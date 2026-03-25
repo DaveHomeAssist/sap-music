@@ -1,0 +1,165 @@
+SAP Music Site — Implementation Plan
+=====================================
+Generated: 2026-03-25
+Repo: DaveHomeAssist/sap-music
+Domain: standardacidprocedure.com
+Stack: Static HTML + Vercel serverless (api/) + SoundCloud embeds + Notion intake
+
+
+PHASE 0 — DNS & Domain Finalization  [IN PROGRESS]
+====================================================
+Owner: Dave
+Timeline: Today (Mar 25) — completes within hours
+
+Milestones:
+  [ ] Delete URL Redirect Record from Namecheap (conflicts with A records)
+  [ ] Add CNAME record: www -> davehomeassist.github.io (TTL: Automatic)
+  [ ] Verify https://standardacidprocedure.com loads after propagation (~5-30 min)
+  [ ] Verify https://www.standardacidprocedure.com redirects correctly
+  [ ] Re-save custom domain in GitHub > Settings > Pages if validation stalls
+
+Required resources:
+  - Namecheap DNS panel access
+
+Status:
+  - 4x A records: DONE
+  - CNAME file in repo: DONE
+  - GitHub Pages custom domain configured: DONE
+  - HTTPS enforced: DONE
+
+
+PHASE 1 — SoundCloud URL Fixes & Verification  [IN PROGRESS]
+==============================================================
+Owner: Dave (URLs) + Claude (code)
+Timeline: Today
+
+Milestones:
+  [ ] Verify all 9 embedded players load correctly on the live site
+  [ ] Fix "SAP: the Musical" URL if player shows "track not found"
+      - Current guess: /sapmusicofficial/sap-the-musical-mix
+      - Dave to provide correct URL if broken
+  [ ] Confirm "Dance" and "AG Set" players work (URLs corrected in commit a94fffe)
+
+Required resources:
+  - Correct SoundCloud URL for "SAP: the Musical (Mix)" if current slug is wrong
+
+
+PHASE 2 — OG / Social Metadata  [BLOCKED ON DECISION]
+=======================================================
+Owner: Claude (code) + Dave (decision + asset)
+Timeline: 1 day after decision
+
+Decision needed:
+  - Option A: Use artist.jpg as OG image (quick, ready now)
+  - Option B: Create branded 1200x630 card (better for social, needs design)
+
+Milestones:
+  [ ] Dave decides OG image approach
+  [ ] Set og:url to https://standardacidprocedure.com
+  [ ] Add og:image pointing to chosen image
+  [ ] Add twitter:card, twitter:title, twitter:description, twitter:image
+  [ ] Test with https://cards-dev.twitter.com/validator and Facebook debugger
+
+Required resources:
+  - OG image file (1200x630px recommended)
+  - If Option B: design tool or prompt to generate branded card
+
+
+PHASE 3 — Hosting Decision: GitHub Pages vs Vercel  [BLOCKED ON DECISION]
+===========================================================================
+Owner: Dave
+Timeline: Decision needed before Notion intake goes live
+
+Context:
+  - The site is currently on GitHub Pages (static only)
+  - api/notion-intake.js is a Vercel serverless function — it CANNOT run on GitHub Pages
+  - Contact form and newsletter currently fall back to mailto: when the API is unreachable
+
+Decision needed:
+  - Option A: Keep GitHub Pages — static site only, forms use mailto fallback
+  - Option B: Move to Vercel — enables Notion intake, contact form saves to Notion DB
+      Requires: Deploy sap-music to Vercel, add NOTION_TOKEN env var, update DNS
+
+If Option B (Vercel):
+  [ ] Connect DaveHomeAssist/sap-music repo to Vercel
+  [ ] Add environment variables in Vercel dashboard:
+      - NOTION_TOKEN
+      - NOTION_CONTACT_DATABASE_ID (default: cac04740-36f0-45e4-b7c3-d11937e34196)
+      - NOTION_NEWSLETTER_DATABASE_ID (default: 68347904-6a05-4cd8-94a1-c71e96e60ca4)
+  [ ] Update DNS: replace GitHub Pages A records with Vercel DNS records
+  [ ] Add custom domain in Vercel project settings
+  [ ] Verify contact form submits to Notion
+  [ ] Verify newsletter modal submits to Notion
+
+Required resources:
+  - Vercel account (free tier sufficient)
+  - NOTION_TOKEN (integration token with access to both databases)
+
+
+PHASE 4 — Content Refresh & Bio Polish
+========================================
+Owner: Dave (content) + Claude (code)
+Timeline: 1-2 days
+
+Milestones:
+  [ ] Update bio stats (23 releases, 140+ shows, 12 countries) with real numbers
+  [ ] Update or remove placeholder press quotes (Resident Advisor, Inverted Audio, Boomkat)
+      - These are fictional — replace with real press or remove the section
+  [ ] Update or remove placeholder show dates
+      - Current shows (Tresor, Dekmantel, Unsound, Fabric, Sonar) are fictional
+      - Replace with real upcoming shows or remove section
+  [ ] Review contact email addresses:
+      - booking@standardacidprocedure.com — is this set up?
+      - press@standardacidprocedure.com — is this set up?
+      - mgmt@standardacidprocedure.com — is this set up?
+      - If not, set up email forwarding in Namecheap or remove unused addresses
+
+Required resources:
+  - Real bio stats, press quotes, show dates
+  - Email forwarding configuration (if using @standardacidprocedure.com addresses)
+
+
+PHASE 5 — Prompt Lab Settings Bug (Separate Project)
+======================================================
+Owner: Claude + Dave
+Timeline: Deferred — needs DevTools diagnosis
+
+Context:
+  - Extension options page (options.html) renders but model dropdown reportedly unselectable
+  - Code reviewed: options.html, options.js, providerRegistry.js — all look correct
+  - JS module imports resolve properly in built extension/
+
+Milestones:
+  [ ] Dave opens options page, hits F12, checks Console for red errors
+  [ ] If module import error: fix the import path in built extension
+  [ ] If no errors: investigate CSS/z-index or Chrome extension popup context issue
+  [ ] Verify select dropdown works after fix
+
+Required resources:
+  - DevTools console output from the options page
+
+
+PHASE 6 — Cross-Project Blockers (from Mar 24 carryover)
+==========================================================
+Owner: Dave
+Timeline: Ongoing
+
+These are not SAP-specific but were tracked in today's session:
+
+  [ ] DaveLLM: Provide LAN IPs for GP66, Katana x2, Duncan
+  [ ] ShieldBox: Confirm production URL + "ShieldBox Security" spelling
+  [ ] Garden OS: Run fresh clone before new commits
+  [ ] Prompt Lab: Reload extension in chrome://extensions, verify pn TDZ fix
+  [ ] 6 dirty repos: Commit changes in graph-explorer, notion-widgets,
+      trailkeeper, sdlc-tool-stack-map, quest-platform, utility
+
+
+ASSUMPTIONS
+===========
+1. standardacidprocedure.com was registered at Namecheap (based on DNS panel screenshot)
+2. Dave has a Vercel account or can create one (free tier)
+3. The Notion integration token exists and has access to the contact + newsletter databases
+4. SoundCloud track slugs for Dance and AG Set are correct after URL fix
+5. "SAP: the Musical" slug (/sap-the-musical-mix) is a guess — may need correction
+6. The fictional press quotes, show dates, and bio stats will be replaced with real data
+7. Email addresses @standardacidprocedure.com are not yet configured
