@@ -654,6 +654,28 @@
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
     }
+    .release-card__play--placeholder {
+      width: auto;
+      min-width: 108px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid var(--accent2-dim);
+      background: rgba(12,14,26,0.88);
+      cursor: default;
+      opacity: 0.95;
+    }
+    .release-card__play--placeholder::after {
+      content: 'PREVIEW SOON';
+      width: auto;
+      height: auto;
+      border: 0;
+      margin-left: 0;
+      color: var(--accent2);
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      white-space: nowrap;
+    }
     @media (hover: none) {
       .release-card__play {
         opacity: 0.7;
@@ -776,12 +798,12 @@
       border-color: var(--accent-dim);
     }
     .press-card::before {
-      content: '\201C';
-      font-family: Georgia, serif;
-      font-size: 4rem;
+      content: '//';
+      font-family: var(--font-mono);
+      font-size: 1rem;
       color: var(--accent-dim);
       position: absolute;
-      top: 12px;
+      top: 20px;
       left: 20px;
       line-height: 1;
     }
@@ -985,6 +1007,26 @@
       font-size: 0.8rem;
       color: var(--accent2);
     }
+    .form-success a {
+      color: var(--accent2);
+    }
+    .form-note,
+    .modal__note {
+      font-size: 0.72rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+    .form-note {
+      margin-top: 12px;
+      text-align: center;
+    }
+    .modal__note {
+      margin-top: 14px;
+    }
+    .form-note a,
+    .modal__note a {
+      color: var(--accent2);
+    }
 
     /* ============================================
        FOOTER
@@ -1047,6 +1089,9 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
+    }
+    .modal-overlay[hidden] {
+      display: none;
     }
     .modal-overlay.show {
       opacity: 1;
@@ -1158,7 +1203,7 @@
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__inner">
       <!-- SWAP: Replace with your logo image or SVG -->
-      <a href="#" class="nav__logo" aria-label="SAP — Home">
+      <a href="#hero" class="nav__logo" aria-label="SAP — Home">
         <span class="led" aria-hidden="true"></span>
         SAP
       </a>
@@ -1202,7 +1247,7 @@
       </p>
       <div class="hero__ctas reveal">
         <!-- SWAP: Replace href with your streaming link -->
-        <a href="#releases" class="btn btn--primary">&#9654;&ensp;Listen Now</a>
+        <a href="https://soundcloud.com/sapmusicofficial/back-it-up-free-download" target="_blank" rel="noopener" class="btn btn--primary">&#9654;&ensp;Listen Now</a>
         <a href="#contact" class="btn btn--outline">Book SAP</a>
       </div>
     </div>
@@ -1234,58 +1279,82 @@
 
         <div class="releases-grid" role="tabpanel">
           <!-- SWAP: Replace placeholder data with actual release info and artwork -->
-          <article class="release-card reveal" data-type="ep">
-            <div class="release-card__art">
-              <span class="release-card__art-label" aria-hidden="true">SAP</span>
-              <button class="release-card__play" aria-label="Play Corrosive Synthesis"></button>
-            </div>
-            <div class="release-card__info">
-              <div class="release-card__type">EP</div>
-              <h3 class="release-card__name">Corrosive Synthesis</h3>
-              <div class="release-card__meta">2026 &middot; 4 tracks &middot; Mechanics Recordings</div>
-            </div>
-          </article>
-
           <article class="release-card reveal" data-type="single">
             <div class="release-card__art">
               <span class="release-card__art-label" aria-hidden="true">SAP</span>
-              <button class="release-card__play" aria-label="Play Voltage Drop"></button>
+              <a
+                href="https://soundcloud.com/sapmusicofficial/back-it-up-free-download"
+                target="_blank"
+                rel="noopener"
+                class="release-card__play"
+                aria-label="Listen to Back It Up on SoundCloud"
+              ></a>
             </div>
             <div class="release-card__info">
               <div class="release-card__type">Single</div>
-              <h3 class="release-card__name">Voltage Drop</h3>
-              <div class="release-card__meta">2025 &middot; Subsonic Ltd.</div>
-            </div>
-          </article>
-
-          <article class="release-card reveal" data-type="ep">
-            <div class="release-card__art">
-              <span class="release-card__art-label" aria-hidden="true">SAP</span>
-              <button class="release-card__play" aria-label="Play Oxide Layer"></button>
-            </div>
-            <div class="release-card__info">
-              <div class="release-card__type">EP</div>
-              <h3 class="release-card__name">Oxide Layer</h3>
-              <div class="release-card__meta">2025 &middot; 5 tracks &middot; Mechanics Recordings</div>
-            </div>
-          </article>
-
-          <article class="release-card reveal" data-type="remix">
-            <div class="release-card__art">
-              <span class="release-card__art-label" aria-hidden="true">RMX</span>
-              <button class="release-card__play" aria-label="Play Deconstruct (SAP Remix)"></button>
-            </div>
-            <div class="release-card__info">
-              <div class="release-card__type">Remix</div>
-              <h3 class="release-card__name">Deconstruct (SAP Remix)</h3>
-              <div class="release-card__meta">2025 &middot; Phase Distortion Records</div>
+              <h3 class="release-card__name">Back It Up</h3>
+              <div class="release-card__meta">Available now &middot; Free download &middot; SoundCloud</div>
             </div>
           </article>
 
           <article class="release-card reveal" data-type="single">
             <div class="release-card__art">
               <span class="release-card__art-label" aria-hidden="true">SAP</span>
-              <button class="release-card__play" aria-label="Play Feedback Path"></button>
+              <a
+                href="https://soundcloud.com/sapmusicofficial/dont-stop-free-download"
+                target="_blank"
+                rel="noopener"
+                class="release-card__play"
+                aria-label="Listen to Don't Stop on SoundCloud"
+              ></a>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Single</div>
+              <h3 class="release-card__name">Don't Stop</h3>
+              <div class="release-card__meta">Available now &middot; Free download &middot; SoundCloud</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="single">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <a
+                href="https://soundcloud.com/sapmusicofficial/drop?si=5c9ebb4560904d31b4edf7950b5ca434&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+                target="_blank"
+                rel="noopener"
+                class="release-card__play"
+                aria-label="Listen to Drop on SoundCloud"
+              ></a>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Single</div>
+              <h3 class="release-card__name">Drop</h3>
+              <div class="release-card__meta">Available now &middot; Stream &middot; SoundCloud</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="single">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <a
+                href="https://soundcloud.com/sapmusicofficial/dance?si=0239456bccb64a01b8abc9fc98eee1b2&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+                target="_blank"
+                rel="noopener"
+                class="release-card__play"
+                aria-label="Listen to Dance on SoundCloud"
+              ></a>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Single</div>
+              <h3 class="release-card__name">Dance</h3>
+              <div class="release-card__meta">Available now &middot; Stream &middot; SoundCloud</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="single">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <span class="release-card__play release-card__play--placeholder" aria-hidden="true"></span>
             </div>
             <div class="release-card__info">
               <div class="release-card__type">Single</div>
@@ -1297,7 +1366,7 @@
           <article class="release-card reveal" data-type="remix">
             <div class="release-card__art">
               <span class="release-card__art-label" aria-hidden="true">RMX</span>
-              <button class="release-card__play" aria-label="Play Machine State (SAP Acid Rework)"></button>
+              <span class="release-card__play release-card__play--placeholder" aria-hidden="true"></span>
             </div>
             <div class="release-card__info">
               <div class="release-card__type">Remix</div>
@@ -1309,7 +1378,7 @@
           <article class="release-card reveal" data-type="ep">
             <div class="release-card__art">
               <span class="release-card__art-label" aria-hidden="true">SAP</span>
-              <button class="release-card__play" aria-label="Play Cathode Rituals"></button>
+              <span class="release-card__play release-card__play--placeholder" aria-hidden="true"></span>
             </div>
             <div class="release-card__info">
               <div class="release-card__type">EP</div>
@@ -1321,7 +1390,7 @@
           <article class="release-card reveal" data-type="single">
             <div class="release-card__art">
               <span class="release-card__art-label" aria-hidden="true">SAP</span>
-              <button class="release-card__play" aria-label="Play 303 Church"></button>
+              <span class="release-card__play release-card__play--placeholder" aria-hidden="true"></span>
             </div>
             <div class="release-card__info">
               <div class="release-card__type">Single</div>
@@ -1393,41 +1462,37 @@
       <div class="container">
         <div class="section__header reveal">
           <div class="section__label">Press</div>
-          <h2 class="section__title">What They Say</h2>
+          <h2 class="section__title">Press Materials</h2>
           <div class="section__divider"></div>
         </div>
 
         <div class="press-grid">
-          <!-- SWAP: Replace with actual press quotes -->
-          <blockquote class="press-card reveal">
+          <article class="press-card reveal">
             <p class="press-card__quote">
-              SAP doesn't make tracks — SAP builds pressure systems.
-              Corrosive Synthesis is 25 minutes of controlled demolition, the kind of
-              acid techno that makes your fillings vibrate.
+              A current artist bio, stage plot, technical rider, and high-resolution
+              visuals are available on request for promoters, festivals, and publications.
             </p>
-            <cite class="press-card__source">Resident Advisor</cite>
-            <div class="press-card__pub">Review, March 2026</div>
-          </blockquote>
+            <div class="press-card__source">Press Kit</div>
+            <div class="press-card__pub">Request via booking@standardacidprocedure.com</div>
+          </article>
 
-          <blockquote class="press-card reveal">
+          <article class="press-card reveal">
             <p class="press-card__quote">
-              One of the most electrifying live hardware acts working today.
-              No laptop, no net — just machines, feedback, and an intensity that
-              most producers can only approximate in software.
+              New clips, release updates, and live extracts are published on the active
+              SAP channels as they go live.
             </p>
-            <cite class="press-card__source">Inverted Audio</cite>
-            <div class="press-card__pub">Feature, January 2026</div>
-          </blockquote>
+            <div class="press-card__source">Live Channels</div>
+            <div class="press-card__pub">SoundCloud and Instagram are current</div>
+          </article>
 
-          <blockquote class="press-card reveal">
+          <article class="press-card reveal">
             <p class="press-card__quote">
-              Where others chase polish, SAP chases voltage. Oxide Layer
-              is a masterclass in restraint through distortion — every frequency
-              earns its place.
+              Published reviews, interviews, and premiere links will be added here once
+              they are live. No placeholder endorsements are being shown.
             </p>
-            <cite class="press-card__source">Boomkat</cite>
-            <div class="press-card__pub">Recommended, 2025</div>
-          </blockquote>
+            <div class="press-card__source">Coverage</div>
+            <div class="press-card__pub">Updates land as soon as they are public</div>
+          </article>
         </div>
       </div>
     </section>
@@ -1439,84 +1504,83 @@
       <div class="container">
         <div class="section__header reveal">
           <div class="section__label">Live</div>
-          <h2 class="section__title">Upcoming Shows</h2>
+          <h2 class="section__title">Live Availability</h2>
           <div class="section__divider"></div>
         </div>
 
-        <!-- SWAP: Replace with actual event data -->
         <div class="shows-list reveal">
           <div class="show-item">
             <div class="show-item__date">
-              <div class="show-item__day">04</div>
-              <div class="show-item__month">Apr 2026</div>
+              <div class="show-item__day">Q2</div>
+              <div class="show-item__month">2026</div>
             </div>
             <div class="show-item__info">
-              <div class="show-item__name">Tresor — Acid Fridays</div>
-              <div class="show-item__venue">Tresor Club</div>
-              <div class="show-item__location">Berlin, DE</div>
+              <div class="show-item__name">Spring Routing Window</div>
+              <div class="show-item__venue">Club dates actively being scheduled</div>
+              <div class="show-item__location">EU + UK</div>
             </div>
             <div class="show-item__action">
-              <a href="#" class="show-item__badge show-item__badge--live" aria-label="Get tickets for Tresor Acid Fridays">Tickets</a>
+              <span class="show-item__badge">Routing Open</span>
             </div>
           </div>
 
           <div class="show-item">
             <div class="show-item__date">
-              <div class="show-item__day">18</div>
-              <div class="show-item__month">Apr 2026</div>
+              <div class="show-item__day">Q3</div>
+              <div class="show-item__month">2026</div>
             </div>
             <div class="show-item__info">
-              <div class="show-item__name">Dekmantel Selectors</div>
-              <div class="show-item__venue">Warehouse Elementenstraat</div>
-              <div class="show-item__location">Amsterdam, NL</div>
+              <div class="show-item__name">Festival Holds</div>
+              <div class="show-item__venue">Details shared privately with promoters</div>
+              <div class="show-item__location">Europe</div>
             </div>
             <div class="show-item__action">
-              <a href="#" class="show-item__badge show-item__badge--live" aria-label="Get tickets for Dekmantel Selectors">Tickets</a>
+              <span class="show-item__badge">Inquiries</span>
             </div>
           </div>
 
           <div class="show-item">
             <div class="show-item__date">
-              <div class="show-item__day">09</div>
-              <div class="show-item__month">May 2026</div>
+              <div class="show-item__day">Q3</div>
+              <div class="show-item__month">2026</div>
             </div>
             <div class="show-item__info">
-              <div class="show-item__name">Unsound Festival</div>
-              <div class="show-item__venue">Hotel Forum</div>
-              <div class="show-item__location">Krakow, PL</div>
+              <div class="show-item__name">Warehouse Set</div>
+              <div class="show-item__venue">Late-night bookings available by request</div>
+              <div class="show-item__location">International</div>
             </div>
             <div class="show-item__action">
-              <span class="show-item__badge">Announced</span>
+              <span class="show-item__badge">By Request</span>
             </div>
           </div>
 
           <div class="show-item">
             <div class="show-item__date">
-              <div class="show-item__day">23</div>
-              <div class="show-item__month">May 2026</div>
+              <div class="show-item__day">Q4</div>
+              <div class="show-item__month">2026</div>
             </div>
             <div class="show-item__info">
-              <div class="show-item__name">Fabric — Room 1</div>
-              <div class="show-item__venue">Fabric London</div>
-              <div class="show-item__location">London, UK</div>
+              <div class="show-item__name">Hybrid AV Room</div>
+              <div class="show-item__venue">Black-box rooms, galleries, and special programming</div>
+              <div class="show-item__location">Worldwide</div>
             </div>
             <div class="show-item__action">
-              <a href="#" class="show-item__badge show-item__badge--live" aria-label="Get tickets for Fabric Room 1">Tickets</a>
+              <span class="show-item__badge">Select Dates</span>
             </div>
           </div>
 
           <div class="show-item">
             <div class="show-item__date">
-              <div class="show-item__day">14</div>
-              <div class="show-item__month">Jun 2026</div>
+              <div class="show-item__day">Q4</div>
+              <div class="show-item__month">2026</div>
             </div>
             <div class="show-item__info">
-              <div class="show-item__name">Sónar by Night</div>
-              <div class="show-item__venue">Fira Montjuïc</div>
-              <div class="show-item__location">Barcelona, ES</div>
+              <div class="show-item__name">Guest Mixes and Broadcasts</div>
+              <div class="show-item__venue">One-off sessions available for radio and digital platforms</div>
+              <div class="show-item__location">Remote or in-studio</div>
             </div>
             <div class="show-item__action">
-              <span class="show-item__badge">Announced</span>
+              <span class="show-item__badge">Open</span>
             </div>
           </div>
         </div>
@@ -1588,9 +1652,13 @@
                 <div class="error-msg" aria-live="polite">Message is required.</div>
               </div>
               <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;">Transmit Message</button>
+              <p class="form-note">
+                Submitting opens your email client with a prefilled inquiry. If nothing opens,
+                email <a href="mailto:booking@standardacidprocedure.com">booking@standardacidprocedure.com</a>.
+              </p>
             </form>
             <div class="form-success" id="form-success" role="status">
-              <p>&#10003; Message transmitted. We'll get back to you within 48 hours.</p>
+              <p>&#10003; Your email client should open with a prefilled inquiry.</p>
             </div>
           </div>
         </div>
@@ -1618,18 +1686,25 @@
   <!-- ==========================================
        NEWSLETTER MODAL (Exit-intent)
        ========================================== -->
-  <div class="modal-overlay" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-overlay" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true" hidden>
     <div class="modal">
       <button class="modal__close" aria-label="Close newsletter signup">&times;</button>
       <h2 class="modal__title" id="modal-title">Stay in the Signal Chain</h2>
       <p class="modal__desc">
         Drops, show announcements, and exclusive hardware session recordings.
-        No spam — just signal.
+        No spam — just signal. Until the mailing-list backend is live, subscribe opens
+        a prefilled email request.
       </p>
       <form class="modal__form" id="newsletter-form" novalidate>
         <input type="email" placeholder="your@email.com" required aria-label="Email address for newsletter">
         <button type="submit" class="btn btn--primary">Subscribe</button>
       </form>
+      <p class="modal__note">
+        Live updates also land on
+        <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener">SoundCloud</a>
+        and
+        <a href="https://www.instagram.com/sapmusicofficial/" target="_blank" rel="noopener">Instagram</a>.
+      </p>
     </div>
   </div>
 
@@ -1651,6 +1726,14 @@
         themeIcon.innerHTML = t === 'dark' ? '&#9790;' : '&#9728;';
         themeBtn.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' theme');
         try { localStorage.setItem(SK, t); } catch (e) {}
+      }
+      function buildMailto(to, subject, lines) {
+        return 'mailto:' + to +
+          '?subject=' + encodeURIComponent(subject) +
+          '&body=' + encodeURIComponent(lines.join('\n'));
+      }
+      function openMailto(to, subject, lines) {
+        window.location.href = buildMailto(to, subject, lines);
       }
       try { var s = localStorage.getItem(SK); if (s) setTheme(s); } catch (e) {}
       themeBtn.addEventListener('click', function () {
@@ -1748,14 +1831,28 @@
           if (!validate(i)) ok = false;
         });
         if (ok) {
+          var name = form.querySelector('#cf-name').value.trim();
+          var email = form.querySelector('#cf-email').value.trim();
+          var subject = form.querySelector('#cf-subject').options[form.querySelector('#cf-subject').selectedIndex].text;
+          var message = form.querySelector('#cf-message').value.trim();
           form.style.display = 'none';
           success.style.display = 'block';
-          // SWAP: Replace with actual form submission (fetch to your API)
+          success.innerHTML = '<p>Your email client should open with a prefilled inquiry. If it does not, email <a href="mailto:booking@standardacidprocedure.com">booking@standardacidprocedure.com</a>.</p>';
+          openMailto('booking@standardacidprocedure.com', 'SAP ' + subject + ' — ' + name, [
+            'Name: ' + name,
+            'Email: ' + email,
+            'Subject: ' + subject,
+            '',
+            message
+          ]);
         }
       });
 
       /* ---- NEWSLETTER MODAL (EXIT INTENT) ---- */
       var modal = document.getElementById('newsletter-modal');
+      var modalForm = document.getElementById('newsletter-form');
+      var lastFocused = null;
+      var hideTimer = null;
       var shown = false;
       var dismissed = false;
       try { dismissed = localStorage.getItem('sap-nl-dismissed') === '1'; } catch (e) {}
@@ -1763,14 +1860,32 @@
       function showModal() {
         if (shown || dismissed) return;
         shown = true;
-        modal.classList.add('show');
+        lastFocused = document.activeElement;
+        if (hideTimer) {
+          clearTimeout(hideTimer);
+          hideTimer = null;
+        }
+        modal.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        requestAnimationFrame(function () {
+          modal.classList.add('show');
+        });
+        document.body.style.overflow = 'hidden';
         modal.querySelector('.modal__close').focus();
         document.addEventListener('keydown', trapFocus);
       }
       function hideModal() {
         modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
         document.removeEventListener('keydown', trapFocus);
+        document.body.style.overflow = '';
+        hideTimer = window.setTimeout(function () {
+          modal.hidden = true;
+        }, 300);
         try { localStorage.setItem('sap-nl-dismissed', '1'); } catch (e) {}
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+          lastFocused.focus();
+        }
       }
       function trapFocus(e) {
         if (e.key === 'Escape') { hideModal(); return; }
@@ -1786,13 +1901,18 @@
       if ('ontouchstart' in window) setTimeout(showModal, 90000);
       modal.querySelector('.modal__close').addEventListener('click', hideModal);
       modal.addEventListener('click', function (e) { if (e.target === modal) hideModal(); });
-      document.getElementById('newsletter-form').addEventListener('submit', function (e) {
+      modalForm.addEventListener('submit', function (e) {
         e.preventDefault();
         var inp = this.querySelector('input[type="email"]');
         if (inp.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim())) {
-          // SWAP: Replace with actual newsletter API call
-          this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;">&#10003; Subscribed. Signal locked.</p>';
-          setTimeout(hideModal, 2000);
+          inp.style.borderColor = '';
+          this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;line-height:1.6;">Your email client should open with a signup request. If it does not, email mgmt@standardacidprocedure.com.</p>';
+          openMailto('mgmt@standardacidprocedure.com', 'SAP Newsletter Signup', [
+            'Please add me to the SAP newsletter.',
+            '',
+            'Email: ' + inp.value.trim()
+          ]);
+          setTimeout(hideModal, 2800);
         } else {
           inp.style.borderColor = 'var(--warning)';
           inp.focus();
