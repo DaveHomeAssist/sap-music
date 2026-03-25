@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SAP (Standard Acid Procedure) — Electronic music project exploring acid, industrial, and experimental sound. Releases, shows, and booking.">
+  <meta name="keywords" content="SAP, Standard Acid Procedure, acid techno, industrial music, electronic music, TB-303, experimental">
+  <meta name="author" content="SAP">
+  <meta property="og:title" content="SAP — Standard Acid Procedure">
+  <meta property="og:description" content="Acid. Industrial. Experimental. Hardware-driven electronic music.">
+  <meta property="og:type" content="website">
+  <!-- SWAP: Add og:image once artwork is ready -->
+  <!-- <meta property="og:image" content="https://your-domain.com/sap-og.jpg"> -->
+  <title>SAP — Standard Acid Procedure</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       DESIGN SYSTEM — MIAMI VICE × HARDWARE
+       Muted neon pink + cool cyan on deep navy
+       ============================================ */
+    :root {
+      /* Core palette — low-key Miami Vice */
+      --accent:       #e8609c;          /* dusty neon pink */
+      --accent-dim:   #8a3a5e;
+      --accent-glow:  rgba(232, 96, 156, 0.12);
+      --accent2:      #5ce0d6;          /* muted cyan / teal */
+      --accent2-dim:  #2a7a75;
+      --accent2-glow: rgba(92, 224, 214, 0.10);
+      --warning:      #ff6b4a;
+      --signal:       #ffd166;
+
+      /* Surfaces — deep navy, not pure black */
+      --bg-black:     #0c0e1a;
+      --bg-surface:   #111425;
+      --bg-elevated:  #181c30;
+      --bg-card:      #13162a;
+      --border:       #252940;
+      --border-lite:  #353a55;
+      --text-primary:   #e2dfe8;
+      --text-secondary: #8a87a0;
+      --text-dim:       #55536a;
+
+      /* Typography */
+      --font-display: 'Orbitron', sans-serif;
+      --font-body:    'IBM Plex Mono', monospace;
+      --font-sans:    'Space Grotesk', sans-serif;
+
+      /* Layout */
+      --nav-h: 64px;
+      --section-py: clamp(80px, 10vw, 140px);
+      --max-w: 1200px;
+      --radius: 2px;
+      --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    [data-theme="light"] {
+      --accent:       #c24e82;
+      --accent-dim:   #f0c4d8;
+      --accent-glow:  rgba(194, 78, 130, 0.07);
+      --accent2:      #2a9e96;
+      --accent2-dim:  #b8e8e4;
+      --accent2-glow: rgba(42, 158, 150, 0.06);
+      --bg-black:     #f5f3f0;
+      --bg-surface:   #eae7e3;
+      --bg-elevated:  #dfdcd8;
+      --bg-card:      #f0ede9;
+      --border:       #d0ccc6;
+      --border-lite:  #bab6b0;
+      --text-primary:   #1a1a24;
+      --text-secondary: #5a5868;
+      --text-dim:       #9896a5;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--nav-h);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-black);
+      color: var(--text-primary);
+      line-height: 1.7;
+      font-size: 14px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--accent2); }
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 48px);
+    }
+
+    /* ============================================
+       SCROLL REVEAL
+       ============================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ============================================
+       NAVIGATION
+       ============================================ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-h);
+      background: rgba(12, 14, 26, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    [data-theme="light"] .nav {
+      background: rgba(245, 243, 240, 0.90);
+    }
+    .nav__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 48px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    /* SWAP: Replace text logo with your logo image / SVG */
+    .nav__logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav__logo .led {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent), 0 0 24px rgba(232,96,156,0.35);
+      animation: led-pulse 2.4s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nav__logo .led { animation: none; }
+    }
+    @keyframes led-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: clamp(16px, 2.5vw, 32px);
+      list-style: none;
+    }
+    .nav__links a {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      position: relative;
+      padding: 4px 0;
+      transition: color var(--transition);
+    }
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width var(--transition);
+    }
+    .nav__links a:hover,
+    .nav__links a.active {
+      color: var(--accent);
+    }
+    .nav__links a.active::after,
+    .nav__links a:hover::after {
+      width: 100%;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      font-size: 16px;
+    }
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Hamburger */
+    .nav__hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .nav__hamburger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--text-primary);
+      transition: all var(--transition);
+    }
+    .nav__hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); }
+    .nav__hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav__hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); }
+
+    @media (max-width: 768px) {
+      .nav__hamburger { display: flex; }
+      .nav__links {
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg-black);
+        flex-direction: column;
+        justify-content: center;
+        gap: 32px;
+        transform: translateX(100%);
+        transition: transform 0.4s ease;
+      }
+      .nav__links.open { transform: translateX(0); }
+      .nav__links a { font-size: 1rem; }
+    }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: var(--nav-h);
+    }
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    /* Hexagon tessellation pattern */
+    .hero__bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23252940' stroke-width='0.7'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%23252940' stroke-width='0.7'/%3E%3C/svg%3E");
+      background-size: 56px 100px;
+      opacity: 0.45;
+    }
+    [data-theme="light"] .hero__bg::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23d0ccc6' stroke-width='0.7'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%23d0ccc6' stroke-width='0.7'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+    /* Dual-tone gradient glow — pink + cyan */
+    .hero__bg::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 900px;
+      background:
+        radial-gradient(ellipse at 35% 40%, rgba(232,96,156,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at 65% 50%, rgba(92,224,214,0.06) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    [data-theme="light"] .hero__bg::after {
+      background:
+        radial-gradient(ellipse at 35% 40%, rgba(194,78,130,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 65% 50%, rgba(42,158,150,0.04) 0%, transparent 55%);
+    }
+    .hero__noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+    }
+    .hero__label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero__label::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent2);
+    }
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .hero__title .hl-pink {
+      color: var(--accent);
+      text-shadow: 0 0 50px rgba(232,96,156,0.25), 0 0 100px rgba(232,96,156,0.08);
+    }
+    .hero__title .hl-cyan {
+      color: var(--accent2);
+      text-shadow: 0 0 50px rgba(92,224,214,0.2), 0 0 100px rgba(92,224,214,0.06);
+    }
+    [data-theme="light"] .hero__title .hl-pink,
+    [data-theme="light"] .hero__title .hl-cyan {
+      text-shadow: none;
+    }
+    .hero__subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+    .hero__desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      max-width: 480px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+    }
+    .hero__ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+    }
+    .btn--primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn--primary:hover {
+      background: #d0538a;
+      box-shadow: 0 0 30px rgba(232,96,156,0.3);
+      transform: translateY(-1px);
+    }
+    [data-theme="light"] .btn--primary { color: #fff; }
+    [data-theme="light"] .btn--primary:hover {
+      box-shadow: 0 4px 20px rgba(194,78,130,0.25);
+    }
+    .btn--outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-lite);
+    }
+    .btn--outline:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      transform: translateY(-1px);
+    }
+    .btn--cyan {
+      background: var(--accent2);
+      color: var(--bg-black);
+    }
+    .btn--cyan:hover {
+      background: #4cc8c0;
+      box-shadow: 0 0 30px rgba(92,224,214,0.25);
+      transform: translateY(-1px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn:hover { transform: none; }
+    }
+
+    /* Scroll indicator */
+    .hero__scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .hero__scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--accent-dim), transparent);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    @keyframes scroll-pulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero__scroll-line { animation: none; opacity: 0.5; }
+    }
+
+    /* ============================================
+       SECTION HEADINGS
+       ============================================ */
+    .section {
+      padding: var(--section-py) 0;
+      position: relative;
+    }
+    .section__header {
+      margin-bottom: 56px;
+    }
+    .section__label {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section__label::before {
+      content: '//';
+      color: var(--text-dim);
+    }
+    .section__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+    .section__divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      margin-top: 16px;
+      border-radius: 1px;
+    }
+
+    /* ============================================
+       RELEASES / DISCOGRAPHY
+       ============================================ */
+    #releases {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      position: relative;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transition: transform var(--transition);
+    }
+    .tab-btn:hover { color: var(--text-secondary); }
+    .tab-btn.active { color: var(--accent); }
+    .tab-btn.active::after { transform: scaleX(1); }
+
+    .releases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .release-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+    .release-card:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-3px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .release-card:hover { transform: none; }
+    }
+    .release-card__art {
+      aspect-ratio: 1;
+      background: var(--bg-elevated);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* SWAP: Replace with actual cover art <img> tags */
+    .release-card__art::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23e8609c' stroke-width='0.4'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%235ce0d6' stroke-width='0.4'/%3E%3C/svg%3E");
+      background-size: 42px 75px;
+      opacity: 0.12;
+    }
+    .release-card__art-label {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--border-lite);
+      letter-spacing: 0.05em;
+      z-index: 1;
+    }
+    .release-card__play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      opacity: 0;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .release-card__play::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 14px;
+      border-color: transparent transparent transparent #fff;
+      margin-left: 3px;
+    }
+    .release-card:hover .release-card__play {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    @media (hover: none) {
+      .release-card__play {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+    .release-card__info {
+      padding: 16px;
+    }
+    .release-card__type {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+    .release-card__name {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .release-card__meta {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .release-card[hidden] { display: none; }
+
+    /* ============================================
+       BIO / ABOUT
+       ============================================ */
+    .bio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 5vw, 80px);
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .bio-grid { grid-template-columns: 1fr; }
+    }
+    .bio__image {
+      aspect-ratio: 4/5;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    /* SWAP: Replace with actual artist photo <img> */
+    .bio__image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23e8609c' stroke-width='0.5'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%235ce0d6' stroke-width='0.5'/%3E%3C/svg%3E"),
+        linear-gradient(135deg, rgba(232,96,156,0.04) 0%, transparent 50%),
+        linear-gradient(225deg, rgba(92,224,214,0.04) 0%, transparent 50%);
+      background-size: 56px 100px, 100% 100%, 100% 100%;
+      opacity: 0.3;
+    }
+    .bio__image::after {
+      content: '[ ARTIST PHOTO ]';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .bio__text p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    .bio__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .bio__stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .bio__stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* ============================================
+       PRESS / TESTIMONIALS
+       ============================================ */
+    #press {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .press-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .press-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 32px;
+      position: relative;
+      transition: border-color var(--transition);
+    }
+    .press-card:hover {
+      border-color: var(--accent-dim);
+    }
+    .press-card::before {
+      content: '\201C';
+      font-family: Georgia, serif;
+      font-size: 4rem;
+      color: var(--accent-dim);
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      line-height: 1;
+    }
+    .press-card__quote {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 400;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      padding-top: 24px;
+      color: var(--text-primary);
+    }
+    .press-card__source {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .press-card__pub {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* ============================================
+       SHOWS / EVENTS
+       ============================================ */
+    .shows-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .show-item {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 24px;
+      background: var(--bg-card);
+      transition: all var(--transition);
+    }
+    .show-item:hover { background: var(--bg-elevated); }
+    .show-item__date { text-align: center; }
+    .show-item__day {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--accent);
+    }
+    .show-item__month {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .show-item__name {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .show-item__venue {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .show-item__location {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+    .show-item__badge {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid var(--border-lite);
+      color: var(--text-dim);
+      background: none;
+      transition: all var(--transition);
+    }
+    .show-item__badge--live {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+    .show-item__badge--live:hover {
+      background: var(--accent2);
+      color: var(--bg-black);
+    }
+    @media (max-width: 600px) {
+      .show-item {
+        grid-template-columns: 60px 1fr;
+        gap: 12px;
+        padding: 16px;
+      }
+      .show-item__action {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .show-item__day { font-size: 1.3rem; }
+    }
+
+    /* ============================================
+       CONTACT / BOOKING
+       ============================================ */
+    #contact {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: clamp(32px, 5vw, 80px);
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    .contact__info p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .contact__channels {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .contact__channel {
+      font-size: 0.75rem;
+      display: flex;
+      gap: 12px;
+    }
+    .contact__channel-label {
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      min-width: 80px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-black);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      transition: border-color var(--transition);
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-group .error-msg {
+      font-size: 0.7rem;
+      color: var(--warning);
+      margin-top: 4px;
+      display: none;
+    }
+    .form-group.has-error input,
+    .form-group.has-error textarea {
+      border-color: var(--warning);
+    }
+    .form-group.has-error .error-msg { display: block; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .form-success {
+      display: none;
+      padding: 20px;
+      border: 1px solid var(--accent2-dim);
+      background: var(--accent2-glow);
+      text-align: center;
+    }
+    .form-success p {
+      font-size: 0.8rem;
+      color: var(--accent2);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+    }
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .footer__inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+    }
+    .footer__logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .footer__copy {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+    .footer__socials {
+      display: flex;
+      gap: 16px;
+    }
+    .footer__socials a {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color var(--transition);
+    }
+    .footer__socials a:hover { color: var(--accent2); }
+
+    /* ============================================
+       NEWSLETTER MODAL
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(12,14,26,0.75);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: clamp(32px, 5vw, 48px);
+      max-width: 440px;
+      width: 90%;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    .modal-overlay.show .modal { transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .modal { transform: none; transition: none; }
+    }
+    .modal__close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      transition: color var(--transition);
+    }
+    .modal__close:hover { color: var(--text-primary); }
+    .modal__title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .modal__desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .modal__form {
+      display: flex;
+      gap: 8px;
+    }
+    .modal__form input {
+      flex: 1;
+      padding: 12px 14px;
+      background: var(--bg-black);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+    }
+    .modal__form input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    /* ============================================
+       SCANLINES OVERLAY
+       ============================================ */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.012) 2px,
+        rgba(0,0,0,0.012) 4px
+      );
+    }
+    [data-theme="light"] .scanlines { opacity: 0; }
+
+    /* ============================================
+       SKIP LINK
+       ============================================ */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 9999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 8px; }
+  </style>
+</head>
+
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- ==========================================
+       NAVIGATION
+       ========================================== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <!-- SWAP: Replace with your logo image or SVG -->
+      <a href="#" class="nav__logo" aria-label="SAP — Home">
+        <span class="led" aria-hidden="true"></span>
+        SAP
+      </a>
+
+      <button class="nav__hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav__links" role="list">
+        <li><a href="#releases">Releases</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#press">Press</a></li>
+        <li><a href="#shows">Shows</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li>
+          <button class="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <span class="theme-toggle__icon" aria-hidden="true">&#9790;</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       HERO
+       ========================================== -->
+  <header class="hero" id="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__noise" aria-hidden="true"></div>
+    <div class="container hero__content">
+      <div class="hero__label reveal">System Active — 303.909.808</div>
+      <h1 class="hero__title reveal">
+        <span class="hl-pink">Standard</span><br>
+        <span class="hl-cyan">Acid</span><br>
+        Procedure
+      </h1>
+      <p class="hero__subtitle reveal">Acid &middot; Industrial &middot; Experimental</p>
+      <p class="hero__desc reveal">
+        Hardware-driven electronic music forged from overdriven 303 basslines,
+        pounding industrial rhythms, and fractured signal chains. No presets. No compromises.
+      </p>
+      <div class="hero__ctas reveal">
+        <!-- SWAP: Replace href with your streaming link -->
+        <a href="#releases" class="btn btn--primary">&#9654;&ensp;Listen Now</a>
+        <a href="#contact" class="btn btn--outline">Book SAP</a>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <div class="hero__scroll-line"></div>
+      Scroll
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ==========================================
+         RELEASES / DISCOGRAPHY
+         ========================================== -->
+    <section class="section" id="releases">
+      <div class="container">
+        <div class="section__header reveal">
+          <div class="section__label">Discography</div>
+          <h2 class="section__title">Releases</h2>
+          <div class="section__divider"></div>
+        </div>
+
+        <div class="tabs reveal" role="tablist" aria-label="Filter releases by type">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-filter="all">All</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-filter="ep">EPs</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-filter="single">Singles</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-filter="remix">Remixes</button>
+        </div>
+
+        <div class="releases-grid" role="tabpanel">
+          <!-- SWAP: Replace placeholder data with actual release info and artwork -->
+          <article class="release-card reveal" data-type="ep">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <button class="release-card__play" aria-label="Play Corrosive Synthesis"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">EP</div>
+              <h3 class="release-card__name">Corrosive Synthesis</h3>
+              <div class="release-card__meta">2026 &middot; 4 tracks &middot; Mechanics Recordings</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="single">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <button class="release-card__play" aria-label="Play Voltage Drop"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Single</div>
+              <h3 class="release-card__name">Voltage Drop</h3>
+              <div class="release-card__meta">2025 &middot; Subsonic Ltd.</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="ep">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <button class="release-card__play" aria-label="Play Oxide Layer"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">EP</div>
+              <h3 class="release-card__name">Oxide Layer</h3>
+              <div class="release-card__meta">2025 &middot; 5 tracks &middot; Mechanics Recordings</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="remix">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">RMX</span>
+              <button class="release-card__play" aria-label="Play Deconstruct (SAP Remix)"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Remix</div>
+              <h3 class="release-card__name">Deconstruct (SAP Remix)</h3>
+              <div class="release-card__meta">2025 &middot; Phase Distortion Records</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="single">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <button class="release-card__play" aria-label="Play Feedback Path"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Single</div>
+              <h3 class="release-card__name">Feedback Path</h3>
+              <div class="release-card__meta">2024 &middot; Self-released</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="remix">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">RMX</span>
+              <button class="release-card__play" aria-label="Play Machine State (SAP Acid Rework)"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Remix</div>
+              <h3 class="release-card__name">Machine State (SAP Acid Rework)</h3>
+              <div class="release-card__meta">2024 &middot; Analogue Assault</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="ep">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <button class="release-card__play" aria-label="Play Cathode Rituals"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">EP</div>
+              <h3 class="release-card__name">Cathode Rituals</h3>
+              <div class="release-card__meta">2024 &middot; 4 tracks &middot; Mechanics Recordings</div>
+            </div>
+          </article>
+
+          <article class="release-card reveal" data-type="single">
+            <div class="release-card__art">
+              <span class="release-card__art-label" aria-hidden="true">SAP</span>
+              <button class="release-card__play" aria-label="Play 303 Church"></button>
+            </div>
+            <div class="release-card__info">
+              <div class="release-card__type">Single</div>
+              <h3 class="release-card__name">303 Church</h3>
+              <div class="release-card__meta">2023 &middot; Subsonic Ltd.</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BIO / ABOUT
+         ========================================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="bio-grid">
+          <div class="bio__image reveal" role="img" aria-label="SAP artist photo placeholder">
+            <!-- SWAP: Replace with actual artist <img> -->
+          </div>
+          <div class="bio__text reveal">
+            <div class="section__header">
+              <div class="section__label">About</div>
+              <h2 class="section__title">The Machine<br>Behind the Noise</h2>
+              <div class="section__divider"></div>
+            </div>
+            <!-- SWAP: Replace with actual bio copy -->
+            <p>
+              SAP (Standard Acid Procedure) is the solo hardware project of Berlin-based
+              producer and sound designer M. Krause. Emerging from the city's warehouse
+              scene in 2019, SAP channels raw 303 sequences, distorted drum machines, and
+              modular chaos into relentless live performances and studio work.
+            </p>
+            <p>
+              Every SAP release begins on hardware — no DAW, no safety net. Roland's
+              TR-909 and TB-303 form the rhythmic and melodic core, fed through chains of
+              industrial effects processors, tape saturators, and custom feedback loops.
+              The result is music that feels dangerous, physical, and deliberately
+              unpolished.
+            </p>
+            <p>
+              With releases on Mechanics Recordings, Subsonic Ltd., and Phase Distortion
+              Records, SAP has built a reputation for uncompromising acid techno that
+              bridges the gap between 90s rave energy and modern industrial aesthetics.
+            </p>
+            <div class="bio__stats">
+              <div>
+                <div class="bio__stat-num">23</div>
+                <div class="bio__stat-label">Releases</div>
+              </div>
+              <div>
+                <div class="bio__stat-num">140+</div>
+                <div class="bio__stat-label">Live Shows</div>
+              </div>
+              <div>
+                <div class="bio__stat-num">12</div>
+                <div class="bio__stat-label">Countries</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PRESS / TESTIMONIALS
+         ========================================== -->
+    <section class="section" id="press">
+      <div class="container">
+        <div class="section__header reveal">
+          <div class="section__label">Press</div>
+          <h2 class="section__title">What They Say</h2>
+          <div class="section__divider"></div>
+        </div>
+
+        <div class="press-grid">
+          <!-- SWAP: Replace with actual press quotes -->
+          <blockquote class="press-card reveal">
+            <p class="press-card__quote">
+              SAP doesn't make tracks — SAP builds pressure systems.
+              Corrosive Synthesis is 25 minutes of controlled demolition, the kind of
+              acid techno that makes your fillings vibrate.
+            </p>
+            <cite class="press-card__source">Resident Advisor</cite>
+            <div class="press-card__pub">Review, March 2026</div>
+          </blockquote>
+
+          <blockquote class="press-card reveal">
+            <p class="press-card__quote">
+              One of the most electrifying live hardware acts working today.
+              No laptop, no net — just machines, feedback, and an intensity that
+              most producers can only approximate in software.
+            </p>
+            <cite class="press-card__source">Inverted Audio</cite>
+            <div class="press-card__pub">Feature, January 2026</div>
+          </blockquote>
+
+          <blockquote class="press-card reveal">
+            <p class="press-card__quote">
+              Where others chase polish, SAP chases voltage. Oxide Layer
+              is a masterclass in restraint through distortion — every frequency
+              earns its place.
+            </p>
+            <cite class="press-card__source">Boomkat</cite>
+            <div class="press-card__pub">Recommended, 2025</div>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SHOWS / EVENTS
+         ========================================== -->
+    <section class="section" id="shows">
+      <div class="container">
+        <div class="section__header reveal">
+          <div class="section__label">Live</div>
+          <h2 class="section__title">Upcoming Shows</h2>
+          <div class="section__divider"></div>
+        </div>
+
+        <!-- SWAP: Replace with actual event data -->
+        <div class="shows-list reveal">
+          <div class="show-item">
+            <div class="show-item__date">
+              <div class="show-item__day">04</div>
+              <div class="show-item__month">Apr 2026</div>
+            </div>
+            <div class="show-item__info">
+              <div class="show-item__name">Tresor — Acid Fridays</div>
+              <div class="show-item__venue">Tresor Club</div>
+              <div class="show-item__location">Berlin, DE</div>
+            </div>
+            <div class="show-item__action">
+              <a href="#" class="show-item__badge show-item__badge--live" aria-label="Get tickets for Tresor Acid Fridays">Tickets</a>
+            </div>
+          </div>
+
+          <div class="show-item">
+            <div class="show-item__date">
+              <div class="show-item__day">18</div>
+              <div class="show-item__month">Apr 2026</div>
+            </div>
+            <div class="show-item__info">
+              <div class="show-item__name">Dekmantel Selectors</div>
+              <div class="show-item__venue">Warehouse Elementenstraat</div>
+              <div class="show-item__location">Amsterdam, NL</div>
+            </div>
+            <div class="show-item__action">
+              <a href="#" class="show-item__badge show-item__badge--live" aria-label="Get tickets for Dekmantel Selectors">Tickets</a>
+            </div>
+          </div>
+
+          <div class="show-item">
+            <div class="show-item__date">
+              <div class="show-item__day">09</div>
+              <div class="show-item__month">May 2026</div>
+            </div>
+            <div class="show-item__info">
+              <div class="show-item__name">Unsound Festival</div>
+              <div class="show-item__venue">Hotel Forum</div>
+              <div class="show-item__location">Krakow, PL</div>
+            </div>
+            <div class="show-item__action">
+              <span class="show-item__badge">Announced</span>
+            </div>
+          </div>
+
+          <div class="show-item">
+            <div class="show-item__date">
+              <div class="show-item__day">23</div>
+              <div class="show-item__month">May 2026</div>
+            </div>
+            <div class="show-item__info">
+              <div class="show-item__name">Fabric — Room 1</div>
+              <div class="show-item__venue">Fabric London</div>
+              <div class="show-item__location">London, UK</div>
+            </div>
+            <div class="show-item__action">
+              <a href="#" class="show-item__badge show-item__badge--live" aria-label="Get tickets for Fabric Room 1">Tickets</a>
+            </div>
+          </div>
+
+          <div class="show-item">
+            <div class="show-item__date">
+              <div class="show-item__day">14</div>
+              <div class="show-item__month">Jun 2026</div>
+            </div>
+            <div class="show-item__info">
+              <div class="show-item__name">Sónar by Night</div>
+              <div class="show-item__venue">Fira Montjuïc</div>
+              <div class="show-item__location">Barcelona, ES</div>
+            </div>
+            <div class="show-item__action">
+              <span class="show-item__badge">Announced</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         CONTACT / BOOKING
+         ========================================== -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="reveal">
+            <div class="section__header">
+              <div class="section__label">Contact</div>
+              <h2 class="section__title">Book SAP</h2>
+              <div class="section__divider"></div>
+            </div>
+            <div class="contact__info">
+              <p>
+                For booking inquiries, remix requests, label submissions, or press
+                access, use the form or reach out directly. Typical response time: 48 hours.
+              </p>
+              <!-- SWAP: Replace with actual contact info -->
+              <div class="contact__channels">
+                <div class="contact__channel">
+                  <span class="contact__channel-label">Booking</span>
+                  <a href="mailto:booking@standardacidprocedure.com">booking@standardacidprocedure.com</a>
+                </div>
+                <div class="contact__channel">
+                  <span class="contact__channel-label">Press</span>
+                  <a href="mailto:press@standardacidprocedure.com">press@standardacidprocedure.com</a>
+                </div>
+                <div class="contact__channel">
+                  <span class="contact__channel-label">Mgmt</span>
+                  <a href="mailto:mgmt@standardacidprocedure.com">mgmt@standardacidprocedure.com</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal">
+            <form id="contact-form" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="cf-name">Name *</label>
+                  <input type="text" id="cf-name" name="name" required autocomplete="name" placeholder="Your name">
+                  <div class="error-msg" aria-live="polite">Name is required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="cf-email">Email *</label>
+                  <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com">
+                  <div class="error-msg" aria-live="polite">Valid email required.</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="cf-subject">Subject</label>
+                <select id="cf-subject" name="subject">
+                  <option value="booking">Booking Inquiry</option>
+                  <option value="remix">Remix Request</option>
+                  <option value="press">Press / Interview</option>
+                  <option value="label">Label Submission</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="cf-message">Message *</label>
+                <textarea id="cf-message" name="message" required rows="5" placeholder="Tell us about your event, project, or inquiry..."></textarea>
+                <div class="error-msg" aria-live="polite">Message is required.</div>
+              </div>
+              <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;">Transmit Message</button>
+            </form>
+            <div class="form-success" id="form-success" role="status">
+              <p>&#10003; Message transmitted. We'll get back to you within 48 hours.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">SAP</div>
+        <div class="footer__copy">&copy; 2026 Standard Acid Procedure. All rights reserved.</div>
+        <div class="footer__socials">
+          <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener" aria-label="SoundCloud">SoundCloud</a>
+          <a href="https://www.instagram.com/sapmusicofficial/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       NEWSLETTER MODAL (Exit-intent)
+       ========================================== -->
+  <div class="modal-overlay" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <button class="modal__close" aria-label="Close newsletter signup">&times;</button>
+      <h2 class="modal__title" id="modal-title">Stay in the Signal Chain</h2>
+      <p class="modal__desc">
+        Drops, show announcements, and exclusive hardware session recordings.
+        No spam — just signal.
+      </p>
+      <form class="modal__form" id="newsletter-form" novalidate>
+        <input type="email" placeholder="your@email.com" required aria-label="Email address for newsletter">
+        <button type="submit" class="btn btn--primary">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       VANILLA JS
+       ========================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---- THEME TOGGLE ---- */
+      var html = document.documentElement;
+      var themeBtn = document.querySelector('.theme-toggle');
+      var themeIcon = themeBtn.querySelector('.theme-toggle__icon');
+      var SK = 'sap-theme';
+
+      function setTheme(t) {
+        html.setAttribute('data-theme', t);
+        themeIcon.innerHTML = t === 'dark' ? '&#9790;' : '&#9728;';
+        themeBtn.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' theme');
+        try { localStorage.setItem(SK, t); } catch (e) {}
+      }
+      try { var s = localStorage.getItem(SK); if (s) setTheme(s); } catch (e) {}
+      themeBtn.addEventListener('click', function () {
+        setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      });
+
+      /* ---- MOBILE NAV ---- */
+      var hamburger = document.querySelector('.nav__hamburger');
+      var navLinks = document.querySelector('.nav__links');
+      hamburger.addEventListener('click', function () {
+        var open = hamburger.classList.toggle('open');
+        navLinks.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+      navLinks.querySelectorAll('a').forEach(function (l) {
+        l.addEventListener('click', function () {
+          hamburger.classList.remove('open');
+          navLinks.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        });
+      });
+
+      /* ---- ACTIVE NAV ---- */
+      var sections = document.querySelectorAll('section[id]');
+      var navAs = document.querySelectorAll('.nav__links a[href^="#"]');
+      function updateNav() {
+        var y = window.scrollY + 120;
+        sections.forEach(function (sec) {
+          var id = sec.id, top = sec.offsetTop, h = sec.offsetHeight;
+          if (y >= top && y < top + h) {
+            navAs.forEach(function (a) {
+              a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+            });
+          }
+        });
+      }
+      window.addEventListener('scroll', updateNav, { passive: true });
+      updateNav();
+
+      /* ---- SCROLL REVEAL ---- */
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduced && 'IntersectionObserver' in window) {
+        var ro = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(function (el) { ro.observe(el); });
+      } else {
+        document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
+      }
+
+      /* ---- RELEASE TABS ---- */
+      var tabs = document.querySelectorAll('.tab-btn');
+      var cards = document.querySelectorAll('.release-card');
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          tabs.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          var f = btn.getAttribute('data-filter');
+          cards.forEach(function (c) {
+            if (f === 'all' || c.getAttribute('data-type') === f) c.removeAttribute('hidden');
+            else c.setAttribute('hidden', '');
+          });
+        });
+      });
+
+      /* ---- CONTACT FORM VALIDATION ---- */
+      var form = document.getElementById('contact-form');
+      var success = document.getElementById('form-success');
+      function validate(input) {
+        var g = input.closest('.form-group');
+        if (!g) return true;
+        var ok = true;
+        if (input.required && !input.value.trim()) ok = false;
+        if (input.type === 'email' && input.value.trim()) {
+          ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+        }
+        g.classList.toggle('has-error', !ok);
+        return ok;
+      }
+      form.querySelectorAll('input, textarea').forEach(function (i) {
+        i.addEventListener('blur', function () { validate(i); });
+        i.addEventListener('input', function () {
+          if (i.closest('.form-group').classList.contains('has-error')) validate(i);
+        });
+      });
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+        form.querySelectorAll('input[required], textarea[required]').forEach(function (i) {
+          if (!validate(i)) ok = false;
+        });
+        if (ok) {
+          form.style.display = 'none';
+          success.style.display = 'block';
+          // SWAP: Replace with actual form submission (fetch to your API)
+        }
+      });
+
+      /* ---- NEWSLETTER MODAL (EXIT INTENT) ---- */
+      var modal = document.getElementById('newsletter-modal');
+      var shown = false;
+      var dismissed = false;
+      try { dismissed = localStorage.getItem('sap-nl-dismissed') === '1'; } catch (e) {}
+
+      function showModal() {
+        if (shown || dismissed) return;
+        shown = true;
+        modal.classList.add('show');
+        modal.querySelector('.modal__close').focus();
+        document.addEventListener('keydown', trapFocus);
+      }
+      function hideModal() {
+        modal.classList.remove('show');
+        document.removeEventListener('keydown', trapFocus);
+        try { localStorage.setItem('sap-nl-dismissed', '1'); } catch (e) {}
+      }
+      function trapFocus(e) {
+        if (e.key === 'Escape') { hideModal(); return; }
+        if (e.key !== 'Tab') return;
+        var f = modal.querySelectorAll('button, input, [href], [tabindex]:not([tabindex="-1"])');
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      document.addEventListener('mouseout', function (e) {
+        if (e.clientY <= 0 && !e.relatedTarget && !e.toElement) showModal();
+      });
+      if ('ontouchstart' in window) setTimeout(showModal, 90000);
+      modal.querySelector('.modal__close').addEventListener('click', hideModal);
+      modal.addEventListener('click', function (e) { if (e.target === modal) hideModal(); });
+      document.getElementById('newsletter-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var inp = this.querySelector('input[type="email"]');
+        if (inp.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim())) {
+          // SWAP: Replace with actual newsletter API call
+          this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;">&#10003; Subscribed. Signal locked.</p>';
+          setTimeout(hideModal, 2000);
+        } else {
+          inp.style.borderColor = 'var(--warning)';
+          inp.focus();
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>
