@@ -723,29 +723,10 @@
       position: relative;
       overflow: hidden;
     }
-    /* SWAP: Replace with actual artist photo <img> */
-    .bio__image::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23e8609c' stroke-width='0.5'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%235ce0d6' stroke-width='0.5'/%3E%3C/svg%3E"),
-        linear-gradient(135deg, rgba(232,96,156,0.04) 0%, transparent 50%),
-        linear-gradient(225deg, rgba(92,224,214,0.04) 0%, transparent 50%);
-      background-size: 56px 100px, 100% 100%, 100% 100%;
-      opacity: 0.3;
-    }
-    .bio__image::after {
-      content: '[ ARTIST PHOTO ]';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: var(--font-body);
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--text-dim);
-      text-transform: uppercase;
+    .bio__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .bio__text p {
       margin-bottom: 16px;
@@ -1294,8 +1275,8 @@
     <section class="section" id="about">
       <div class="container">
         <div class="bio-grid">
-          <div class="bio__image reveal" role="img" aria-label="SAP artist photo placeholder">
-            <!-- SWAP: Replace with actual artist <img> -->
+          <div class="bio__image reveal" role="img" aria-label="SAP artist photo">
+            <img src="artist.jpg" alt="SAP — artist promo photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="bio__text reveal">
             <div class="section__header">
