@@ -581,116 +581,29 @@
 
     .releases-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 24px;
+    }
+    @media (max-width: 400px) {
+      .releases-grid { grid-template-columns: 1fr; }
     }
     .release-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       overflow: hidden;
-      transition: all var(--transition);
+      transition: border-color var(--transition);
     }
     .release-card:hover {
       border-color: var(--accent-dim);
-      transform: translateY(-3px);
     }
-    @media (prefers-reduced-motion: reduce) {
-      .release-card:hover { transform: none; }
+    .release-card__player {
+      line-height: 0;
     }
-    .release-card__art {
-      aspect-ratio: 1;
-      background: var(--bg-elevated);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    /* SWAP: Replace with actual cover art <img> tags */
-    .release-card__art::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23e8609c' stroke-width='0.4'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%235ce0d6' stroke-width='0.4'/%3E%3C/svg%3E");
-      background-size: 42px 75px;
-      opacity: 0.12;
-    }
-    .release-card__art-label {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--border-lite);
-      letter-spacing: 0.05em;
-      z-index: 1;
-    }
-    .release-card__play {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: none;
-      cursor: pointer;
-      opacity: 0;
-      transition: all var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .release-card__play::after {
-      content: '';
+    .release-card__player iframe {
       display: block;
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 8px 0 8px 14px;
-      border-color: transparent transparent transparent #fff;
-      margin-left: 3px;
-    }
-    .release-card:hover .release-card__play {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    .release-card__play--placeholder {
-      width: auto;
-      min-width: 108px;
-      padding: 0 14px;
-      border-radius: 999px;
-      border: 1px solid var(--accent2-dim);
-      background: rgba(12,14,26,0.88);
-      cursor: default;
-      opacity: 0.95;
-    }
-    .release-card__play--placeholder::after {
-      content: 'PREVIEW SOON';
-      width: auto;
-      height: auto;
-      border: 0;
-      margin-left: 0;
-      color: var(--accent2);
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      white-space: nowrap;
-    }
-    @media (hover: none) {
-      .release-card__play {
-        opacity: 0.7;
-        transform: translate(-50%, -50%) scale(1);
-      }
     }
     .release-card__info {
-      padding: 16px;
-    }
-    .release-card__type {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent2);
-      margin-bottom: 6px;
+      padding: 14px 16px;
     }
     .release-card__name {
       font-family: var(--font-sans);
@@ -1251,20 +1164,133 @@
           <div class="section__divider"></div>
         </div>
 
-        <div class="sc-embed reveal" style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);">
-          <iframe
-            width="100%"
-            height="450"
-            scrolling="no"
-            frameborder="no"
-            allow="autoplay"
-            loading="lazy"
-            src="https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Fusers%2F46872727&show_artwork=true&show_playcount=true&color=%23e8609c"
-            title="SAP on SoundCloud"
-          ></iframe>
+        <div class="tabs reveal" role="tablist" aria-label="Filter releases">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-filter="all">All</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-filter="track">Tracks</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-filter="mix">Sets &amp; Mixes</button>
         </div>
+
+        <div class="releases-grid">
+          <!-- Back It Up -->
+          <article class="release-card reveal" data-type="track">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fback-it-up-free-download&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="Back It Up"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">Back It Up</h3>
+              <div class="release-card__meta">Mar 11, 2026 &middot; 323 plays &middot; Free download</div>
+            </div>
+          </article>
+
+          <!-- Don't Stop -->
+          <article class="release-card reveal" data-type="track">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fdont-stop-free-download&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="Don't Stop"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">Don't Stop</h3>
+              <div class="release-card__meta">Feb 25, 2026 &middot; 267 plays &middot; Free download</div>
+            </div>
+          </article>
+
+          <!-- YNG Martyr - LV Steppers (SAP Flip) -->
+          <article class="release-card reveal" data-type="track">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fyng-martyr-lv-steppers-sap-flip-free-download&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="YNG Martyr - LV Steppers (SAP Flip)"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">LV Steppers (SAP Flip)</h3>
+              <div class="release-card__meta">Jan 15, 2026 &middot; 857 plays &middot; Free download</div>
+            </div>
+          </article>
+
+          <!-- AfterJinx Set -->
+          <article class="release-card reveal" data-type="mix">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fsap-afterjinx-set-12292025&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="SAP AfterJinx Set"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">AfterJinx Set (12/29/2025)</h3>
+              <div class="release-card__meta">Jan 6, 2026 &middot; 81 plays &middot; Live set</div>
+            </div>
+          </article>
+
+          <!-- Drop -->
+          <article class="release-card reveal" data-type="track">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fdrop&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="Drop"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">Drop</h3>
+              <div class="release-card__meta">Dec 10, 2025 &middot; 572 plays &middot; Free download</div>
+            </div>
+          </article>
+
+          <!-- A Fairly Odd Flip -->
+          <article class="release-card reveal" data-type="track">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fa-fairly-odd-flip-free-download&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="A Fairly Odd Flip"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">A Fairly Odd Flip</h3>
+              <div class="release-card__meta">Nov 20, 2025 &middot; 995 plays &middot; Free download</div>
+            </div>
+          </article>
+
+          <!-- Dance -->
+          <article class="release-card reveal" data-type="track">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fdance&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="Dance"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">Dance</h3>
+              <div class="release-card__meta">Nov 12, 2025 &middot; 2,068 plays &middot; Free download</div>
+            </div>
+          </article>
+
+          <!-- American Grime @ Lost City Brewery -->
+          <article class="release-card reveal" data-type="mix">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Famerican-grime-lost-city-brewery-7112025&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="American Grime @ Lost City Brewery"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">American Grime @ Lost City Brewery</h3>
+              <div class="release-card__meta">Sep 1, 2025 &middot; 25 plays &middot; Live set</div>
+            </div>
+          </article>
+
+          <!-- SAP: the Musical -->
+          <article class="release-card reveal" data-type="mix">
+            <div class="release-card__player">
+              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fsap-the-musical-mix&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                title="SAP: the Musical (Mix)"></iframe>
+            </div>
+            <div class="release-card__info">
+              <h3 class="release-card__name">SAP: the Musical (Mix)</h3>
+              <div class="release-card__meta">May 3, 2025 &middot; 54 plays &middot; Mix</div>
+            </div>
+          </article>
+        </div>
+
         <p class="reveal" style="text-align:center;margin-top:24px;">
-          <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener" class="btn btn--outline">View all tracks on SoundCloud &rarr;</a>
+          <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener" class="btn btn--outline">Follow on SoundCloud &rarr;</a>
         </p>
       </div>
     </section>
@@ -1645,7 +1671,21 @@
         document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
       }
 
-      /* ---- RELEASE TABS (reserved for future use) ---- */
+      /* ---- RELEASE TABS ---- */
+      var tabs = document.querySelectorAll('.tab-btn');
+      var cards = document.querySelectorAll('.release-card');
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          tabs.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          var f = btn.getAttribute('data-filter');
+          cards.forEach(function (c) {
+            if (f === 'all' || c.getAttribute('data-type') === f) c.removeAttribute('hidden');
+            else c.setAttribute('hidden', '');
+          });
+        });
+      });
 
       /* ---- CONTACT FORM VALIDATION ---- */
       var form = document.getElementById('contact-form');
