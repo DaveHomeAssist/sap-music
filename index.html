@@ -1615,8 +1615,29 @@
           '?subject=' + encodeURIComponent(subject) +
           '&body=' + encodeURIComponent(lines.join('\n'));
       }
+      function getApiUrl(path) {
+        var base = typeof window.SAP_API_BASE === 'string' ? window.SAP_API_BASE.trim() : '';
+        if (!base) return path;
+        return base.replace(/\/+$/, '') + path;
+      }
       function openMailto(to, subject, lines) {
         window.location.href = buildMailto(to, subject, lines);
+      }
+      async function submitIntake(type, payload) {
+        var response = await fetch(getApiUrl('/api/notion-intake'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: type,
+            payload: payload
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Intake request failed');
+        }
+
+        return response.json();
       }
       try { var s = localStorage.getItem(SK); if (s) setTheme(s); } catch (e) {}
       themeBtn.addEventListener('click', function () {
@@ -1707,7 +1728,7 @@
           if (i.closest('.form-group').classList.contains('has-error')) validate(i);
         });
       });
-      form.addEventListener('submit', function (e) {
+      form.addEventListener('submit', async function (e) {
         e.preventDefault();
         var ok = true;
         form.querySelectorAll('input[required], textarea[required]').forEach(function (i) {
@@ -1718,16 +1739,34 @@
           var email = form.querySelector('#cf-email').value.trim();
           var subject = form.querySelector('#cf-subject').options[form.querySelector('#cf-subject').selectedIndex].text;
           var message = form.querySelector('#cf-message').value.trim();
-          form.style.display = 'none';
-          success.style.display = 'block';
-          success.innerHTML = '<p>Your email client should open with a prefilled inquiry. If it does not, email <a href="mailto:booking@standardacidprocedure.com">booking@standardacidprocedure.com</a>.</p>';
-          openMailto('booking@standardacidprocedure.com', 'SAP ' + subject + ' — ' + name, [
-            'Name: ' + name,
-            'Email: ' + email,
-            'Subject: ' + subject,
-            '',
-            message
-          ]);
+          var submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) submitBtn.disabled = true;
+
+          try {
+            await submitIntake('contact', {
+              name: name,
+              email: email,
+              subject: subject,
+              message: message,
+              sourceUrl: window.location.href
+            });
+            form.style.display = 'none';
+            success.style.display = 'block';
+            success.innerHTML = '<p>Inquiry sent. The SAP team has your details and will follow up soon.</p>';
+          } catch (error) {
+            form.style.display = 'none';
+            success.style.display = 'block';
+            success.innerHTML = '<p>Your email client should open with a prefilled inquiry. If it does not, email <a href="mailto:booking@standardacidprocedure.com">booking@standardacidprocedure.com</a>.</p>';
+            openMailto('booking@standardacidprocedure.com', 'SAP ' + subject + ' — ' + name, [
+              'Name: ' + name,
+              'Email: ' + email,
+              'Subject: ' + subject,
+              '',
+              message
+            ]);
+          } finally {
+            if (submitBtn) submitBtn.disabled = false;
+          }
         }
       });
 
@@ -1784,17 +1823,26 @@
       if ('ontouchstart' in window) setTimeout(showModal, 90000);
       modal.querySelector('.modal__close').addEventListener('click', hideModal);
       modal.addEventListener('click', function (e) { if (e.target === modal) hideModal(); });
-      modalForm.addEventListener('submit', function (e) {
+      modalForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         var inp = this.querySelector('input[type="email"]');
         if (inp.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim())) {
           inp.style.borderColor = '';
-          this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;line-height:1.6;">Your email client should open with a signup request. If it does not, email mgmt@standardacidprocedure.com.</p>';
-          openMailto('mgmt@standardacidprocedure.com', 'SAP Newsletter Signup', [
-            'Please add me to the SAP newsletter.',
-            '',
-            'Email: ' + inp.value.trim()
-          ]);
+          var email = inp.value.trim();
+          try {
+            await submitIntake('newsletter', {
+              email: email,
+              sourceUrl: window.location.href
+            });
+            this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;line-height:1.6;">You are on the list. Future drops and updates will land in your inbox.</p>';
+          } catch (error) {
+            this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;line-height:1.6;">Your email client should open with a signup request. If it does not, email mgmt@standardacidprocedure.com.</p>';
+            openMailto('mgmt@standardacidprocedure.com', 'SAP Newsletter Signup', [
+              'Please add me to the SAP newsletter.',
+              '',
+              'Email: ' + email
+            ]);
+          }
           setTimeout(hideModal, 2800);
         } else {
           inp.style.borderColor = 'var(--warning)';
