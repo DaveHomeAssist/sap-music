@@ -934,21 +934,14 @@
     .form-success a {
       color: var(--accent2);
     }
-    .form-note,
-    .modal__note {
+    .form-note {
       font-size: 0.72rem;
       line-height: 1.6;
       color: var(--text-dim);
-    }
-    .form-note {
       margin-top: 12px;
       text-align: center;
     }
-    .modal__note {
-      margin-top: 14px;
-    }
-    .form-note a,
-    .modal__note a {
+    .form-note a {
       color: var(--accent2);
     }
 
@@ -998,86 +991,17 @@
     }
     .footer__socials a:hover { color: var(--accent2); }
 
+    /* (Newsletter modal removed — Tier 1 audit) */
+
     /* ============================================
-       NEWSLETTER MODAL
+       REDUCED MOTION — catch-all for remaining transitions
        ============================================ */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(12,14,26,0.75);
-      backdrop-filter: blur(10px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-    .modal-overlay[hidden] {
-      display: none;
-    }
-    .modal-overlay.show {
-      opacity: 1;
-      pointer-events: all;
-    }
-    .modal {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      padding: clamp(32px, 5vw, 48px);
-      max-width: 440px;
-      width: 90%;
-      position: relative;
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-    }
-    .modal-overlay.show .modal { transform: translateY(0); }
     @media (prefers-reduced-motion: reduce) {
-      .modal { transform: none; transition: none; }
-    }
-    .modal__close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-      transition: color var(--transition);
-    }
-    .modal__close:hover { color: var(--text-primary); }
-    .modal__title {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-    }
-    .modal__desc {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-    }
-    .modal__form {
-      display: flex;
-      gap: 8px;
-    }
-    .modal__form input {
-      flex: 1;
-      padding: 12px 14px;
-      background: var(--bg-black);
-      border: 1px solid var(--border);
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-    }
-    .modal__form input:focus {
-      border-color: var(--accent);
-      outline: none;
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
 
     /* ============================================
@@ -1171,7 +1095,7 @@
       </p>
       <div class="hero__ctas reveal">
         <!-- SWAP: Replace href with your streaming link -->
-        <a href="https://soundcloud.com/sapmusicofficial/back-it-up-free-download" target="_blank" rel="noopener" class="btn btn--primary">&#9654;&ensp;Listen Now</a>
+        <a href="https://soundcloud.com/sapmusicofficial/back-it-up-free-download" target="_blank" rel="noopener noreferrer" class="btn btn--primary">&#9654;&ensp;Listen Now</a>
         <a href="#contact" class="btn btn--outline">Book SAP</a>
       </div>
     </div>
@@ -1194,10 +1118,10 @@
           <div class="section__divider"></div>
         </div>
 
-        <div class="tabs reveal" role="tablist" aria-label="Filter releases">
-          <button class="tab-btn active" role="tab" aria-selected="true" data-filter="all">All</button>
-          <button class="tab-btn" role="tab" aria-selected="false" data-filter="track">Tracks</button>
-          <button class="tab-btn" role="tab" aria-selected="false" data-filter="mix">Sets &amp; Mixes</button>
+        <div class="tabs reveal" aria-label="Filter releases">
+          <button class="tab-btn active" aria-pressed="true" data-filter="all">All</button>
+          <button class="tab-btn" aria-pressed="false" data-filter="track">Tracks</button>
+          <button class="tab-btn" aria-pressed="false" data-filter="mix">Sets &amp; Mixes</button>
         </div>
 
         <div class="releases-grid">
@@ -1320,7 +1244,7 @@
         </div>
 
         <p class="reveal" style="text-align:center;margin-top:24px;">
-          <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener" class="btn btn--outline">Follow on SoundCloud &rarr;</a>
+          <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener noreferrer" class="btn btn--outline">Follow on SoundCloud &rarr;</a>
         </p>
       </div>
     </section>
@@ -1589,37 +1513,12 @@
         <div class="footer__logo">SAP</div>
         <div class="footer__copy">&copy; 2026 Standard Acid Procedure. All rights reserved.</div>
         <div class="footer__socials">
-          <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener me" aria-label="SoundCloud">SoundCloud</a>
-          <a href="https://www.instagram.com/sapmusicofficial/" target="_blank" rel="noopener me" aria-label="Instagram">Instagram</a>
+          <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener noreferrer me" aria-label="SoundCloud">SoundCloud</a>
+          <a href="https://www.instagram.com/sapmusicofficial/" target="_blank" rel="noopener noreferrer me" aria-label="Instagram">Instagram</a>
         </div>
       </div>
     </div>
   </footer>
-
-  <!-- ==========================================
-       NEWSLETTER MODAL (Exit-intent)
-       ========================================== -->
-  <div class="modal-overlay" id="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true" hidden>
-    <div class="modal">
-      <button class="modal__close" aria-label="Close newsletter signup">&times;</button>
-      <h2 class="modal__title" id="modal-title">Stay in the Signal Chain</h2>
-      <p class="modal__desc">
-        Drops, show announcements, and exclusive hardware session recordings.
-        No spam — just signal. Until the mailing-list backend is live, subscribe opens
-        a prefilled email request.
-      </p>
-      <form class="modal__form" id="newsletter-form" novalidate>
-        <input type="email" placeholder="your@email.com" required aria-label="Email address for newsletter">
-        <button type="submit" class="btn btn--primary">Subscribe</button>
-      </form>
-      <p class="modal__note">
-        Live updates also land on
-        <a href="https://soundcloud.com/sapmusicofficial" target="_blank" rel="noopener">SoundCloud</a>
-        and
-        <a href="https://www.instagram.com/sapmusicofficial/" target="_blank" rel="noopener">Instagram</a>.
-      </p>
-    </div>
-  </div>
 
   <!-- ==========================================
        VANILLA JS
@@ -1727,9 +1626,9 @@
       var cards = document.querySelectorAll('.release-card');
       tabs.forEach(function (btn) {
         btn.addEventListener('click', function () {
-          tabs.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+          tabs.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
           btn.classList.add('active');
-          btn.setAttribute('aria-selected', 'true');
+          btn.setAttribute('aria-pressed', 'true');
           var f = btn.getAttribute('data-filter');
           cards.forEach(function (c) {
             if (f === 'all' || c.getAttribute('data-type') === f) c.removeAttribute('hidden');
@@ -1800,85 +1699,7 @@
         }
       });
 
-      /* ---- NEWSLETTER MODAL (EXIT INTENT) ---- */
-      var modal = document.getElementById('newsletter-modal');
-      var modalForm = document.getElementById('newsletter-form');
-      var lastFocused = null;
-      var hideTimer = null;
-      var shown = false;
-      var dismissed = false;
-      try { dismissed = localStorage.getItem('sap-nl-dismissed') === '1'; } catch (e) {}
-
-      function showModal() {
-        if (shown || dismissed) return;
-        shown = true;
-        lastFocused = document.activeElement;
-        if (hideTimer) {
-          clearTimeout(hideTimer);
-          hideTimer = null;
-        }
-        modal.hidden = false;
-        modal.setAttribute('aria-hidden', 'false');
-        requestAnimationFrame(function () {
-          modal.classList.add('show');
-        });
-        document.body.style.overflow = 'hidden';
-        modal.querySelector('.modal__close').focus();
-        document.addEventListener('keydown', trapFocus);
-      }
-      function hideModal() {
-        modal.classList.remove('show');
-        modal.setAttribute('aria-hidden', 'true');
-        document.removeEventListener('keydown', trapFocus);
-        document.body.style.overflow = '';
-        hideTimer = window.setTimeout(function () {
-          modal.hidden = true;
-        }, 300);
-        try { localStorage.setItem('sap-nl-dismissed', '1'); } catch (e) {}
-        if (lastFocused && typeof lastFocused.focus === 'function') {
-          lastFocused.focus();
-        }
-      }
-      function trapFocus(e) {
-        if (e.key === 'Escape') { hideModal(); return; }
-        if (e.key !== 'Tab') return;
-        var f = modal.querySelectorAll('button, input, [href], [tabindex]:not([tabindex="-1"])');
-        var first = f[0], last = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-      document.addEventListener('mouseout', function (e) {
-        if (e.clientY <= 0 && !e.relatedTarget && !e.toElement) showModal();
-      });
-      if ('ontouchstart' in window) setTimeout(showModal, 90000);
-      modal.querySelector('.modal__close').addEventListener('click', hideModal);
-      modal.addEventListener('click', function (e) { if (e.target === modal) hideModal(); });
-      modalForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        var inp = this.querySelector('input[type="email"]');
-        if (inp.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim())) {
-          inp.style.borderColor = '';
-          var email = inp.value.trim();
-          try {
-            await submitIntake('newsletter', {
-              email: email,
-              sourceUrl: window.location.href
-            });
-            this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;line-height:1.6;">You are on the list. Future drops and updates will land in your inbox.</p>';
-          } catch (error) {
-            this.innerHTML = '<p style="color:var(--accent2);font-size:0.85rem;line-height:1.6;">Your email client should open with a signup request. If it does not, email mgmt@standardacidprocedure.com.</p>';
-            openMailto('mgmt@standardacidprocedure.com', 'SAP Newsletter Signup', [
-              'Please add me to the SAP newsletter.',
-              '',
-              'Email: ' + email
-            ]);
-          }
-          setTimeout(hideModal, 2800);
-        } else {
-          inp.style.borderColor = 'var(--warning)';
-          inp.focus();
-        }
-      });
+      /* (Newsletter modal JS removed — Tier 1 audit) */
 
     })();
   </script>
