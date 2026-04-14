@@ -647,6 +647,136 @@
     }
     .release-card[hidden] { display: none; }
 
+    /* Click-to-play poster — avoids loading SoundCloud iframe until user opts in */
+    .release-card__poster {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 6.6; /* matches 166px height feel */
+      border: 0;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      background: linear-gradient(135deg, #1a0d14 0%, #0a1418 50%, #14061a 100%);
+      color: var(--text-primary);
+      text-align: left;
+      font: inherit;
+      overflow: hidden;
+    }
+    .release-card__poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(232,96,156,0.25), transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(0,200,220,0.2), transparent 55%);
+      pointer-events: none;
+    }
+    .release-card__poster-inner {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 18px;
+    }
+    .release-card__poster-play {
+      flex: 0 0 auto;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg-black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: transform var(--transition);
+    }
+    .release-card__poster:hover .release-card__poster-play,
+    .release-card__poster:focus-visible .release-card__poster-play {
+      transform: scale(1.08);
+    }
+    .release-card__poster-text {
+      min-width: 0;
+    }
+    .release-card__poster-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .release-card__poster-title {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .release-card__poster:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+
+    /* Shows subgroup headings */
+    .shows-subhead {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin: 28px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .shows-subhead:first-child { margin-top: 0; }
+    .shows-subhead::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .shows-empty {
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+
+    /* Press toolkit CTA */
+    .press-toolkit {
+      margin-top: 40px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .press-toolkit__text {
+      max-width: 540px;
+    }
+    .press-toolkit__title {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+    .press-toolkit__desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
     /* ============================================
        BIO / ABOUT
        ============================================ */
@@ -1128,9 +1258,15 @@
           <!-- Back It Up -->
           <article class="release-card reveal" data-type="track">
             <div class="release-card__player">
-              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
-                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fback-it-up-free-download&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
-                title="Back It Up"></iframe>
+              <button type="button" class="release-card__poster" data-sc-embed="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fback-it-up-free-download&color=%23e8609c&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false" data-sc-title="Back It Up" aria-label="Play Back It Up on SoundCloud">
+                <div class="release-card__poster-inner">
+                  <span class="release-card__poster-play" aria-hidden="true">&#9654;</span>
+                  <div class="release-card__poster-text">
+                    <div class="release-card__poster-label">SoundCloud &middot; Click to play</div>
+                    <div class="release-card__poster-title">Back It Up</div>
+                  </div>
+                </div>
+              </button>
             </div>
             <div class="release-card__info">
               <h3 class="release-card__name">Back It Up</h3>
@@ -1141,9 +1277,15 @@
           <!-- Don't Stop -->
           <article class="release-card reveal" data-type="track">
             <div class="release-card__player">
-              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
-                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fdont-stop-free-download&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
-                title="Don't Stop"></iframe>
+              <button type="button" class="release-card__poster" data-sc-embed="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fdont-stop-free-download&color=%23e8609c&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false" data-sc-title="Don't Stop" aria-label="Play Don't Stop on SoundCloud">
+                <div class="release-card__poster-inner">
+                  <span class="release-card__poster-play" aria-hidden="true">&#9654;</span>
+                  <div class="release-card__poster-text">
+                    <div class="release-card__poster-label">SoundCloud &middot; Click to play</div>
+                    <div class="release-card__poster-title">Don't Stop</div>
+                  </div>
+                </div>
+              </button>
             </div>
             <div class="release-card__info">
               <h3 class="release-card__name">Don't Stop</h3>
@@ -1154,9 +1296,15 @@
           <!-- YNG Martyr - LV Steppers (SAP Flip) -->
           <article class="release-card reveal" data-type="track">
             <div class="release-card__player">
-              <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
-                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fyng-martyr-lv-steppers-sap-flip-free-download&color=%23e8609c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
-                title="YNG Martyr - LV Steppers (SAP Flip)"></iframe>
+              <button type="button" class="release-card__poster" data-sc-embed="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsapmusicofficial%2Fyng-martyr-lv-steppers-sap-flip-free-download&color=%23e8609c&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false" data-sc-title="LV Steppers (SAP Flip)" aria-label="Play LV Steppers SAP Flip on SoundCloud">
+                <div class="release-card__poster-inner">
+                  <span class="release-card__poster-play" aria-hidden="true">&#9654;</span>
+                  <div class="release-card__poster-text">
+                    <div class="release-card__poster-label">SoundCloud &middot; Click to play</div>
+                    <div class="release-card__poster-title">LV Steppers (SAP Flip)</div>
+                  </div>
+                </div>
+              </button>
             </div>
             <div class="release-card__info">
               <h3 class="release-card__name">LV Steppers (SAP Flip)</h3>
@@ -1331,6 +1479,14 @@
             <div class="press-card__pub">Updates land as soon as they are public</div>
           </article>
         </div>
+
+        <div class="press-toolkit reveal">
+          <div class="press-toolkit__text">
+            <div class="press-toolkit__title">Press Toolkit</div>
+            <p class="press-toolkit__desc">Bio, hi-res photos, and stage plot for booking and press inquiries.</p>
+          </div>
+          <a href="/press/" class="btn btn--primary">Press Toolkit &rarr;</a>
+        </div>
       </div>
     </section>
 
@@ -1345,6 +1501,13 @@
           <div class="section__divider"></div>
         </div>
 
+        <h3 class="shows-subhead reveal">Confirmed Shows</h3>
+        <div class="shows-empty reveal">
+          No public dates announced yet &mdash; next confirmed shows will be listed here.
+          For advance holds, contact <a href="mailto:booking@standardacidprocedure.com">booking@standardacidprocedure.com</a>.
+        </div>
+
+        <h3 class="shows-subhead reveal">Booking Availability</h3>
         <div class="shows-list reveal">
           <div class="show-item">
             <div class="show-item__date">
@@ -1634,6 +1797,25 @@
             if (f === 'all' || c.getAttribute('data-type') === f) c.removeAttribute('hidden');
             else c.setAttribute('hidden', '');
           });
+        });
+      });
+
+      /* ---- SOUNDCLOUD CLICK-TO-PLAY POSTERS ---- */
+      document.querySelectorAll('.release-card__poster').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var src = btn.getAttribute('data-sc-embed');
+          var title = btn.getAttribute('data-sc-title') || 'SoundCloud player';
+          if (!src) return;
+          var iframe = document.createElement('iframe');
+          iframe.setAttribute('width', '100%');
+          iframe.setAttribute('height', '166');
+          iframe.setAttribute('scrolling', 'no');
+          iframe.setAttribute('frameborder', 'no');
+          iframe.setAttribute('allow', 'autoplay');
+          iframe.setAttribute('loading', 'lazy');
+          iframe.setAttribute('title', title);
+          iframe.src = src;
+          btn.replaceWith(iframe);
         });
       });
 
