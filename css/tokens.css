@@ -1,0 +1,56 @@
+/* ============================================
+   DESIGN SYSTEM — MIAMI VICE × HARDWARE
+   Muted neon pink + cool cyan on deep navy
+   ============================================ */
+:root {
+  /* Core palette — low-key Miami Vice */
+  --accent:       #e8609c;          /* dusty neon pink */
+  --accent-dim:   #8a3a5e;
+  --accent-glow:  rgba(232, 96, 156, 0.12);
+  --accent2:      #5ce0d6;          /* muted cyan / teal */
+  --accent2-dim:  #2a7a75;
+  --accent2-glow: rgba(92, 224, 214, 0.10);
+  --warning:      #ff6b4a;
+  --signal:       #ffd166;
+
+  /* Surfaces — deep navy, not pure black */
+  --bg-black:     #0c0e1a;
+  --bg-surface:   #111425;
+  --bg-elevated:  #181c30;
+  --bg-card:      #13162a;
+  --border:       #252940;
+  --border-lite:  #353a55;
+  --text-primary:   #e2dfe8;
+  --text-secondary: #8a87a0;
+  --text-dim:       #55536a;
+
+  /* Typography */
+  --font-display: 'Orbitron', sans-serif;
+  --font-body:    'IBM Plex Mono', monospace;
+  --font-sans:    'Space Grotesk', sans-serif;
+
+  /* Layout */
+  --nav-h: 64px;
+  --section-py: clamp(80px, 10vw, 140px);
+  --max-w: 1200px;
+  --radius: 2px;
+  --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-theme="light"] {
+  --accent:       #c24e82;
+  --accent-dim:   #f0c4d8;
+  --accent-glow:  rgba(194, 78, 130, 0.07);
+  --accent2:      #2a9e96;
+  --accent2-dim:  #b8e8e4;
+  --accent2-glow: rgba(42, 158, 150, 0.06);
+  --bg-black:     #f5f3f0;
+  --bg-surface:   #eae7e3;
+  --bg-elevated:  #dfdcd8;
+  --bg-card:      #f0ede9;
+  --border:       #d0ccc6;
+  --border-lite:  #bab6b0;
+  --text-primary:   #1a1a24;
+  --text-secondary: #5a5868;
+  --text-dim:       #9896a5;
+}
