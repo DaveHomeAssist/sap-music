@@ -664,6 +664,19 @@
         document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
       }
 
+      /* ---- ANALYTICS: LISTEN NOW ---- */
+      var listenBtn = document.querySelector('.hero__ctas .btn--primary');
+      if (listenBtn) {
+        listenBtn.addEventListener('click', function () {
+          submitIntake('analytics', {
+            event: 'listen_now_click',
+            sourceUrl: window.location.href,
+            userAgent: navigator.userAgent,
+            referrer: document.referrer || ''
+          }).catch(function () {});
+        });
+      }
+
       /* ---- RELEASE TABS ---- */
       var tabs = document.querySelectorAll('.tab-btn');
       var cards = document.querySelectorAll('.release-card');

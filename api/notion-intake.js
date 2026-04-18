@@ -2,6 +2,8 @@ const CONTACT_DATABASE_ID =
   process.env.NOTION_CONTACT_DATABASE_ID || 'cac04740-36f0-45e4-b7c3-d11937e34196';
 const NEWSLETTER_DATABASE_ID =
   process.env.NOTION_NEWSLETTER_DATABASE_ID || '68347904-6a05-4cd8-94a1-c71e96e60ca4';
+const ANALYTICS_DATABASE_ID =
+  process.env.NOTION_ANALYTICS_DATABASE_ID || '9b7b5848-c14b-4b42-ad4d-cab5228107a7';
 const NOTION_API_URL = 'https://api.notion.com/v1/pages';
 const NOTION_VERSION = '2022-06-28';
 const DEFAULT_ALLOWED_HOSTS = [
@@ -153,6 +155,40 @@ function buildContactPayload(payload) {
   };
 }
 
+function buildAnalyticsPayload(payload) {
+  const event = normalizeText(payload.event, '');
+  const sourceUrl = normalizeText(payload.sourceUrl, '');
+  const userAgent = normalizeText(payload.userAgent, '');
+  const referrer = normalizeText(payload.referrer, '');
+
+  if (!event) {
+    throw new Error('Missing required analytics fields');
+  }
+
+  return {
+    parent: {
+      database_id: ANALYTICS_DATABASE_ID
+    },
+    properties: {
+      Event: {
+        title: [
+          {
+            type: 'text',
+            text: {
+              content: event.slice(0, 200)
+            }
+          }
+        ]
+      },
+      'Source URL': sourceUrl ? { url: sourceUrl } : { url: null },
+      'User Agent': {
+        rich_text: splitRichText(userAgent)
+      },
+      Referrer: referrer ? { url: referrer } : { url: null }
+    }
+  };
+}
+
 function buildNewsletterPayload(payload) {
   const email = normalizeText(payload.email, '');
   const sourceUrl = normalizeText(payload.sourceUrl, '');
@@ -222,6 +258,8 @@ module.exports = async (req, res) => {
       notionPayload = buildContactPayload(payload);
     } else if (type === 'newsletter') {
       notionPayload = buildNewsletterPayload(payload);
+    } else if (type === 'analytics') {
+      notionPayload = buildAnalyticsPayload(payload);
     } else {
       sendJson(res, 400, { ok: false, error: 'Unsupported intake type' });
       return;

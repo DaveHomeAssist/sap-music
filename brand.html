@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP — Brand Identity System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* === CORE PALETTE === */
+      --accent:        #e8609c;
+      --accent-dim:    #8a3a5e;
+      --accent-glow:   rgba(232, 96, 156, 0.14);
+      --accent2:       #5ce0d6;
+      --accent2-dim:   #2a7a75;
+      --accent2-glow:  rgba(92, 224, 214, 0.10);
+      --warning:       #ff6b4a;
+      --signal:        #ffd166;
+
+      /* === SURFACES === */
+      --bg-black:      #0c0e1a;
+      --bg-surface:    #111425;
+      --bg-elevated:   #181c30;
+      --bg-card:       #13162a;
+      --border:        #252940;
+      --border-lite:   #353a55;
+
+      /* === TEXT === */
+      --text-primary:   #e2dfe8;
+      --text-secondary: #8a87a0;
+      --text-dim:       #55536a;
+
+      /* === TYPOGRAPHY === */
+      --font-display: 'Orbitron', sans-serif;
+      --font-body:    'IBM Plex Mono', monospace;
+      --font-sans:    'Space Grotesk', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-black);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
+
+    /* ── HEADER ── */
+    .brand-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 48px;
+      margin-bottom: 72px;
+    }
+
+    .brand-header-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-wordmark {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .brand-meta {
+      text-align: right;
+    }
+
+    .brand-meta .label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .brand-meta .value {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .brand-tagline {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+    }
+
+    .brand-tagline strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section { margin-bottom: 72px; }
+
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-primary);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── COLOR PALETTE ── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .color-swatch {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .swatch-block {
+      height: 80px;
+      width: 100%;
+      position: relative;
+    }
+
+    .swatch-block.glow-pink  { box-shadow: inset 0 0 30px rgba(232,96,156,0.25); }
+    .swatch-block.glow-cyan  { box-shadow: inset 0 0 30px rgba(92,224,214,0.25); }
+
+    .swatch-info {
+      background: var(--bg-elevated);
+      padding: 10px 12px;
+    }
+
+    .swatch-name {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .swatch-hex {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .swatch-role {
+      font-family: var(--font-body);
+      font-size: 9px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .type-specimens { display: flex; flex-direction: column; gap: 32px; }
+
+    .type-specimen {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .type-specimen::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .type-specimen.display-font::before { background: linear-gradient(90deg, var(--accent), transparent); }
+    .type-specimen.body-font::before    { background: linear-gradient(90deg, var(--accent2), transparent); }
+    .type-specimen.sans-font::before    { background: linear-gradient(90deg, var(--signal), transparent); }
+
+    .type-meta {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .type-sample-display {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 1.1;
+      color: var(--text-primary);
+    }
+
+    .type-sample-mono {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    .type-sample-sans {
+      font-family: var(--font-sans);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    .type-weights {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .type-weight-item {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .type-weight-item span {
+      display: block;
+      color: var(--text-dim);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── VOICE / TONE GRID ── */
+    .voice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .voice-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .voice-card::after {
+      content: attr(data-symbol);
+      position: absolute;
+      top: 16px; right: 16px;
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--border-lite);
+    }
+
+    .voice-card-label {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .voice-card-desc {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── UI COMPONENTS PREVIEW ── */
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .component-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+
+    .component-label {
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    /* Button styles */
+    .demo-buttons { display: flex; flex-direction: column; gap: 10px; }
+
+    .btn-demo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0c0e1a;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-ghost {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .btn-cyan {
+      background: var(--accent2);
+      color: #0c0e1a;
+    }
+
+    /* Nav demo */
+    .nav-demo {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo-demo {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .nav-links-demo {
+      display: flex;
+      gap: 16px;
+      list-style: none;
+    }
+
+    .nav-links-demo li a {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    /* Tag demo */
+    .tags-demo { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tag-pink   { background: var(--accent-glow); border: 1px solid var(--accent-dim); color: var(--accent); }
+    .tag-cyan   { background: var(--accent2-glow); border: 1px solid var(--accent2-dim); color: var(--accent2); }
+    .tag-orange { background: rgba(255,107,74,0.1); border: 1px solid rgba(255,107,74,0.4); color: var(--warning); }
+    .tag-yellow { background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.4); color: var(--signal); }
+
+    /* Stat card demo */
+    .stat-card-demo {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .stat-label { font-family: var(--font-body); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+    .stat-value { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--accent2); line-height: 1; }
+    .stat-sub   { font-family: var(--font-body); font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* ── PATTERN / MOTIF ── */
+    .pattern-demo {
+      height: 120px;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          var(--border) 0px,
+          var(--border) 1px,
+          transparent 1px,
+          transparent 40px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          var(--border) 0px,
+          var(--border) 1px,
+          transparent 1px,
+          transparent 40px
+        ),
+        var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pattern-demo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, var(--accent-glow) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 50%, var(--accent2-glow) 0%, transparent 60%);
+    }
+
+    /* ── GRADIENT SWATCHES ── */
+    .gradient-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .gradient-swatch {
+      height: 100px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gradient-swatch-label {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-family: var(--font-body);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── FOOTER ── */
+    .brand-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-wordmark {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-note {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    /* ── DIVIDER ── */
+    hr.brand-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="brand-header">
+    <div class="brand-header-top">
+      <div class="brand-wordmark">SAP</div>
+      <div class="brand-meta">
+        <span class="label">Brand Identity System</span>
+        <span class="value">Standard Acid Procedure — v1.0</span>
+        <span class="value" style="display:block; color: var(--text-dim); margin-top:2px;">standardacidprocedure.com</span>
+      </div>
+    </div>
+    <p class="brand-tagline">
+      <strong>Miami Vice × Hardware.</strong> South Florida bass music — dubstep, halftime, glitch hop, glitch pop, and psy.
+      Low-key neon on deep navy. Heavy on the low end, big on the vibes.
+    </p>
+  </header>
+
+  <!-- COLOR PALETTE -->
+  <section class="section">
+    <div class="section-label">01 — Palette</div>
+    <div class="section-title">Color System</div>
+    <div class="color-grid">
+
+      <div class="color-swatch">
+        <div class="swatch-block glow-pink" style="background:#e8609c;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Neon Pink</div>
+          <div class="swatch-hex">#e8609c</div>
+          <div class="swatch-role">Primary Accent</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#8a3a5e;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Pink Dim</div>
+          <div class="swatch-hex">#8a3a5e</div>
+          <div class="swatch-role">Accent Muted</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block glow-cyan" style="background:#5ce0d6;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Muted Cyan</div>
+          <div class="swatch-hex">#5ce0d6</div>
+          <div class="swatch-role">Secondary Accent</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#2a7a75;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Cyan Dim</div>
+          <div class="swatch-hex">#2a7a75</div>
+          <div class="swatch-role">Accent Muted</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#ff6b4a;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Warning</div>
+          <div class="swatch-hex">#ff6b4a</div>
+          <div class="swatch-role">Alert / CTA</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#ffd166;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Signal</div>
+          <div class="swatch-hex">#ffd166</div>
+          <div class="swatch-role">Highlight / Status</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#0c0e1a;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Abyss</div>
+          <div class="swatch-hex">#0c0e1a</div>
+          <div class="swatch-role">BG / Base</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#111425;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Surface</div>
+          <div class="swatch-hex">#111425</div>
+          <div class="swatch-role">BG Surface</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#181c30;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Elevated</div>
+          <div class="swatch-hex">#181c30</div>
+          <div class="swatch-role">BG Elevated</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#13162a;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Card</div>
+          <div class="swatch-hex">#13162a</div>
+          <div class="swatch-role">BG Card</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#252940;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Border</div>
+          <div class="swatch-hex">#252940</div>
+          <div class="swatch-role">Stroke Default</div>
+        </div>
+      </div>
+
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#e2dfe8;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Text Primary</div>
+          <div class="swatch-hex">#e2dfe8</div>
+          <div class="swatch-role">Body Copy</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GRADIENTS -->
+  <section class="section">
+    <div class="section-label">02 — Gradients</div>
+    <div class="section-title">Gradient Motifs</div>
+    <div class="gradient-grid">
+
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #e8609c 0%, #5ce0d6 100%);">
+        <span class="gradient-swatch-label">Brand Gradient</span>
+      </div>
+
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #e8609c 0%, #ff6b4a 100%);">
+        <span class="gradient-swatch-label">Hot Signal</span>
+      </div>
+
+      <div class="gradient-swatch" style="background: linear-gradient(135deg, #5ce0d6 0%, #ffd166 100%);">
+        <span class="gradient-swatch-label">Tropical</span>
+      </div>
+
+      <div class="gradient-swatch" style="background: radial-gradient(ellipse at center, rgba(232,96,156,0.4) 0%, rgba(12,14,26,1) 70%);">
+        <span class="gradient-swatch-label">Pink Radial</span>
+      </div>
+
+      <div class="gradient-swatch" style="background: radial-gradient(ellipse at center, rgba(92,224,214,0.35) 0%, rgba(12,14,26,1) 70%);">
+        <span class="gradient-swatch-label">Cyan Radial</span>
+      </div>
+
+      <div class="gradient-swatch" style="background: linear-gradient(180deg, #181c30 0%, #0c0e1a 100%);">
+        <span class="gradient-swatch-label">Surface Fade</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PATTERN / TEXTURE -->
+  <section class="section">
+    <div class="section-label">03 — Texture</div>
+    <div class="section-title">Background Motif — Grid + Glow</div>
+    <div class="pattern-demo"></div>
+    <p style="font-family:var(--font-body); font-size:11px; color:var(--text-dim); margin-top:12px; letter-spacing:0.05em;">
+      Fine grid at var(--border) opacity + radial glow overlays at accent colors. Used on hero and feature sections.
+    </p>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="section">
+    <div class="section-label">04 — Typography</div>
+    <div class="section-title">Type System</div>
+    <div class="type-specimens">
+
+      <div class="type-specimen display-font">
+        <div class="type-meta">Display / Orbitron — Headers, Wordmark, Labels</div>
+        <div class="type-sample-display">STANDARD ACID PROCEDURE</div>
+        <div class="type-weights">
+          <div class="type-weight-item" style="font-family:var(--font-display); font-weight:400;">Aa <span>Regular / 400</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-display); font-weight:600;">Aa <span>SemiBold / 600</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-display); font-weight:700;">Aa <span>Bold / 700</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-display); font-weight:900;">Aa <span>Black / 900</span></div>
+        </div>
+      </div>
+
+      <div class="type-specimen body-font">
+        <div class="type-meta">Body / IBM Plex Mono — Metadata, Labels, Code, Data</div>
+        <div class="type-sample-mono">SYSTEM ACTIVE — 303.909.808<br>
+        <span style="color:var(--text-secondary);">Dubstep · Halftime · Glitch Hop · Psy</span></div>
+        <div class="type-weights">
+          <div class="type-weight-item" style="font-family:var(--font-body); font-weight:300;">Aa <span>Light / 300</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-body); font-weight:400;">Aa <span>Regular / 400</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-body); font-weight:500;">Aa <span>Medium / 500</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-body); font-weight:600; font-style:italic;">Aa <span>Italic / 600</span></div>
+        </div>
+      </div>
+
+      <div class="type-specimen sans-font">
+        <div class="type-meta">Sans / Space Grotesk — Body copy, descriptions, UI prose</div>
+        <div class="type-sample-sans">South Florida bass music — exploring dubstep, halftime, glitch hop, glitch pop, and a little psy. Heavy on the low end, big on the vibes.</div>
+        <div class="type-weights">
+          <div class="type-weight-item" style="font-family:var(--font-sans); font-weight:300;">Aa <span>Light / 300</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-sans); font-weight:400;">Aa <span>Regular / 400</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-sans); font-weight:600;">Aa <span>SemiBold / 600</span></div>
+          <div class="type-weight-item" style="font-family:var(--font-sans); font-weight:700;">Aa <span>Bold / 700</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VOICE + TONE -->
+  <section class="section">
+    <div class="section-label">05 — Voice</div>
+    <div class="section-title">Brand Voice &amp; Tone</div>
+    <div class="voice-grid">
+
+      <div class="voice-card" data-symbol="↗">
+        <div class="voice-card-label">Low-Key Cool</div>
+        <div class="voice-card-desc">Confident, not bragging. The music speaks. Copy supports but doesn't oversell. No hype for hype's sake.</div>
+      </div>
+
+      <div class="voice-card" data-symbol="◈">
+        <div class="voice-card-label">Technical</div>
+        <div class="voice-card-desc">Monospace aesthetic. Hardware references. Precision-minded. Labels read like instrument panels, not marketing copy.</div>
+      </div>
+
+      <div class="voice-card" data-symbol="∿">
+        <div class="voice-card-label">Warm</div>
+        <div class="voice-card-desc">Genuine appreciation for the listener. "If you're here reading this, thank you." Not cold — just focused.</div>
+      </div>
+
+      <div class="voice-card" data-symbol="▲">
+        <div class="voice-card-label">Direct</div>
+        <div class="voice-card-desc">No fluff, no placeholder copy. Only real info — real play counts, real show dates, real contacts.</div>
+      </div>
+
+      <div class="voice-card" data-symbol="≋">
+        <div class="voice-card-label">Bass-First</div>
+        <div class="voice-card-desc">The identity leans into the low end — heavy, physical, sub-bass culture. Not pretty, not pop. Textured.</div>
+      </div>
+
+      <div class="voice-card" data-symbol="◉">
+        <div class="voice-card-label">Global</div>
+        <div class="voice-card-desc">South Florida origin, international scope. 140+ shows, 12 countries. The brand travels. Keep it universal.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- UI COMPONENTS -->
+  <section class="section">
+    <div class="section-label">06 — Components</div>
+    <div class="section-title">UI Component Palette</div>
+    <div class="components-grid">
+
+      <div class="component-card">
+        <div class="component-label">Buttons</div>
+        <div class="demo-buttons">
+          <button class="btn-demo btn-primary">▶ Listen Now</button>
+          <button class="btn-demo btn-cyan">Book SAP</button>
+          <button class="btn-demo btn-secondary">Follow on SoundCloud →</button>
+          <button class="btn-demo btn-ghost">Clear</button>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-label">Tags / Chips</div>
+        <div class="tags-demo">
+          <span class="tag tag-pink">Dubstep</span>
+          <span class="tag tag-cyan">Halftime</span>
+          <span class="tag tag-orange">Free DL</span>
+          <span class="tag tag-yellow">Live Set</span>
+          <span class="tag tag-pink">Glitch Hop</span>
+          <span class="tag tag-cyan">Psy</span>
+          <span class="tag tag-orange">New</span>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-label">Navigation</div>
+        <div class="nav-demo">
+          <span class="nav-logo-demo">SAP</span>
+          <ul class="nav-links-demo">
+            <li><a href="#">Releases</a></li>
+            <li><a href="#">Shows</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-label">Stat Card</div>
+        <div class="stat-card-demo">
+          <div class="stat-label">Total Releases</div>
+          <div class="stat-value">23</div>
+          <div class="stat-sub">+3 this quarter</div>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-label">Stat Card — Cyan</div>
+        <div class="stat-card-demo">
+          <div class="stat-label">Live Shows</div>
+          <div class="stat-value" style="color:var(--accent2);">140+</div>
+          <div class="stat-sub">12 countries</div>
+        </div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-label">Status Signal</div>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent); display:inline-block; animation: pulse 1.5s ease-in-out infinite;"></span>
+          <span style="font-family:var(--font-body); font-size:11px; letter-spacing:0.1em; color:var(--text-secondary);">SYSTEM ACTIVE — 303.909.808</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:12px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:var(--accent2); box-shadow:0 0 10px var(--accent2); display:inline-block;"></span>
+          <span style="font-family:var(--font-body); font-size:11px; letter-spacing:0.1em; color:var(--text-secondary);">Q2 2026 — ROUTING OPEN</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:12px;">
+          <span style="width:8px; height:8px; border-radius:50%; background:var(--border-lite); display:inline-block;"></span>
+          <span style="font-family:var(--font-body); font-size:11px; letter-spacing:0.1em; color:var(--text-dim);">OFFLINE</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CSS VARIABLES REFERENCE -->
+  <section class="section">
+    <div class="section-label">07 — Reference</div>
+    <div class="section-title">CSS Variables</div>
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:28px; font-family:var(--font-body); font-size:12px; line-height:2; color:var(--text-secondary); overflow-x:auto;">
+<pre style="margin:0; white-space:pre; color:var(--text-secondary);">:root {
+  <span style="color:var(--text-dim);">/* Accent */</span>
+  --accent:        <span style="color:#e8609c;">#e8609c</span>;   <span style="color:var(--text-dim);">/* primary pink */</span>
+  --accent-dim:    <span style="color:#8a3a5e;">#8a3a5e</span>;
+  --accent-glow:   <span style="color:var(--text-dim);">rgba(232,96,156,0.14)</span>;
+  --accent2:       <span style="color:#5ce0d6;">#5ce0d6</span>;   <span style="color:var(--text-dim);">/* secondary cyan */</span>
+  --accent2-dim:   <span style="color:#2a7a75;">#2a7a75</span>;
+  --accent2-glow:  <span style="color:var(--text-dim);">rgba(92,224,214,0.10)</span>;
+  --warning:       <span style="color:#ff6b4a;">#ff6b4a</span>;
+  --signal:        <span style="color:#ffd166;">#ffd166</span>;
+
+  <span style="color:var(--text-dim);">/* Surfaces */</span>
+  --bg-black:      <span style="color:var(--text-secondary);">#0c0e1a</span>;
+  --bg-surface:    <span style="color:var(--text-secondary);">#111425</span>;
+  --bg-elevated:   <span style="color:var(--text-secondary);">#181c30</span>;
+  --bg-card:       <span style="color:var(--text-secondary);">#13162a</span>;
+  --border:        <span style="color:var(--text-secondary);">#252940</span>;
+  --border-lite:   <span style="color:var(--text-secondary);">#353a55</span>;
+
+  <span style="color:var(--text-dim);">/* Text */</span>
+  --text-primary:   <span style="color:var(--text-secondary);">#e2dfe8</span>;
+  --text-secondary: <span style="color:var(--text-secondary);">#8a87a0</span>;
+  --text-dim:       <span style="color:var(--text-secondary);">#55536a</span>;
+
+  <span style="color:var(--text-dim);">/* Fonts */</span>
+  --font-display: <span style="color:var(--accent2);">'Orbitron'</span>, sans-serif;
+  --font-body:    <span style="color:var(--accent2);">'IBM Plex Mono'</span>, monospace;
+  --font-sans:    <span style="color:var(--accent2);">'Space Grotesk'</span>, sans-serif;
+}</pre>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="brand-footer">
+    <div class="footer-wordmark">STANDARD ACID PROCEDURE</div>
+    <div class="footer-note">SAP Brand Identity System — standardacidprocedure.com — 2026</div>
+  </footer>
+
+</div>
+
+<style>
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent); }
+    50% { opacity: 0.5; box-shadow: 0 0 4px var(--accent); }
+  }
+</style>
+</body>
+</html>
