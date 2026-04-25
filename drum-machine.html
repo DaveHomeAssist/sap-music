@@ -675,6 +675,7 @@
     let isPlaying = false;
     let currentStep = 0;
     let intervalId = null;
+    let aiAccessToken = '';
     let pattern = {};
 
     instruments.forEach(inst => {
@@ -877,6 +878,13 @@
       return null;
     }
 
+    function getAIAccessToken() {
+      if (aiAccessToken) return aiAccessToken;
+      const nextToken = window.prompt('Paste the SAP AI access token to use the protected classifier:');
+      aiAccessToken = nextToken ? nextToken.trim() : '';
+      return aiAccessToken;
+    }
+
     async function generateBeat() {
       const input = document.getElementById('beatInput').value;
       if (!input.trim()) { showStatus('Describe your beat first', 'error'); return; }
@@ -886,16 +894,31 @@
       btn.textContent = 'Generating...';
 
       let preset = null;
+      let usedAI = false;
 
       try {
-        const response = await fetch('/api/generate-beat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ description: input.trim().slice(0, 200) })
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.preset && presets[data.preset]) preset = data.preset;
+        const accessToken = getAIAccessToken();
+        if (accessToken) {
+          const response = await fetch('/api/generate-beat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-SAP-Access-Token': accessToken
+            },
+            body: JSON.stringify({ description: input.trim().slice(0, 200) })
+          });
+          if (response.status === 401) {
+            aiAccessToken = '';
+            showStatus('AI access denied — using local classifier', 'error');
+          } else if (response.status === 429) {
+            showStatus('AI rate limited — using local classifier', 'error');
+          } else if (response.ok) {
+            const data = await response.json();
+            if (data.preset && presets[data.preset]) {
+              preset = data.preset;
+              usedAI = true;
+            }
+          }
         }
       } catch (_) {}
 
@@ -903,7 +926,7 @@
 
       pattern = JSON.parse(JSON.stringify(presets[preset]));
       updatePattern();
-      showStatus(`Pattern loaded — ${preset}`, 'success');
+      showStatus(`Pattern loaded — ${preset}${usedAI ? '' : ' · local classifier'}`, usedAI ? 'success' : 'info');
 
       document.querySelectorAll('.preset-btn').forEach(b => {
         b.classList.toggle('active-preset', b.dataset.preset === preset);
