@@ -1,0 +1,54 @@
+category,folder,file,dimensions,primary_use,notes
+start,00-start-here,erosyn-asset-contact-sheet-v01.jpg,1240x2250,Quick package scan,Visual contact sheet
+start,00-start-here,QUICK-START.md,n/a,Handoff guide,Artist quick start
+logos,01-logos/png,erosyn-logo-icon-red-transparent-v01.png,1100x1100,Icon on dark or neutral backgrounds,Transparent PNG
+logos,01-logos/png,erosyn-logo-icon-redglow-black-v01.png,1100x1100,Profile or high-impact avatar tests,Glow version on black
+logos,01-logos/png,erosyn-logo-icon-white-transparent-v01.png,1100x1100,Icon on dark backgrounds,Transparent PNG
+logos,01-logos/png,erosyn-logo-wordmark-black-transparent-v01.png,1900x1200,Wordmark on light backgrounds,Transparent PNG
+logos,01-logos/png,erosyn-logo-wordmark-red-transparent-v01.png,1900x1200,Wordmark on dark or neutral backgrounds,Transparent PNG
+logos,01-logos/png,erosyn-logo-wordmark-redglow-black-v01.png,1900x1200,Hero or social tests,Glow version on black
+logos,01-logos/png,erosyn-logo-wordmark-white-transparent-v01.png,1900x1200,Primary wordmark on dark backgrounds,Transparent PNG
+logos,01-logos/svg,erosyn-logo-icon-red-v01.svg,886x886 viewBox,Vector starter,Hand cleanup required
+logos,01-logos/svg,erosyn-logo-icon-white-v01.svg,886x886 viewBox,Vector starter,Hand cleanup required
+logos,01-logos/svg,erosyn-logo-wordmark-black-v01.svg,1405x888 viewBox,Vector starter,Hand cleanup required
+logos,01-logos/svg,erosyn-logo-wordmark-red-v01.svg,1405x888 viewBox,Vector starter,Hand cleanup required
+logos,01-logos/svg,erosyn-logo-wordmark-white-v01.svg,1405x888 viewBox,Vector starter,Hand cleanup required
+press,02-press-kit/photos,erosyn-press-photo-headshot-bw-redrim-square-v01.jpg,1600x1600,Profile and press image tests,Treated photo
+press,02-press-kit/photos,erosyn-press-photo-headshot-bw-redrim-wide-v01.jpg,2400x1350,Press header and editorial crop,Treated photo
+press,02-press-kit/source-reference,connor headshot.jpg,1092x1092,Source reference,Original/reference image
+press,02-press-kit/source-reference,connor pool.jpeg,1056x1201,Source reference,Original/reference image
+press,02-press-kit/one-sheet,erosyn-one-sheet-press-v01.pdf,n/a,Booking and press,PDF one-sheet
+press,02-press-kit/one-sheet,erosyn-one-sheet-press-v01.png,2550x3300,One-sheet preview,PNG export
+social,03-social/avatars,erosyn-avatar-icon-redglow-1200-v01.png,1200x1200,Social avatar,First profile test
+social,03-social/banners,erosyn-banner-wide-waveform-2480x520-v01.png,2480x520,Wide profile banner,Recommended banner test
+social,03-social/banners,erosyn-hero-banner-warehouse-1920x1080-v01.png,1920x1080,Hero image and channel header,Wide hero visual
+social,03-social/posts,erosyn-post-logo-reveal-1080-v01.png,1080x1080,Logo reveal post,Square social
+social,03-social/posts,erosyn-post-transition-sap-to-erosyn-1080-v01.png,1080x1080,Rebrand transition post,First rollout post
+social,03-social/stories,erosyn-story-transition-1080x1920-v01.png,1080x1920,Story transition post,Vertical social
+release,04-release-art/backgrounds,erosyn-cover-background-synth-static-3000-v01.png,3000x3000,Cover background,Synth/static visual
+release,04-release-art/backgrounds,erosyn-cover-background-warehouse-smoke-3000-v01.png,3000x3000,Cover background,Warehouse smoke visual
+release,04-release-art/backgrounds,erosyn-cover-background-waveform-tear-3000-v01.png,3000x3000,Cover background,Waveform tear visual
+release,04-release-art/templates,erosyn-ep-cover-template-warehouse-logo-3000-v01.png,3000x3000,EP cover test,Logo template
+release,04-release-art/templates,erosyn-mix-cover-template-synth-logo-3000-v01.png,3000x3000,Mix cover test,Logo template
+release,04-release-art/templates,erosyn-single-cover-template-waveform-logo-3000-v01.png,3000x3000,Single cover test,Logo template
+live,05-live-visuals/flyers,erosyn-flyer-template-11x17-v01.png,2200x3400,Flyer test,11x17 style asset
+live,05-live-visuals/stage-screens,erosyn-stage-screen-logo-1920x1080-v01.png,1920x1080,Stage screen logo,Live visual
+live,05-live-visuals/stage-screens,erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png,1920x1080,VJ still,Live visual
+web,06-web-digital,erosyn-css-tokens.css,n/a,Web color tokens,CSS variables
+source,07-source-selects,erosyn-source-select-a-waveform-tear-clean-v01.png,1965x2048,Future design source,Clean source visual
+source,07-source-selects,erosyn-source-select-b-cable-clean-v01.png,1951x2048,Future design source,Clean source visual
+source,07-source-selects,erosyn-source-select-c-warehouse-clean-v01.png,1942x2048,Future design source,Clean source visual
+source,07-source-selects,erosyn-source-select-c-warehouse-wide-clean-v01.png,1043x539,Future design source,Clean wide visual
+source,07-source-selects,erosyn-source-select-d-synth-clean-v01.png,1942x2048,Future design source,Clean source visual
+source,07-source-selects,erosyn-source-select-g-dj-silhouette-clean-v01.png,920x961,Future design source,Clean source visual
+docs,08-brand-docs,erosyn-brand-core.md,n/a,Positioning and bio,Brand core
+docs,08-brand-docs,erosyn-platform-copy.md,n/a,Platform copy,Copy starter
+docs,08-brand-docs,logo-usage-guide.md,n/a,Logo guidance,Usage notes
+docs,08-brand-docs,erosyn-color-type-system.md,n/a,Palette and type,Design reference
+docs,08-brand-docs,cover-art-rules.md,n/a,Release art rules,Design reference
+docs,08-brand-docs,social-rollout-plan.md,n/a,Social rollout,Launch reference
+docs,08-brand-docs,erosyn-drops-and-tags.md,n/a,Sonic identity,Drops and tags
+docs,08-brand-docs,erosyn-epk-copy.md,n/a,EPK copy,Press copy
+docs,08-brand-docs,erosyn-link-in-bio-copy.md,n/a,Link-in-bio copy,Digital copy
+docs,08-brand-docs,erosyn-batch-image-prompt-pack.md,n/a,Prompt source,Generation notes
+docs,08-brand-docs,erosyn-brand-index.md,n/a,Package index,Source overview
