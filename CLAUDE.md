@@ -19,12 +19,12 @@ standardacidprocedure.com
 - Fonts: Orbitron, IBM Plex Mono, Space Grotesk — currently loaded from Google Fonts CDN; self-hosting under `fonts/` is a planned follow-up (CSP currently whitelists `fonts.googleapis.com` / `fonts.gstatic.com`)
 
 ## Deploy
-GitHub Pages via custom domain. `CNAME` file pins `standardacidprocedure.com`. Pushes to `main` auto-deploy.
+Production at `standardacidprocedure.com` is served by **Vercel** (Vercel GitHub integration); pushes to `main` deploy production and PR branches get preview URLs. `.github/workflows/pages.yml` also publishes to GitHub Pages on push to `main`, and `CNAME` pins the domain there.
 
 ## Key pages
 - `index.html` — landing page: hero, releases, shows, press toolkit
 - `drum-machine.html` — interactive drum machine
-- `erosyn/index.html` — Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. Expects the Erosyn artist pack folders (`01-logos/`, `02-press-kit/`, `03-social/`, `04-release-art/`, `05-live-visuals/`) beside it; missing assets fall back to CSS art. Placeholders are marked `BRAND SWAP` / `CONTENT SWAP`.
+- `erosyn/index.html` — Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. Expects the Erosyn artist pack folders (`01-logos/`, `02-press-kit/`, `03-social/`, `04-release-art/`, `05-live-visuals/`) beside it; missing assets fall back to CSS art. The page loads resized copies from `erosyn/web/` (regenerate them from the pack masters when art changes); modal "Open full file" links point at the masters. Placeholders are marked `BRAND SWAP` / `CONTENT SWAP`.
 
 ## Key sections (index.html)
 - **Hero** — artist identity and primary CTA
