@@ -24,6 +24,7 @@ GitHub Pages via custom domain. `CNAME` file pins `standardacidprocedure.com`. P
 ## Key pages
 - `index.html` — landing page: hero, releases, shows, press toolkit
 - `drum-machine.html` — interactive drum machine
+- `erosyn/index.html` — Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. Expects the Erosyn artist pack folders (`01-logos/`, `02-press-kit/`, `03-social/`, `04-release-art/`, `05-live-visuals/`) beside it; missing assets fall back to CSS art. Placeholders are marked `BRAND SWAP` / `CONTENT SWAP`.
 
 ## Key sections (index.html)
 - **Hero** — artist identity and primary CTA
