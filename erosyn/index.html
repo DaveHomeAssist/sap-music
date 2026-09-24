@@ -35,7 +35,7 @@
   <meta name="twitter:image:alt" content="Erosyn warehouse hero banner">
 
   <!-- BRAND ASSET: flat red icon mark (production PNG) -->
-  <link rel="icon" type="image/png" href="01-logos/png/erosyn-logo-icon-red-transparent-v01.png">
+  <link rel="icon" type="image/png" href="web/erosyn-icon-red-192.png">
   <!-- BRAND ASSET: red glow avatar, used for the home-screen icon only -->
   <link rel="apple-touch-icon" href="03-social/avatars/erosyn-avatar-icon-redglow-1200-v01.png">
 
@@ -1403,8 +1403,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: 62% 50%;
-      filter: saturate(.92) contrast(1.08) brightness(.62);
+      object-position: 50% 62%;
+      filter: saturate(.95) contrast(1.06) brightness(.72);
     }
 
     .home__media.is-missing img {
@@ -2277,7 +2277,7 @@
 
     @media (min-width: 1024px) {
       .pool {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.8fr) minmax(0, 1fr) minmax(0, 1fr);
         grid-template-rows: repeat(2, 240px);
       }
 
@@ -2430,7 +2430,7 @@
       text-transform: uppercase;
     }
 
-    .p-b { --pos: 50% 20%; }
+    .p-b { --pos: 50% 0%; }
     .p-d { --pos: 50% 30%; }
 
     .pool__foot {
@@ -3087,10 +3087,44 @@
       color: var(--text-soft);
     }
 
+    .booking-card {
+      min-height: 420px;
+      background: var(--void-black);
+    }
+
+    .booking-card__media {
+      position: absolute;
+      inset: 34px 0 0;
+      z-index: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse 70% 50% at 50% 35%, rgba(158, 0, 24, .55), transparent 70%), #050505;
+    }
+
+    .booking-card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 30%;
+    }
+
+    .booking-card__media.is-missing img {
+      opacity: 0;
+    }
+
+    .booking-card__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(5, 5, 5, .1) 0%, rgba(5, 5, 5, .5) 40%, rgba(5, 5, 5, .94) 68%);
+    }
+
     .booking-card__body {
+      position: relative;
+      z-index: 1;
       display: grid;
       align-content: start;
       gap: .8rem;
+      margin-top: auto;
       padding: 1.1rem 1.1rem 1.2rem;
     }
 
@@ -3127,6 +3161,7 @@
     .booking-card::before {
       content: "";
       position: absolute;
+      z-index: 2;
       top: 0;
       bottom: 0;
       left: 0;
@@ -4052,7 +4087,7 @@
           index.textContent = data.modalIdx || '';
           meta.textContent = data.modalMeta || '';
           desc.textContent = data.modalDesc || '';
-          file.href = data.modalSrc;
+          file.href = data.modalFull || data.modalSrc;
           path.textContent = data.modalSrc.split('/').pop();
           modal.hidden = false;
           background.forEach((element) => {
@@ -4487,9 +4522,9 @@
 
       <a class="brand" href="#home" data-fallback>
         <!-- BRAND ASSET: primary Erosyn production wordmark (white, for dark backgrounds) -->
-        <img class="logo-on-dark" src="01-logos/png/erosyn-logo-wordmark-white-transparent-v01.png" alt="Erosyn — home" width="1900" height="1200" decoding="async">
+        <img class="logo-on-dark" src="web/erosyn-wordmark-white-800.png" alt="Erosyn — home" width="800" height="490" decoding="async">
         <!-- BRAND ASSET: Erosyn production wordmark (black, for the light theme) -->
-        <img class="logo-on-light" src="01-logos/png/erosyn-logo-wordmark-black-transparent-v01.png" alt="Erosyn — home" width="1900" height="1200" loading="lazy" decoding="async">
+        <img class="logo-on-light" src="web/erosyn-wordmark-black-800.png" alt="Erosyn — home" width="800" height="490" loading="lazy" decoding="async">
         <span class="brand__fallback" aria-hidden="true"><span>E</span>rosyn</span>
       </a>
 
@@ -4583,8 +4618,9 @@
              ====================================================== -->
         <section class="view view--home scheme-dark" id="home" aria-labelledby="home-title">
           <div class="home__media" data-fallback>
-            <!-- BRAND ASSET: warehouse hero banner, cinematic background -->
-            <img src="03-social/banners/erosyn-hero-banner-warehouse-1920x1080-v01.png" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+            <!-- BRAND ASSET: clean warehouse source select (07-source-selects/erosyn-source-select-c-warehouse-clean-v01.png), web copy.
+                 The hero banner has type baked in, so it stays the social preview image instead. -->
+            <img src="web/erosyn-home-warehouse-1600.jpg" alt="" width="1600" height="1687" fetchpriority="high" decoding="async">
           </div>
           <div class="home__fx" aria-hidden="true">
             <div class="home__wash"></div>
@@ -4603,7 +4639,7 @@
               <h1 class="hero__title" id="home-title" tabindex="-1" data-view-heading>
                 <span class="wordmark" data-fallback>
                   <!-- BRAND ASSET: primary Erosyn production wordmark -->
-                  <img class="wordmark__img" src="01-logos/png/erosyn-logo-wordmark-white-transparent-v01.png" alt="Erosyn" width="1900" height="1200" decoding="async">
+                  <img class="wordmark__img" src="web/erosyn-wordmark-white-800.png" alt="Erosyn" width="800" height="490" decoding="async">
                   <span class="wordmark__fallback" aria-hidden="true">Erosyn</span>
                 </span>
               </h1>
@@ -4667,7 +4703,7 @@
             <p class="view__desc">Singles, EP cuts, and club mixes. Load a clip into the inspector, then run it on SoundCloud.</p>
           </header>
 
-          <!-- PERFORMANCE: release covers are 3000px masters — export ~1200px web derivatives before launch. -->
+          <!-- PERFORMANCE: images load from web/ (resized copies). Masters stay in the pack folders; "Open full file" links to them. -->
           <div class="music view__body">
             <div class="panel clips">
               <div class="panel__bar"><span><b>Clips</b></span><span>05 entries</span></div>
@@ -4682,13 +4718,13 @@
                     data-year="2026"
                     data-runtime="4:08"
                     data-desc="Halftime weight, grime pressure, and a torn top end."
-                    data-art="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png"
+                    data-art="web/erosyn-cover-single-waveform-800.jpg"
                     data-art-alt="Cover art for Waveform Tear — Erosyn waveform single cover"
                     data-href="https://soundcloud.com/erosynmusic">
                     <span class="track__num">01</span>
                     <span class="track__thumb art art--cover" data-fallback>
                       <!-- BRAND ASSET: release art template — waveform single cover -->
-                      <img src="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/erosyn-cover-single-waveform-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
                       <span class="track__title">Waveform Tear</span>
@@ -4709,13 +4745,13 @@
                     data-year="2026"
                     data-runtime="17:52"
                     data-desc="DnB speed and electro stabs built for concrete rooms."
-                    data-art="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png"
+                    data-art="web/erosyn-cover-ep-warehouse-800.jpg"
                     data-art-alt="Cover art for Warehouse Systems — Erosyn warehouse EP cover"
                     data-href="https://soundcloud.com/erosynmusic">
                     <span class="track__num">02</span>
                     <span class="track__thumb art art--cover" data-fallback>
                       <!-- BRAND ASSET: release art template — warehouse EP cover -->
-                      <img src="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/erosyn-cover-ep-warehouse-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
                       <span class="track__title">Warehouse Systems</span>
@@ -4736,13 +4772,13 @@
                     data-year="2026"
                     data-runtime="58:14"
                     data-desc="Grime, DnB, psytrance, and rave records run hot into the red."
-                    data-art="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png"
+                    data-art="web/erosyn-cover-mix-synth-800.jpg"
                     data-art-alt="Cover art for Redline Session 01 — Erosyn synth mix cover"
                     data-href="https://soundcloud.com/erosynmusic">
                     <span class="track__num">03</span>
                     <span class="track__thumb art art--cover" data-fallback>
                       <!-- BRAND ASSET: release art template — synth mix cover -->
-                      <img src="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/erosyn-cover-mix-synth-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
                       <span class="track__title">Redline Session 01</span>
@@ -4763,13 +4799,13 @@
                     data-year="2026"
                     data-runtime="3:46"
                     data-desc="Psytrance tension over a grime bassline, hardstyle kick on the switch."
-                    data-art="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png"
+                    data-art="web/erosyn-cover-single-waveform-800.jpg"
                     data-art-alt="Cover art for Pressure Test — Erosyn waveform single cover"
                     data-href="https://soundcloud.com/erosynmusic">
                     <span class="track__num">04</span>
                     <span class="track__thumb art art--cover" data-fallback>
                       <!-- BRAND ASSET: release art template — waveform single cover -->
-                      <img src="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/erosyn-cover-single-waveform-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
                       <span class="track__title">Pressure Test</span>
@@ -4790,13 +4826,13 @@
                     data-year="2026"
                     data-runtime="5:21"
                     data-desc="Classic rave damage, re-cut for the last hour."
-                    data-art="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png"
+                    data-art="web/erosyn-cover-ep-warehouse-800.jpg"
                     data-art-alt="Cover art for Late Room — Erosyn warehouse cover"
                     data-href="https://soundcloud.com/erosynmusic">
                     <span class="track__num">05</span>
                     <span class="track__thumb art art--cover" data-fallback>
                       <!-- BRAND ASSET: release art template — warehouse EP cover -->
-                      <img src="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/erosyn-cover-ep-warehouse-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
                       <span class="track__title">Late Room</span>
@@ -4827,7 +4863,7 @@
               <div class="deck__body">
                 <div class="deck__art art art--cover" data-fallback>
                   <!-- BRAND ASSET: release art template — waveform single cover -->
-                  <img id="deck-art" src="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png" alt="Cover art for Waveform Tear — Erosyn waveform single cover" width="3000" height="3000" loading="lazy" decoding="async">
+                  <img id="deck-art" src="web/erosyn-cover-single-waveform-800.jpg" alt="Cover art for Waveform Tear — Erosyn waveform single cover" width="800" height="800" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Cover pending</span><span class="media-fallback__path">04-release-art / templates</span></span>
                 </div>
                 <div class="deck__info">
@@ -4846,7 +4882,7 @@
               <div class="deck__wave" data-fallback aria-hidden="true">
                 <svg class="wave-svg" focusable="false"><use href="#i-wave"/></svg>
                 <!-- BRAND ASSET: wide waveform banner, used as the deck readout -->
-                <img src="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png" alt="" width="2480" height="520" loading="lazy" decoding="async">
+                <img src="web/erosyn-waveform-readout-1200.jpg" alt="" width="1200" height="405" loading="lazy" decoding="async">
                 <span class="deck__playhead"><span class="mono">Cue</span></span>
               </div>
 
@@ -4884,14 +4920,15 @@
             <li class="pad p-a">
               <!-- BRAND ASSET: live visuals — warehouse redline VJ loop still -->
               <button class="pad__btn" type="button"
-                data-modal-src="05-live-visuals/stage-screens/erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png"
+                data-modal-src="web/erosyn-vj-still-warehouse-redline-1600.jpg"
+                data-modal-full="05-live-visuals/stage-screens/erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png"
                 data-modal-idx="V/01"
                 data-modal-title="Warehouse redline — VJ loop still"
                 data-modal-meta="Live visuals · Stage screen · 1920 × 1080"
                 data-modal-alt="Erosyn warehouse redline VJ loop still"
                 data-modal-desc="Stage-screen still from the warehouse redline loop, sized for club projection and LED walls.">
                 <span class="pad__frame art art--redline" data-fallback>
-                  <img src="05-live-visuals/stage-screens/erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+                  <img src="web/erosyn-vj-still-warehouse-redline-1600.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/01</span>
@@ -4907,14 +4944,15 @@
             <li class="pad p-b">
               <!-- BRAND ASSET: live/event — 11x17 flyer template -->
               <button class="pad__btn" type="button"
-                data-modal-src="05-live-visuals/flyers/erosyn-flyer-template-11x17-v01.png"
+                data-modal-src="web/erosyn-flyer-template-1100.jpg"
+                data-modal-full="05-live-visuals/flyers/erosyn-flyer-template-11x17-v01.png"
                 data-modal-idx="V/02"
                 data-modal-title="Flyer template — 11 × 17"
                 data-modal-meta="Live / event · Print flyer · 2200 × 3400"
                 data-modal-alt="Erosyn 11 by 17 flyer template"
                 data-modal-desc="Print and social flyer layout for club nights and DJ bills. Date, venue, and lineup drop into the frame.">
                 <span class="pad__frame art art--flyer" data-fallback>
-                  <img src="05-live-visuals/flyers/erosyn-flyer-template-11x17-v01.png" alt="" width="2200" height="3400" loading="lazy" decoding="async">
+                  <img src="web/erosyn-flyer-template-1100.jpg" alt="" width="1100" height="1700" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-flyer-template-11x17-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/02</span>
@@ -4930,14 +4968,15 @@
             <li class="pad p-c">
               <!-- BRAND ASSET: live visuals — stage-screen logo -->
               <button class="pad__btn" type="button"
-                data-modal-src="05-live-visuals/stage-screens/erosyn-stage-screen-logo-1920x1080-v01.png"
+                data-modal-src="web/erosyn-stage-screen-logo-1600.jpg"
+                data-modal-full="05-live-visuals/stage-screens/erosyn-stage-screen-logo-1920x1080-v01.png"
                 data-modal-idx="V/03"
                 data-modal-title="Stage screen — logo lock"
                 data-modal-meta="Live visuals · Stage screen · 1920 × 1080"
                 data-modal-alt="Erosyn logo stage screen"
                 data-modal-desc="Logo lock for stage screens between sets and on DJ intros.">
                 <span class="pad__frame art art--logo" data-fallback>
-                  <img src="05-live-visuals/stage-screens/erosyn-stage-screen-logo-1920x1080-v01.png" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+                  <img src="web/erosyn-stage-screen-logo-1600.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-stage-screen-logo-1920x1080-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/03</span>
@@ -4953,14 +4992,15 @@
             <li class="pad p-d">
               <!-- BRAND ASSET: press photo, square red-rim crop -->
               <button class="pad__btn" type="button"
-                data-modal-src="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-square-v01.jpg"
+                data-modal-src="web/erosyn-press-photo-square-1000.jpg"
+                data-modal-full="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-square-v01.jpg"
                 data-modal-idx="V/04"
                 data-modal-title="Press crop — red rim"
                 data-modal-meta="Press kit · Headshot · 1600 × 1600"
                 data-modal-alt="Erosyn black-and-white press headshot with red rim light, square crop"
                 data-modal-desc="Black-and-white press headshot with red rim light. Square crop for profiles, listings, and promo posts.">
                 <span class="pad__frame art art--press" data-fallback>
-                  <img src="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-square-v01.jpg" alt="" width="1600" height="1600" loading="lazy" decoding="async">
+                  <img src="web/erosyn-press-photo-square-1000.jpg" alt="" width="1000" height="1000" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-square-v01.jpg</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/04</span>
@@ -4976,14 +5016,15 @@
             <li class="pad p-e">
               <!-- BRAND ASSET: release art template — synth mix cover -->
               <button class="pad__btn" type="button"
-                data-modal-src="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png"
+                data-modal-src="web/erosyn-cover-mix-synth-1600.jpg"
+                data-modal-full="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png"
                 data-modal-idx="V/05"
                 data-modal-title="Mix cover — synth static"
                 data-modal-meta="Release art · Cover template · 3000 × 3000"
                 data-modal-alt="Erosyn mix cover template with synth imagery and logo"
                 data-modal-desc="Square cover template for mixes: synth imagery under the Erosyn logo lockup.">
                 <span class="pad__frame art art--cover" data-fallback>
-                  <img src="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                  <img src="web/erosyn-cover-mix-synth-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-mix-cover-template-synth-logo-3000-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/05</span>
@@ -4999,7 +5040,8 @@
             <li class="pad p-f">
               <!-- BRAND ASSET: wide waveform banner -->
               <button class="pad__btn" type="button"
-                data-modal-src="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png"
+                data-modal-src="web/erosyn-banner-wide-waveform-1600.jpg"
+                data-modal-full="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png"
                 data-modal-idx="V/06"
                 data-modal-title="Waveform tear — wide banner"
                 data-modal-meta="Social · Header banner · 2480 × 520"
@@ -5007,7 +5049,7 @@
                 data-modal-desc="Wide waveform banner for profile headers and page covers.">
                 <span class="pad__frame art art--wave" data-fallback>
                   <svg class="wave-svg" aria-hidden="true" focusable="false"><use href="#i-wave"/></svg>
-                  <img src="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png" alt="" width="2480" height="520" loading="lazy" decoding="async">
+                  <img src="web/erosyn-banner-wide-waveform-1600.jpg" alt="" width="1600" height="335" loading="lazy" decoding="async">
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/06</span>
                 <span class="pad__open" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-expand"/></svg></span>
@@ -5043,7 +5085,7 @@
               <div class="panel__bar" aria-hidden="true"><span><b>Display</b></span><span>Press photo</span></div>
               <span class="device__frame art art--press" data-fallback>
                 <!-- BRAND ASSET: press photo, wide red-rim crop -->
-                <img src="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-wide-v01.jpg" alt="Erosyn press photo: black-and-white headshot with red rim light" width="2400" height="1350" loading="lazy" decoding="async">
+                <img src="web/erosyn-press-photo-wide-1400.jpg" alt="Erosyn press photo: black-and-white headshot with red rim light" width="1400" height="788" loading="lazy" decoding="async">
                 <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Press photo pending</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-wide-v01.jpg</span></span>
               </span>
               <figcaption class="device__caption mono">
@@ -5222,8 +5264,12 @@
               </div>
             </div>
 
-            <aside class="panel booking-card" aria-labelledby="booking-card-title">
+            <aside class="panel booking-card scheme-dark" aria-labelledby="booking-card-title">
               <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Booking</b></span><span>Open</span></div>
+              <span class="booking-card__media" data-fallback aria-hidden="true">
+                <!-- BRAND ASSET: DJ silhouette source select (07-source-selects/erosyn-source-select-g-dj-silhouette-clean-v01.png), web copy -->
+                <img src="web/erosyn-dj-silhouette-900.jpg" alt="" width="900" height="940" loading="lazy" decoding="async">
+              </span>
               <div class="booking-card__body">
                 <h3 id="booking-card-title">Put Erosyn on the bill.</h3>
                 <!-- SOURCE: Erosyn press one-sheet v01 (booking copy, live identity) -->
@@ -5394,7 +5440,7 @@
     <footer class="statusbar">
       <span class="status__icon" data-fallback>
         <!-- BRAND ASSET: flat red icon mark -->
-        <img src="01-logos/png/erosyn-logo-icon-red-transparent-v01.png" alt="" width="1100" height="1100" decoding="async">
+        <img src="web/erosyn-icon-red-192.png" alt="" width="192" height="192" decoding="async">
       </span>
 
       <div class="transport" role="group" aria-label="Transport">
