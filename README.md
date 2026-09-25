@@ -31,10 +31,10 @@ Production is served by Vercel: pushes to `main` deploy `standardacidprocedure.c
 - **Click-to-play release cards** — poster art loads first, SoundCloud iframes lazy-load on interaction
 - **Press toolkit** — bio, assets, and links for press / venues / promoters
 - **Split shows section** — confirmed upcoming dates separated from booking / inquiry info
-- **Drum machine** — standalone interactive page at `/drum-machine.html`
+- **Erosyn rhythm machine** — standalone interactive page at `/drum-machine.html`, with dubstep, grime, DnB, psytrance, electro, hardstyle, and rave kits
 
 ## Drum machine audio notes
 - Built with the browser Web Audio API via `AudioContext`; there is no server side audio processing.
-- Tempo is labeled in BPM and schedules sixteenth note steps with `(60 / BPM / 4) * 1000` milliseconds.
+- Tempo is labeled in BPM and schedules sixteenth note steps with `(60 / BPM / 4) * 1000` milliseconds. Each preset sets its own tempo (for example DnB 174, Electro 128), and changing tempo while playing re-times the loop.
 - Noise buffer lengths use `audioContext.sampleRate`, so the generated clap and snare noise durations track the active browser audio device sample rate.
 - Synth voice pitches are set with oscillator frequency values in Hz, and envelopes use gain automation against `audioContext.currentTime`.

@@ -8,7 +8,9 @@ const ALLOWED_HOSTS = (process.env.SAP_ALLOWED_HOSTS
       '127.0.0.1',
     ]);
 
-const VALID_PRESETS = ['techno', 'house', 'trap', 'breakbeat', 'minimal'];
+// Erosyn kits; must match the preset keys in drum-machine.html.
+const VALID_PRESETS = ['dubstep', 'grime', 'dnb', 'psytrance', 'electro', 'hardstyle', 'rave'];
+const FALLBACK_PRESET = 'dubstep';
 const ACCESS_TOKEN_HEADER = 'x-sap-access-token';
 
 const RATE_WINDOW_MS = 60_000;
@@ -106,7 +108,7 @@ module.exports = async (req, res) => {
         max_tokens: 20,
         messages: [{
           role: 'user',
-          content: `Given this drum beat description: "${description}", classify it into exactly one of these categories: techno, house, trap, breakbeat, minimal. Respond with ONLY the category name in lowercase, nothing else.`
+          content: `Given this drum beat description: "${description}", classify it into exactly one of these categories: ${VALID_PRESETS.join(', ')}. Respond with ONLY the category name in lowercase, nothing else.`
         }]
       })
     });
@@ -123,7 +125,7 @@ module.exports = async (req, res) => {
     if (VALID_PRESETS.includes(preset)) {
       return res.status(200).json({ preset });
     }
-    return res.status(200).json({ preset: 'techno' });
+    return res.status(200).json({ preset: FALLBACK_PRESET });
   } catch (err) {
     console.error('generate-beat error:', err.message);
     return res.status(502).json({ error: 'AI service error' });
