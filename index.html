@@ -72,6 +72,11 @@
       --gutter: clamp(16px, 4vw, 40px);
       --top-h: 60px;
       --status-h: 52px;
+      /* viewport-fit=cover lets the page run under the notch and home indicator; these keep chrome clear of them. */
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
       --browser-w: 232px;
       --rail-w: 84px;
       --gap: 12px;
@@ -457,9 +462,11 @@
 
     .app .shell {
       display: grid;
-      grid-template-rows: var(--top-h) minmax(0, 1fr) var(--status-h);
+      /* The status row grows by the home-indicator inset; the bar's padding keeps its controls above it. */
+      grid-template-rows: var(--top-h) minmax(0, 1fr) calc(var(--status-h) + var(--safe-bottom));
       height: 100vh;
       height: 100dvh;
+      padding: var(--safe-top) var(--safe-right) 0 var(--safe-left);
     }
 
     .app .workspace {
@@ -1011,9 +1018,10 @@
     @media (max-width: 767.98px) {
       .app .browser {
         position: fixed;
-        top: var(--top-h);
+        top: calc(var(--top-h) + var(--safe-top));
         bottom: 0;
-        left: 0;
+        left: var(--safe-left);
+        padding-bottom: var(--safe-bottom);
         z-index: 80;
         width: min(300px, 86vw);
         box-shadow: var(--shadow);
@@ -1035,7 +1043,7 @@
 
     .browser-scrim {
       position: fixed;
-      inset: var(--top-h) 0 0;
+      inset: calc(var(--top-h) + var(--safe-top)) 0 0;
       z-index: 70;
       background: rgba(5, 5, 5, .6);
     }
@@ -1062,7 +1070,7 @@
       flex-wrap: nowrap;
       gap: .75rem;
       min-width: 0;
-      padding: 0 var(--pad);
+      padding: 0 var(--pad) var(--safe-bottom);
       overflow: hidden;
     }
 
@@ -5071,6 +5079,19 @@
         const rememberText = document.getElementById('f-remember-text');
         const draftNote = document.getElementById('f-draft-note');
 
+        /* enterkeyhint="next" labels the key; this makes it act that way instead of submitting a half-filled form. */
+        [[nameInput, emailInput], [emailInput, reason]].forEach(([from, to]) => {
+          if (!from || !to) {
+            return;
+          }
+          from.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.isComposing) {
+              event.preventDefault();
+              to.focus();
+            }
+          });
+        });
+
         const showRememberNote = (value) => {
           if (rememberNote && rememberText) {
             rememberText.textContent = value;
@@ -6382,12 +6403,12 @@
                 <div class="form__row">
                   <div class="field">
                     <label for="f-name">Name</label>
-                    <input class="input" id="f-name" name="name" type="text" autocomplete="name" maxlength="120" required>
+                    <input class="input" id="f-name" name="name" type="text" autocomplete="name" enterkeyhint="next" maxlength="120" required>
                     <p class="field__error" id="f-name-error" hidden></p>
                   </div>
                   <div class="field">
                     <label for="f-email">Email</label>
-                    <input class="input" id="f-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="200" required>
+                    <input class="input" id="f-email" name="email" type="email" autocomplete="email" inputmode="email" enterkeyhint="next" maxlength="200" required>
                     <p class="field__error" id="f-email-error" hidden></p>
                   </div>
                   <div class="field">

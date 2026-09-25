@@ -62,6 +62,12 @@ Then open http://localhost:8000.
 - **Device memory is a hint, never a requirement.** Keys: `erosyn:v1` (localStorage: `lastVisit` as a day only, `lastView`, `lastTrack` as a SoundCloud slug, `knownTracks`, and `contact` only when the visitor ticks "Remember me"), `erosyn:draft` (sessionStorage: the unsent message, cleared when the tab closes), and the existing `erosyn-theme`. Go through `readJSON` / `writeJSON` / `remember()`, which swallow storage errors. Data older than 180 days is ignored. "Clear saved data" in Contact removes all three keys and stops saving for the rest of the visit. Nothing is sent anywhere.
 - **Predictions never cause a network request.** The saved track is preselected, never autoplayed; SoundCloud still loads only on Play. The Home resume chip links; it never redirects. "New" means a track slug that wasn't in `knownTracks` on the previous visit, so a first visit marks nothing.
 - **Next step** lives in the status bar (`#status-next`, from 768px up), driven by `NEXT_STEPS`; its `data-reason` reuses the form's Book-shortcut handler.
+- **iPhone safe areas:** the page uses `viewport-fit=cover`, so the edges are handled by the `--safe-top`, `--safe-right`, `--safe-bottom`, and `--safe-left` tokens (`env(safe-area-inset-*)`, falling back to 0).
+  - The shell pads the sides and top.
+  - The status row grows by `--safe-bottom`, and the bar pads its content above the home indicator.
+  - The phone drawer and its scrim offset by the same tokens.
+  - Any new fixed or edge-pinned chrome must use these tokens too.
+- **Form keyboard:** Name and Email carry `enterkeyhint="next"`, and a keydown handler makes Enter move to the next field instead of submitting.
 - **Motion tokens:** `--t-press` 80ms (press in), `--t-fast` 120ms (release, hover, focus), `--t` 150ms (state change), `--t-feedback` 180ms (shake, confirm, prefill flash); `--ease` for entering, `--ease-exit` for leaving. Keep feedback motion ≤ 180ms and animate only transform, opacity, and colors. Restart one-shot feedback with `pulse(element, className)`. The reduced-motion block cancels every press transform and the shake; add new pressable selectors there too.
 
 ## Status naming
