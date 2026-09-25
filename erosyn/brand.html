@@ -890,8 +890,7 @@
         <p class="lead">Erosyn is Connor's rebranded underground producer and DJ identity, formerly SAP. This guide turns the generated assets into a usable system: positioning, palette, logo behavior, application previews, and a reusable artist pack.</p>
         <div class="actions">
           <a class="button primary" data-href="README.md" href="#">Open artist pack</a>
-          <a class="button" data-root-href="artist-asset-pack.zip" href="#">Download ZIP</a>
-          <a class="button" data-root-href="asset-gallery.html" href="#">Full catalog</a>
+          <a class="button" data-href="MANIFEST.csv" href="#">Asset manifest (CSV)</a>
         </div>
       </div>
       <aside class="hero-media" aria-label="Erosyn visual direction">
@@ -1050,15 +1049,14 @@
   </main>
 
   <footer>
-    <div class="wrap">Erosyn brand system v01. Generated assets are organized into `artist-asset-pack/` with source notes and usage guidance.</div>
+    <div class="wrap">Erosyn brand system v01. Generated assets live in the numbered pack folders beside this guide, with source notes in README.md and MANIFEST.csv.</div>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const inPack = window.location.pathname.split("/").includes("artist-asset-pack");
-    const assetBase = inPack ? "" : "artist-asset-pack/";
-    const rootBase = inPack ? "../" : "";
+    // Assets resolve relative to this page. Folder cards open on GitHub because Pages serves no directory listings.
+    const repoTree = "https://github.com/DaveHomeAssist/sap-music/tree/main/erosyn/";
 
     const colors = [
       { name: "Void Black", hex: "#050505", role: "Primary dark" },
@@ -1161,16 +1159,8 @@
       query: ""
     };
 
-    function toUrl(path) {
-      return path.split("/").map(encodeURIComponent).join("/");
-    }
-
     function assetUrl(path) {
-      return assetBase + toUrl(path);
-    }
-
-    function rootUrl(path) {
-      return rootBase + toUrl(path);
+      return path.split("/").map(encodeURIComponent).join("/");
     }
 
     function escapeHtml(value) {
@@ -1188,9 +1178,6 @@
       });
       document.querySelectorAll("[data-href]").forEach((el) => {
         el.setAttribute("href", assetUrl(el.dataset.href));
-      });
-      document.querySelectorAll("[data-root-href]").forEach((el) => {
-        el.setAttribute("href", rootUrl(el.dataset.rootHref));
       });
     }
 
@@ -1357,7 +1344,7 @@
 
     function renderFolders() {
       document.getElementById("folderGrid").innerHTML = folders.map((folder) => `
-        <a class="folder-card" href="${assetUrl(folder.path)}">
+        <a class="folder-card" href="${repoTree + assetUrl(folder.path)}" target="_blank" rel="noopener">
           <p class="meta">${escapeHtml(folder.path)}</p>
           <strong>${escapeHtml(folder.title)}</strong>
           <span>${escapeHtml(folder.note)}</span>
