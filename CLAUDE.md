@@ -16,7 +16,7 @@ standardacidprocedure.com
   - `components.css` — reusable component styles (cards, buttons, modals, etc.)
   - `layout.css` — page layout / grid / section-level rules
 - Vanilla JS inline in HTML where needed
-- Fonts: Orbitron, IBM Plex Mono, Space Grotesk — currently loaded from Google Fonts CDN; self-hosting under `fonts/` is a planned follow-up (CSP currently whitelists `fonts.googleapis.com` / `fonts.gstatic.com`)
+- Fonts: Orbitron, IBM Plex Mono, Space Grotesk, self-hosted as `.woff2` in `fonts/` and declared by `fonts/fonts.css`. That stylesheet sits beside the files, so its `url()`s resolve no matter which page links it; link it as `fonts/fonts.css` (as `drum-machine.html` does). Orbitron and Space Grotesk are variable fonts (one file covers every weight); IBM Plex Mono has one file per weight. No page's CSP allows Google Fonts. Legacy exceptions, left as-is: `sap.html` still links `css/fonts.css`, whose `url(fonts/…)` paths resolve to a nonexistent `css/fonts/` (it falls back to system fonts), and the SAP `brand.html` loads the Google Fonts CDN.
 
 ## Deploy
 Production at `standardacidprocedure.com` is served by **Vercel** (Vercel GitHub integration); pushes to `main` deploy production and PR branches get preview URLs. `.github/workflows/pages.yml` also publishes to GitHub Pages on push to `main`, and `CNAME` pins the domain there.
@@ -24,7 +24,7 @@ Production at `standardacidprocedure.com` is served by **Vercel** (Vercel GitHub
 ## Key pages
 - `index.html` — homepage: the Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. It lives at the root but its assets stay under `erosyn/`, so every asset path carries the `erosyn/` prefix (`erosyn/01-logos/`, `erosyn/02-press-kit/`, `erosyn/web/`, …); keep that prefix on new assets. Missing assets fall back to CSS art. The page loads resized copies from `erosyn/web/` (regenerate them from the pack masters when art changes); modal "Open full file" links point at the masters. The Music view lists the real catalog from soundcloud.com/erosynmusic (cover art saved in `erosyn/web/releases/`) and loads the SoundCloud widget only when a visitor presses Play. Remaining placeholders are marked `BRAND SWAP` / `CONTENT SWAP`.
 - `sap.html` — legacy SAP landing page (hero, releases, shows, press toolkit), formerly `index.html`. Its canonical and `og:url` point at `/sap.html`, not the root.
-- `drum-machine.html` — interactive drum machine
+- `drum-machine.html` — interactive drum machine. Fonts come from `fonts/fonts.css` (display: Orbitron, body: IBM Plex Mono).
 - `erosyn/index.html` — redirect stub only: sends `/erosyn/` to `/` and keeps the `#view`, so old deep links such as `/erosyn/#music` still work. Do not build here.
 - `erosyn/brand.html` — Erosyn brand system v01 guide. Standalone single file; asset paths resolve relative to the page (pack folders sit beside it). Pack Map folder cards link to the GitHub tree view because the static hosts (Vercel, Pages) serve no directory listings. The Download ZIP button points to a GitHub Release asset (tag `erosyn-pack-v01`), not a file in the repo. When the pack changes, rebuild the zip from the committed tree (the site-only `index.html` and `web/` are excluded) with `git archive --format=zip -9 --prefix=artist-asset-pack/ -o erosyn-artist-asset-pack-v01.zip HEAD:erosyn -- ':!index.html' ':!web'`, then run `gh release upload erosyn-pack-v01 erosyn-artist-asset-pack-v01.zip --clobber`.
 
@@ -43,7 +43,7 @@ Production at `standardacidprocedure.com` is served by **Vercel** (Vercel GitHub
   - CSP meta tag added to the SAP page (now `sap.html`) and `drum-machine.html`
 
 ## Follow-ups
-- Self-host Google Fonts (Orbitron, IBM Plex Mono, Space Grotesk) and tighten CSP to drop `fonts.googleapis.com` / `fonts.gstatic.com` from `style-src` / `font-src`.
+- Legacy SAP pages only: `sap.html` (broken `css/fonts.css`) and the root `brand.html` (Google Fonts CDN) either get pointed at `fonts/fonts.css` or retired. Once neither uses it, delete `css/fonts.css`.
 
 ## Build / dev
 No build. Serve the directory statically:
