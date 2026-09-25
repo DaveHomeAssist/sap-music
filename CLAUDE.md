@@ -25,7 +25,7 @@ GitHub Pages via custom domain. `CNAME` file pins `standardacidprocedure.com`. P
 - `index.html` — landing page: hero, releases, shows, press toolkit
 - `drum-machine.html` — interactive drum machine
 - `erosyn/index.html` — Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. Expects the Erosyn artist pack folders (`01-logos/`, `02-press-kit/`, `03-social/`, `04-release-art/`, `05-live-visuals/`) beside it; missing assets fall back to CSS art. Placeholders are marked `BRAND SWAP` / `CONTENT SWAP`.
-- `erosyn/brand.html` — Erosyn brand system v01 guide. Standalone single file; asset paths resolve relative to the page (pack folders sit beside it). Pack Map folder cards link to the GitHub tree view because Pages serves no directory listings. No pack ZIP is published.
+- `erosyn/brand.html` — Erosyn brand system v01 guide. Standalone single file; asset paths resolve relative to the page (pack folders sit beside it). Pack Map folder cards link to the GitHub tree view because Pages serves no directory listings. The Download ZIP button points to a GitHub Release asset (tag `erosyn-pack-v01`), not a file in the repo. When the pack changes, rebuild the zip from the committed tree with `git archive --format=zip -9 --prefix=artist-asset-pack/ -o erosyn-artist-asset-pack-v01.zip HEAD:erosyn -- ':!index.html'`, then run `gh release upload erosyn-pack-v01 erosyn-artist-asset-pack-v01.zip --clobber`.
 
 ## Key sections (index.html)
 - **Hero** — artist identity and primary CTA
