@@ -35,7 +35,7 @@
   <meta name="twitter:image:alt" content="Erosyn warehouse hero banner">
 
   <!-- BRAND ASSET: flat red icon mark (production PNG) -->
-  <link rel="icon" type="image/png" href="01-logos/png/erosyn-logo-icon-red-transparent-v01.png">
+  <link rel="icon" type="image/png" href="web/erosyn-icon-red-192.png">
   <!-- BRAND ASSET: red glow avatar, used for the home-screen icon only -->
   <link rel="apple-touch-icon" href="03-social/avatars/erosyn-avatar-icon-redglow-1200-v01.png">
 
@@ -1403,8 +1403,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: 62% 50%;
-      filter: saturate(.92) contrast(1.08) brightness(.62);
+      object-position: 50% 62%;
+      filter: saturate(.95) contrast(1.06) brightness(.72);
     }
 
     .home__media.is-missing img {
@@ -1888,7 +1888,8 @@
       }
     }
 
-    @media (min-width: 1024px) and (max-height: 860px) {
+    /* Desktop keeps the list compact; the selected track's blurb shows in the inspector. */
+    @media (min-width: 1024px) {
       .app .track__desc {
         display: none;
       }
@@ -2196,6 +2197,60 @@
       letter-spacing: .14em;
     }
 
+    .deck__player {
+      flex: none;
+      margin-inline: .9rem;
+      overflow: hidden;
+      border: 1px solid rgba(244, 239, 231, .14);
+      border-radius: var(--radius-sm);
+      background: #070606;
+    }
+
+    .deck__player iframe {
+      display: block;
+      width: 100%;
+      height: 166px;
+      border: 0;
+    }
+
+    html:not(.js) #deck-play {
+      display: none;
+    }
+
+    @media (min-width: 1024px) {
+      .app .deck {
+        overflow-y: auto;
+      }
+    }
+
+    @media (min-width: 1024px) and (max-height: 820px) {
+      .deck__body {
+        grid-template-columns: minmax(110px, 30%) minmax(0, 1fr);
+        padding-bottom: .6rem;
+      }
+
+      .deck__title {
+        font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+      }
+
+      .deck.is-playing .deck__desc {
+        display: none;
+      }
+
+      .deck.is-playing .deck__foot {
+        padding-block: .6rem;
+      }
+    }
+
+    .track__free {
+      margin-left: .35rem;
+      padding: .05rem .35rem;
+      border-color: rgba(255, 27, 27, .55);
+      color: var(--accent-text);
+      font-size: .5625rem;
+      vertical-align: 1px;
+    }
+
     .deck__progress {
       display: grid;
       flex: none;
@@ -2277,7 +2332,7 @@
 
     @media (min-width: 1024px) {
       .pool {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.8fr) minmax(0, 1fr) minmax(0, 1fr);
         grid-template-rows: repeat(2, 240px);
       }
 
@@ -2430,7 +2485,7 @@
       text-transform: uppercase;
     }
 
-    .p-b { --pos: 50% 20%; }
+    .p-b { --pos: 50% 0%; }
     .p-d { --pos: 50% 30%; }
 
     .pool__foot {
@@ -3087,10 +3142,44 @@
       color: var(--text-soft);
     }
 
+    .booking-card {
+      min-height: 420px;
+      background: var(--void-black);
+    }
+
+    .booking-card__media {
+      position: absolute;
+      inset: 34px 0 0;
+      z-index: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse 70% 50% at 50% 35%, rgba(158, 0, 24, .55), transparent 70%), #050505;
+    }
+
+    .booking-card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 30%;
+    }
+
+    .booking-card__media.is-missing img {
+      opacity: 0;
+    }
+
+    .booking-card__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(5, 5, 5, .1) 0%, rgba(5, 5, 5, .5) 40%, rgba(5, 5, 5, .94) 68%);
+    }
+
     .booking-card__body {
+      position: relative;
+      z-index: 1;
       display: grid;
       align-content: start;
       gap: .8rem;
+      margin-top: auto;
       padding: 1.1rem 1.1rem 1.2rem;
     }
 
@@ -3127,6 +3216,7 @@
     .booking-card::before {
       content: "";
       position: absolute;
+      z-index: 2;
       top: 0;
       bottom: 0;
       left: 0;
@@ -3961,7 +4051,7 @@
         });
       }
 
-      /* ---------- Release deck ---------- */
+      /* ---------- Release deck (click-to-play SoundCloud widget) ---------- */
       function initReleaseDeck() {
         const deck = document.getElementById('deck');
         const list = document.querySelector('.tracks');
@@ -3973,6 +4063,12 @@
         const artFrame = art ? art.closest('[data-fallback]') : null;
         const link = document.getElementById('deck-link');
         const linkContext = document.getElementById('deck-link-context');
+        const playButton = document.getElementById('deck-play');
+        const playContext = document.getElementById('deck-play-context');
+        const player = document.getElementById('deck-player');
+        const wave = document.getElementById('deck-wave');
+        const progress = document.getElementById('deck-progress');
+        const state = document.getElementById('deck-state');
         const live = document.getElementById('deck-live');
         const stacked = window.matchMedia('(max-width: 1023.98px)');
         const text = {
@@ -3980,18 +4076,50 @@
           title: document.getElementById('deck-title'),
           desc: document.getElementById('deck-desc'),
           type: document.getElementById('deck-type'),
-          year: document.getElementById('deck-year'),
+          date: document.getElementById('deck-date'),
           runtime: document.getElementById('deck-runtime'),
           end: document.getElementById('deck-end')
+        };
+        let current = buttons.find((item) => item.getAttribute('aria-pressed') === 'true') || buttons[0];
+        let playerOn = false;
+
+        const widgetSrc = (url) => 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(url)
+          + '&color=%23ff1b1b&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false';
+
+        const startPlayer = (button, moveFocus) => {
+          if (!player) {
+            return;
+          }
+          let frame = player.querySelector('iframe');
+          if (!frame) {
+            frame = document.createElement('iframe');
+            frame.setAttribute('allow', 'autoplay; encrypted-media');
+            frame.setAttribute('scrolling', 'no');
+            player.appendChild(frame);
+          }
+          frame.title = `SoundCloud player: ${button.dataset.title}`;
+          frame.src = widgetSrc(button.dataset.href);
+          player.hidden = false;
+          if (wave) wave.hidden = true;
+          if (progress) progress.hidden = true;
+          if (playButton) playButton.hidden = true;
+          if (state) state.textContent = 'Deck A · Loaded';
+          deck.classList.add('is-playing');
+          playerOn = true;
+          if (live) live.textContent = `${button.dataset.title} loaded in the SoundCloud player.`;
+          if (moveFocus) {
+            frame.focus();
+          }
         };
 
         const load = (button) => {
           const data = button.dataset;
+          current = button;
           if (text.index) text.index.textContent = `Clip ${data.index} / ${String(buttons.length).padStart(2, '0')}`;
           if (text.title) text.title.textContent = data.title;
           if (text.desc) text.desc.textContent = data.desc;
           if (text.type) text.type.textContent = data.type;
-          if (text.year) text.year.textContent = data.year;
+          if (text.date) text.date.textContent = data.date;
           if (text.runtime) text.runtime.textContent = data.runtime;
           if (text.end) text.end.textContent = data.runtime;
           if (art && art.getAttribute('src') !== data.art) {
@@ -4001,8 +4129,13 @@
           if (art) art.alt = data.artAlt;
           if (link) link.href = data.href;
           if (linkContext) linkContext.textContent = ` — ${data.title} (opens in a new tab)`;
+          if (playContext) playContext.textContent = ` — ${data.title}`;
           buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
-          if (live) live.textContent = `${data.title} loaded in the inspector.`;
+          if (playerOn) {
+            startPlayer(button, false);
+          } else if (live) {
+            live.textContent = `${data.title} loaded in the inspector.`;
+          }
           if (stacked.matches) {
             deck.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
           }
@@ -4014,6 +4147,10 @@
             load(button);
           }
         });
+
+        if (playButton) {
+          playButton.addEventListener('click', () => startPlayer(current, true));
+        }
       }
 
       /* ---------- Media modal ---------- */
@@ -4052,7 +4189,7 @@
           index.textContent = data.modalIdx || '';
           meta.textContent = data.modalMeta || '';
           desc.textContent = data.modalDesc || '';
-          file.href = data.modalSrc;
+          file.href = data.modalFull || data.modalSrc;
           path.textContent = data.modalSrc.split('/').pop();
           modal.hidden = false;
           background.forEach((element) => {
@@ -4406,6 +4543,9 @@
       </g>
       <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor"/>
     </symbol>
+    <symbol id="i-threads" viewBox="-2.5 -2.5 29 29">
+      <path fill="currentColor" d="M18.263 11.097c-.03-3.486-1.92-5.586-5.111-5.586-2.13 0-3.922.963-4.863 2.499l2.062 1.438c.535-.843 1.272-1.543 2.628-1.543 1.528 0 2.318.85 2.544 2.431a15 15 0 0 0-2.236-.173c-4.125 0-6.068 1.867-6.068 4.336s1.943 3.99 4.804 3.99c3.139 0 5.013-2.115 5.781-4.735.798.361 1.348 1.204 1.348 2.47 0 3.387-3.907 5.232-7.22 5.232-4.885 0-8.077-3.207-8.077-8.424 0-6.392 4.223-10.487 9.9-10.487 3.808 0 5.69 1.671 6.97 3.914l2.108-1.475C21.44 2.078 18.331 0 13.663 0 6.227 0 1.168 5.277 1.168 12.934c0 7 4.953 11.066 10.856 11.066 4.878 0 9.809-2.846 9.809-7.716 0-2.545-1.46-4.231-3.569-5.187m-6.33 4.855c-1.077 0-2.026-.512-2.026-1.453 0-1.483 1.822-1.934 3.606-1.934.678 0 1.34.045 1.927.173-.422 1.927-1.671 3.215-3.508 3.214Z"/>
+    </symbol>
     <symbol id="i-youtube" viewBox="0 0 24 24">
       <path fill="currentColor" fill-rule="evenodd" d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 4.8 12 4.8 12 4.8s-6 0-7.7.5a2.7 2.7 0 0 0-1.9 1.9C2 8.9 2 12 2 12s0 3.1.4 4.8a2.7 2.7 0 0 0 1.9 1.9c1.7.5 7.7.5 7.7.5s6 0 7.7-.5a2.7 2.7 0 0 0 1.9-1.9c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8zM10 15.1V8.9l5.3 3.1z"/>
     </symbol>
@@ -4429,6 +4569,9 @@
         <circle cx="12" cy="12" r="4"/>
         <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/>
       </g>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M7 4.5v15l12.5-7.5z"/>
     </symbol>
     <symbol id="i-start" viewBox="0 0 24 24">
       <path fill="currentColor" d="M5 5h2.2v14H5zM19 5v14l-10-7z"/>
@@ -4487,9 +4630,9 @@
 
       <a class="brand" href="#home" data-fallback>
         <!-- BRAND ASSET: primary Erosyn production wordmark (white, for dark backgrounds) -->
-        <img class="logo-on-dark" src="01-logos/png/erosyn-logo-wordmark-white-transparent-v01.png" alt="Erosyn — home" width="1900" height="1200" decoding="async">
+        <img class="logo-on-dark" src="web/erosyn-wordmark-white-800.png" alt="Erosyn — home" width="800" height="490" decoding="async">
         <!-- BRAND ASSET: Erosyn production wordmark (black, for the light theme) -->
-        <img class="logo-on-light" src="01-logos/png/erosyn-logo-wordmark-black-transparent-v01.png" alt="Erosyn — home" width="1900" height="1200" loading="lazy" decoding="async">
+        <img class="logo-on-light" src="web/erosyn-wordmark-black-800.png" alt="Erosyn — home" width="800" height="490" loading="lazy" decoding="async">
         <span class="brand__fallback" aria-hidden="true"><span>E</span>rosyn</span>
       </a>
 
@@ -4517,7 +4660,6 @@
       </div>
 
       <div class="topbar__actions">
-        <!-- BRAND SWAP: confirm SoundCloud artist URL -->
         <a class="btn btn--sm btn--ghost topbar-sc" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">
           <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-soundcloud"/></svg>
           <span class="topbar-sc__label">SoundCloud</span>
@@ -4555,21 +4697,15 @@
           <p class="browser__note"><b>Formerly SAP.</b> Same sound, sharper signal.</p>
           <ul class="social browser__social">
             <li>
-              <!-- BRAND SWAP: confirm SoundCloud artist URL -->
               <a href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener" aria-label="Erosyn on SoundCloud (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-soundcloud"/></svg></a>
             </li>
             <li>
-              <!-- BRAND SWAP: confirmed Instagram URL -->
               <a href="https://www.instagram.com/erosynmusic/" target="_blank" rel="noopener" aria-label="Erosyn on Instagram (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-instagram"/></svg></a>
             </li>
             <li>
-              <!-- BRAND SWAP: confirmed YouTube URL -->
-              <a href="https://www.youtube.com/@erosynmusic" target="_blank" rel="noopener" aria-label="Erosyn on YouTube (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-youtube"/></svg></a>
+              <a href="https://www.threads.com/@erosynmusic" target="_blank" rel="noopener" aria-label="Erosyn on Threads (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-threads"/></svg></a>
             </li>
-            <li>
-              <!-- BRAND SWAP: confirmed Bandcamp URL -->
-              <a href="https://erosynmusic.bandcamp.com/" target="_blank" rel="noopener" aria-label="Erosyn on Bandcamp (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bandcamp"/></svg></a>
-            </li>
+            <!-- BRAND SWAP: add YouTube / Bandcamp links here once those profiles exist (icons #i-youtube, #i-bandcamp are defined) -->
           </ul>
           <p class="mono">© <span data-current-year>2026</span> Erosyn</p>
         </div>
@@ -4583,8 +4719,9 @@
              ====================================================== -->
         <section class="view view--home scheme-dark" id="home" aria-labelledby="home-title">
           <div class="home__media" data-fallback>
-            <!-- BRAND ASSET: warehouse hero banner, cinematic background -->
-            <img src="03-social/banners/erosyn-hero-banner-warehouse-1920x1080-v01.png" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+            <!-- BRAND ASSET: clean warehouse source select (07-source-selects/erosyn-source-select-c-warehouse-clean-v01.png), web copy.
+                 The hero banner has type baked in, so it stays the social preview image instead. -->
+            <img src="web/erosyn-home-warehouse-1600.jpg" alt="" width="1600" height="1687" fetchpriority="high" decoding="async">
           </div>
           <div class="home__fx" aria-hidden="true">
             <div class="home__wash"></div>
@@ -4603,7 +4740,7 @@
               <h1 class="hero__title" id="home-title" tabindex="-1" data-view-heading>
                 <span class="wordmark" data-fallback>
                   <!-- BRAND ASSET: primary Erosyn production wordmark -->
-                  <img class="wordmark__img" src="01-logos/png/erosyn-logo-wordmark-white-transparent-v01.png" alt="Erosyn" width="1900" height="1200" decoding="async">
+                  <img class="wordmark__img" src="web/erosyn-wordmark-white-800.png" alt="Erosyn" width="800" height="490" decoding="async">
                   <span class="wordmark__fallback" aria-hidden="true">Erosyn</span>
                 </span>
               </h1>
@@ -4613,7 +4750,6 @@
               <p class="hero__lede">Grime pressure, DnB speed, psytrance tension, electro, hardstyle, and classic rave damage — cut into one raw club sound.</p>
 
               <div class="hero__actions">
-                <!-- BRAND SWAP: confirm SoundCloud artist URL -->
                 <a class="btn btn--primary btn--lg" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">
                   <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-soundcloud"/></svg>
                   Listen on SoundCloud
@@ -4664,154 +4800,260 @@
               <p class="view__idx">02 / Clips</p>
               <h2 class="view__title" id="music-title" tabindex="-1" data-view-heading>Music</h2>
             </div>
-            <p class="view__desc">Singles, EP cuts, and club mixes. Load a clip into the inspector, then run it on SoundCloud.</p>
+            <p class="view__desc">Tracks, flips, and live sets from SoundCloud. Load one into the inspector and press Play.</p>
           </header>
 
-          <!-- PERFORMANCE: release covers are 3000px masters — export ~1200px web derivatives before launch. -->
+          <!-- SOURCE: soundcloud.com/erosynmusic — all 10 public uploads (titles, dates, runtimes, cover art) as of 2026-09-25.
+               Blurbs are trimmed from the artist's own SoundCloud descriptions. Cover art is saved locally in web/releases/. -->
           <div class="music view__body">
             <div class="panel clips">
-              <div class="panel__bar"><span><b>Clips</b></span><span>05 entries</span></div>
+              <div class="panel__bar"><span><b>Clips</b></span><span>10 tracks</span></div>
               <h3 class="visually-hidden">Releases</h3>
               <ol class="tracks">
-                <!-- CONTENT SWAP: replace with confirmed release metadata -->
                 <li class="track">
                   <button class="track__select" type="button" aria-pressed="true" data-track
                     data-index="01"
-                    data-title="Waveform Tear"
-                    data-type="Single"
-                    data-year="2026"
-                    data-runtime="4:08"
-                    data-desc="Halftime weight, grime pressure, and a torn top end."
-                    data-art="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png"
-                    data-art-alt="Cover art for Waveform Tear — Erosyn waveform single cover"
-                    data-href="https://soundcloud.com/erosynmusic">
+                    data-title="TO THE FUTURE"
+                    data-type="Demo set"
+                    data-date="Sep 2026"
+                    data-runtime="59:21"
+                    data-desc="A solid hour of opening, vibe setting, and energy building."
+                    data-art="web/erosyn-cover-mix-synth-800.jpg"
+                    data-art-alt="Cover art for TO THE FUTURE"
+                    data-href="https://soundcloud.com/erosynmusic/to-the-future-demo-set">
                     <span class="track__num">01</span>
                     <span class="track__thumb art art--cover" data-fallback>
-                      <!-- BRAND ASSET: release art template — waveform single cover -->
-                      <img src="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/erosyn-cover-mix-synth-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
-                      <span class="track__title">Waveform Tear</span>
-                      <span class="track__meta">Single · 2026 · 4:08</span>
-                      <span class="track__desc">Halftime weight, grime pressure, and a torn top end.</span>
-                      <span class="track__len" style="--len:.071" aria-hidden="true"></span>
+                      <span class="track__title">TO THE FUTURE</span>
+                      <span class="track__meta">Demo set · Sep 2026 · 59:21</span>
+                      <span class="track__desc">A solid hour of opening, vibe setting, and energy building.</span>
+                      <span class="track__len" style="--len:0.977" aria-hidden="true"></span>
                     </span>
                   </button>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Waveform Tear (opens in a new tab)</span></a>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/to-the-future-demo-set" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — TO THE FUTURE (opens in a new tab)</span></a>
                 </li>
-
-                <!-- CONTENT SWAP: replace with confirmed release metadata -->
                 <li class="track">
                   <button class="track__select" type="button" aria-pressed="false" data-track
                     data-index="02"
-                    data-title="Warehouse Systems"
-                    data-type="EP · 4 tracks"
-                    data-year="2026"
-                    data-runtime="17:52"
-                    data-desc="DnB speed and electro stabs built for concrete rooms."
-                    data-art="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png"
-                    data-art-alt="Cover art for Warehouse Systems — Erosyn warehouse EP cover"
-                    data-href="https://soundcloud.com/erosynmusic">
+                    data-title="Asper — Vibe Check (Erosyn Flip)"
+                    data-type="Flip"
+                    data-date="Apr 2026"
+                    data-runtime="2:29"
+                    data-desc="Don’t kill my vibe."
+                    data-art="web/releases/asper-vibe-check-flip.jpg"
+                    data-art-alt="Cover art for Asper — Vibe Check (Erosyn Flip)"
+                    data-href="https://soundcloud.com/erosynmusic/asper-vibe-check-flip">
                     <span class="track__num">02</span>
                     <span class="track__thumb art art--cover" data-fallback>
-                      <!-- BRAND ASSET: release art template — warehouse EP cover -->
-                      <img src="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/releases/asper-vibe-check-flip.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
-                      <span class="track__title">Warehouse Systems</span>
-                      <span class="track__meta">EP · 2026 · 17:52</span>
-                      <span class="track__desc">DnB speed and electro stabs built for concrete rooms.</span>
-                      <span class="track__len" style="--len:.307" aria-hidden="true"></span>
+                      <span class="track__title">Asper — Vibe Check (Erosyn Flip)</span>
+                      <span class="track__meta">Flip · Apr 2026 · 2:29</span>
+                      <span class="track__desc">Don’t kill my vibe.</span>
+                      <span class="track__len" style="--len:0.041" aria-hidden="true"></span>
                     </span>
                   </button>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Warehouse Systems (opens in a new tab)</span></a>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/asper-vibe-check-flip" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Asper — Vibe Check (Erosyn Flip) (opens in a new tab)</span></a>
                 </li>
-
-                <!-- CONTENT SWAP: replace with confirmed release metadata -->
                 <li class="track">
                   <button class="track__select" type="button" aria-pressed="false" data-track
                     data-index="03"
-                    data-title="Redline Session 01"
-                    data-type="Mix"
-                    data-year="2026"
-                    data-runtime="58:14"
-                    data-desc="Grime, DnB, psytrance, and rave records run hot into the red."
-                    data-art="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png"
-                    data-art-alt="Cover art for Redline Session 01 — Erosyn synth mix cover"
-                    data-href="https://soundcloud.com/erosynmusic">
+                    data-title="Back It Up"
+                    data-type="Single"
+                    data-date="Mar 2026"
+                    data-runtime="3:02"
+                    data-desc="Big alien-booty bass."
+                    data-art="web/releases/back-it-up-free-download.jpg"
+                    data-art-alt="Cover art for Back It Up"
+                    data-href="https://soundcloud.com/erosynmusic/back-it-up-free-download">
                     <span class="track__num">03</span>
                     <span class="track__thumb art art--cover" data-fallback>
-                      <!-- BRAND ASSET: release art template — synth mix cover -->
-                      <img src="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/releases/back-it-up-free-download.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
-                      <span class="track__title">Redline Session 01</span>
-                      <span class="track__meta">Mix · 2026 · 58:14</span>
-                      <span class="track__desc">Grime, DnB, psytrance, and rave records run hot into the red.</span>
-                      <span class="track__len" style="--len:1" aria-hidden="true"></span>
+                      <span class="track__title">Back It Up</span>
+                      <span class="track__meta">Single · Mar 2026 · 3:02 <span class="chip track__free">Free DL</span></span>
+                      <span class="track__desc">Big alien-booty bass.</span>
+                      <span class="track__len" style="--len:0.05" aria-hidden="true"></span>
                     </span>
                   </button>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Redline Session 01 (opens in a new tab)</span></a>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/back-it-up-free-download" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Back It Up (opens in a new tab)</span></a>
                 </li>
-
-                <!-- CONTENT SWAP: replace with confirmed release metadata -->
                 <li class="track">
                   <button class="track__select" type="button" aria-pressed="false" data-track
                     data-index="04"
-                    data-title="Pressure Test"
-                    data-type="Single"
-                    data-year="2026"
-                    data-runtime="3:46"
-                    data-desc="Psytrance tension over a grime bassline, hardstyle kick on the switch."
-                    data-art="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png"
-                    data-art-alt="Cover art for Pressure Test — Erosyn waveform single cover"
-                    data-href="https://soundcloud.com/erosynmusic">
+                    data-title="YNG Martyr — LV Steppers (Erosyn Flip)"
+                    data-type="Flip"
+                    data-date="Jan 2026"
+                    data-runtime="3:41"
+                    data-desc="Erosyn flip of YNG Martyr’s “LV Steppers.”"
+                    data-art="web/releases/yng-martyr-lv-steppers-sap-flip-free-download.jpg"
+                    data-art-alt="Cover art for YNG Martyr — LV Steppers (Erosyn Flip)"
+                    data-href="https://soundcloud.com/erosynmusic/yng-martyr-lv-steppers-sap-flip-free-download">
                     <span class="track__num">04</span>
                     <span class="track__thumb art art--cover" data-fallback>
-                      <!-- BRAND ASSET: release art template — waveform single cover -->
-                      <img src="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/releases/yng-martyr-lv-steppers-sap-flip-free-download.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
-                      <span class="track__title">Pressure Test</span>
-                      <span class="track__meta">Single · 2026 · 3:46</span>
-                      <span class="track__desc">Psytrance tension over a grime bassline, hardstyle kick on the switch.</span>
-                      <span class="track__len" style="--len:.065" aria-hidden="true"></span>
+                      <span class="track__title">YNG Martyr — LV Steppers (Erosyn Flip)</span>
+                      <span class="track__meta">Flip · Jan 2026 · 3:41 <span class="chip track__free">Free DL</span></span>
+                      <span class="track__desc">Erosyn flip of YNG Martyr’s “LV Steppers.”</span>
+                      <span class="track__len" style="--len:0.061" aria-hidden="true"></span>
                     </span>
                   </button>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Pressure Test (opens in a new tab)</span></a>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/yng-martyr-lv-steppers-sap-flip-free-download" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — YNG Martyr — LV Steppers (Erosyn Flip) (opens in a new tab)</span></a>
                 </li>
-
-                <!-- CONTENT SWAP: replace with confirmed release metadata -->
                 <li class="track">
                   <button class="track__select" type="button" aria-pressed="false" data-track
                     data-index="05"
-                    data-title="Late Room"
-                    data-type="Edit"
-                    data-year="2026"
-                    data-runtime="5:21"
-                    data-desc="Classic rave damage, re-cut for the last hour."
-                    data-art="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png"
-                    data-art-alt="Cover art for Late Room — Erosyn warehouse cover"
-                    data-href="https://soundcloud.com/erosynmusic">
+                    data-title="AfterJinx Set (12/29/2025)"
+                    data-type="Live set"
+                    data-date="Jan 2026"
+                    data-runtime="44:43"
+                    data-desc="Live from AfterJinx in Philadelphia, hauled up from Miami into the cold."
+                    data-art="web/releases/sap-afterjinx-set-12292025.jpg"
+                    data-art-alt="Cover art for AfterJinx Set (12/29/2025)"
+                    data-href="https://soundcloud.com/erosynmusic/sap-afterjinx-set-12292025">
                     <span class="track__num">05</span>
                     <span class="track__thumb art art--cover" data-fallback>
-                      <!-- BRAND ASSET: release art template — warehouse EP cover -->
-                      <img src="04-release-art/templates/erosyn-ep-cover-template-warehouse-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                      <img src="web/releases/sap-afterjinx-set-12292025.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
                     </span>
                     <span class="track__main">
-                      <span class="track__title">Late Room</span>
-                      <span class="track__meta">Edit · 2026 · 5:21</span>
-                      <span class="track__desc">Classic rave damage, re-cut for the last hour.</span>
-                      <span class="track__len" style="--len:.092" aria-hidden="true"></span>
+                      <span class="track__title">AfterJinx Set (12/29/2025)</span>
+                      <span class="track__meta">Live set · Jan 2026 · 44:43</span>
+                      <span class="track__desc">Live from AfterJinx in Philadelphia, hauled up from Miami into the cold.</span>
+                      <span class="track__len" style="--len:0.736" aria-hidden="true"></span>
                     </span>
                   </button>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Late Room (opens in a new tab)</span></a>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/sap-afterjinx-set-12292025" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — AfterJinx Set (12/29/2025) (opens in a new tab)</span></a>
+                </li>
+                <li class="track">
+                  <button class="track__select" type="button" aria-pressed="false" data-track
+                    data-index="06"
+                    data-title="Drop"
+                    data-type="Single"
+                    data-date="Dec 2025"
+                    data-runtime="2:20"
+                    data-desc="I wanna see you drop."
+                    data-art="web/releases/drop.jpg"
+                    data-art-alt="Cover art for Drop"
+                    data-href="https://soundcloud.com/erosynmusic/drop">
+                    <span class="track__num">06</span>
+                    <span class="track__thumb art art--cover" data-fallback>
+                      <img src="web/releases/drop.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
+                    </span>
+                    <span class="track__main">
+                      <span class="track__title">Drop</span>
+                      <span class="track__meta">Single · Dec 2025 · 2:20 <span class="chip track__free">Free DL</span></span>
+                      <span class="track__desc">I wanna see you drop.</span>
+                      <span class="track__len" style="--len:0.038" aria-hidden="true"></span>
+                    </span>
+                  </button>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/drop" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Drop (opens in a new tab)</span></a>
+                </li>
+                <li class="track">
+                  <button class="track__select" type="button" aria-pressed="false" data-track
+                    data-index="07"
+                    data-title="A Fairly Odd Flip"
+                    data-type="Flip"
+                    data-date="Nov 2025"
+                    data-runtime="3:29"
+                    data-desc="An oldie, rereleased: a flip nobody had done before."
+                    data-art="web/releases/a-fairly-odd-flip-free-download.jpg"
+                    data-art-alt="Cover art for A Fairly Odd Flip"
+                    data-href="https://soundcloud.com/erosynmusic/a-fairly-odd-flip-free-download">
+                    <span class="track__num">07</span>
+                    <span class="track__thumb art art--cover" data-fallback>
+                      <img src="web/releases/a-fairly-odd-flip-free-download.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
+                    </span>
+                    <span class="track__main">
+                      <span class="track__title">A Fairly Odd Flip</span>
+                      <span class="track__meta">Flip · Nov 2025 · 3:29 <span class="chip track__free">Free DL</span></span>
+                      <span class="track__desc">An oldie, rereleased: a flip nobody had done before.</span>
+                      <span class="track__len" style="--len:0.057" aria-hidden="true"></span>
+                    </span>
+                  </button>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/a-fairly-odd-flip-free-download" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — A Fairly Odd Flip (opens in a new tab)</span></a>
+                </li>
+                <li class="track">
+                  <button class="track__select" type="button" aria-pressed="false" data-track
+                    data-index="08"
+                    data-title="Dance"
+                    data-type="Single"
+                    data-date="Nov 2025"
+                    data-runtime="3:52"
+                    data-desc="What would high-energy dubstep sound like with a techno aesthetic?"
+                    data-art="web/releases/dance.jpg"
+                    data-art-alt="Cover art for Dance"
+                    data-href="https://soundcloud.com/erosynmusic/dance">
+                    <span class="track__num">08</span>
+                    <span class="track__thumb art art--cover" data-fallback>
+                      <img src="web/releases/dance.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
+                    </span>
+                    <span class="track__main">
+                      <span class="track__title">Dance</span>
+                      <span class="track__meta">Single · Nov 2025 · 3:52 <span class="chip track__free">Free DL</span></span>
+                      <span class="track__desc">What would high-energy dubstep sound like with a techno aesthetic?</span>
+                      <span class="track__len" style="--len:0.064" aria-hidden="true"></span>
+                    </span>
+                  </button>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/dance" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Dance (opens in a new tab)</span></a>
+                </li>
+                <li class="track">
+                  <button class="track__select" type="button" aria-pressed="false" data-track
+                    data-index="09"
+                    data-title="American Grime @ Lost City Brewery (7/11/2025)"
+                    data-type="Live set"
+                    data-date="Sep 2025"
+                    data-runtime="1:00:43"
+                    data-desc="Opening set for American Grime, July 2025."
+                    data-art="web/erosyn-cover-ep-warehouse-800.jpg"
+                    data-art-alt="Cover art for American Grime @ Lost City Brewery (7/11/2025)"
+                    data-href="https://soundcloud.com/erosynmusic/sap-ag-set-7112025">
+                    <span class="track__num">09</span>
+                    <span class="track__thumb art art--cover" data-fallback>
+                      <img src="web/erosyn-cover-ep-warehouse-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
+                    </span>
+                    <span class="track__main">
+                      <span class="track__title">American Grime @ Lost City Brewery (7/11/2025)</span>
+                      <span class="track__meta">Live set · Sep 2025 · 1:00:43</span>
+                      <span class="track__desc">Opening set for American Grime, July 2025.</span>
+                      <span class="track__len" style="--len:1.0" aria-hidden="true"></span>
+                    </span>
+                  </button>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/sap-ag-set-7112025" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — American Grime @ Lost City Brewery (7/11/2025) (opens in a new tab)</span></a>
+                </li>
+                <li class="track">
+                  <button class="track__select" type="button" aria-pressed="false" data-track
+                    data-index="10"
+                    data-title="Welcome to the Eroverse"
+                    data-type="Mix"
+                    data-date="May 2025"
+                    data-runtime="58:25"
+                    data-desc="The mix that feels most authentically “me.”"
+                    data-art="web/releases/eroverse-mix.jpg"
+                    data-art-alt="Cover art for Welcome to the Eroverse"
+                    data-href="https://soundcloud.com/erosynmusic/eroverse-mix">
+                    <span class="track__num">10</span>
+                    <span class="track__thumb art art--cover" data-fallback>
+                      <img src="web/releases/eroverse-mix.jpg" alt="" width="500" height="500" loading="lazy" decoding="async">
+                    </span>
+                    <span class="track__main">
+                      <span class="track__title">Welcome to the Eroverse</span>
+                      <span class="track__meta">Mix · May 2025 · 58:25</span>
+                      <span class="track__desc">The mix that feels most authentically “me.”</span>
+                      <span class="track__len" style="--len:0.962" aria-hidden="true"></span>
+                    </span>
+                  </button>
+                  <a class="ext-link" href="https://soundcloud.com/erosynmusic/eroverse-mix" target="_blank" rel="noopener">SoundCloud<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Welcome to the Eroverse (opens in a new tab)</span></a>
                 </li>
               </ol>
 
               <div class="clips__foot">
-                <p class="clips__note">Catalog preview — release details are being finalized.</p>
-                <!-- BRAND SWAP: confirm SoundCloud artist URL -->
+                <p class="clips__note">Every upload streams free on SoundCloud.</p>
                 <a class="btn btn--ghost btn--sm" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">
                   Follow on SoundCloud
                   <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg>
@@ -4821,47 +5063,48 @@
             </div>
 
             <article class="panel deck" id="deck" aria-labelledby="deck-title">
-              <!-- CONTENT SWAP: replace with production SoundCloud player or release integration -->
-              <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Inspector</b></span><span>Deck A · Cued</span></div>
+              <!-- Click-to-play: the SoundCloud player iframe loads only after a visitor presses Play. -->
+              <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Inspector</b></span><span id="deck-state">Deck A · Cued</span></div>
 
               <div class="deck__body">
                 <div class="deck__art art art--cover" data-fallback>
-                  <!-- BRAND ASSET: release art template — waveform single cover -->
-                  <img id="deck-art" src="04-release-art/templates/erosyn-single-cover-template-waveform-logo-3000-v01.png" alt="Cover art for Waveform Tear — Erosyn waveform single cover" width="3000" height="3000" loading="lazy" decoding="async">
-                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Cover pending</span><span class="media-fallback__path">04-release-art / templates</span></span>
+                  <img id="deck-art" src="web/erosyn-cover-mix-synth-800.jpg" alt="Cover art for TO THE FUTURE" width="800" height="800" loading="lazy" decoding="async">
                 </div>
                 <div class="deck__info">
-                  <!-- CONTENT SWAP: replace with confirmed release metadata -->
-                  <p class="deck__index mono" id="deck-index">Clip 01 / 05</p>
-                  <h3 class="deck__title" id="deck-title">Waveform Tear</h3>
-                  <p class="deck__desc" id="deck-desc">Halftime weight, grime pressure, and a torn top end.</p>
+                  <p class="deck__index mono" id="deck-index">Clip 01 / 10</p>
+                  <h3 class="deck__title" id="deck-title">TO THE FUTURE</h3>
+                  <p class="deck__desc" id="deck-desc">A solid hour of opening, vibe setting, and energy building.</p>
                   <dl class="deck__meta">
-                    <div><dt>Type</dt><dd id="deck-type">Single</dd></div>
-                    <div><dt>Year</dt><dd id="deck-year">2026</dd></div>
-                    <div><dt>Runtime</dt><dd id="deck-runtime">4:08</dd></div>
+                    <div><dt>Type</dt><dd id="deck-type">Demo set</dd></div>
+                    <div><dt>Released</dt><dd id="deck-date">Sep 2026</dd></div>
+                    <div><dt>Runtime</dt><dd id="deck-runtime">59:21</dd></div>
                   </dl>
                 </div>
               </div>
 
-              <div class="deck__wave" data-fallback aria-hidden="true">
+              <div class="deck__wave" id="deck-wave" data-fallback aria-hidden="true">
                 <svg class="wave-svg" focusable="false"><use href="#i-wave"/></svg>
-                <!-- BRAND ASSET: wide waveform banner, used as the deck readout -->
-                <img src="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png" alt="" width="2480" height="520" loading="lazy" decoding="async">
+                <!-- BRAND ASSET: wide waveform banner, cropped web copy used as the idle readout -->
+                <img src="web/erosyn-waveform-readout-1200.jpg" alt="" width="1200" height="405" loading="lazy" decoding="async">
                 <span class="deck__playhead"><span class="mono">Cue</span></span>
               </div>
+              <div class="deck__player" id="deck-player" hidden></div>
 
-              <div class="deck__progress mono" aria-hidden="true">
+              <div class="deck__progress mono" id="deck-progress" aria-hidden="true">
                 <span>0:00</span>
                 <span class="deck__track"><span class="deck__fill"></span></span>
-                <span id="deck-end">4:08</span>
+                <span id="deck-end">59:21</span>
               </div>
 
               <div class="deck__foot">
-                <a class="btn btn--primary" id="deck-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">
+                <button class="btn btn--primary" type="button" id="deck-play">
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-play"/></svg>
+                  Play in deck<span class="visually-hidden" id="deck-play-context"> — TO THE FUTURE</span>
+                </button>
+                <a class="btn btn--ghost" id="deck-link" href="https://soundcloud.com/erosynmusic/to-the-future-demo-set" target="_blank" rel="noopener">
                   <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-soundcloud"/></svg>
-                  Listen on SoundCloud<span class="visually-hidden" id="deck-link-context"> — Waveform Tear (opens in a new tab)</span>
+                  Open on SoundCloud<span class="visually-hidden" id="deck-link-context"> — TO THE FUTURE (opens in a new tab)</span>
                 </a>
-                <p class="deck__note mono">Preview panel — audio plays on SoundCloud</p>
               </div>
               <p class="visually-hidden" id="deck-live" role="status"></p>
             </article>
@@ -4884,14 +5127,15 @@
             <li class="pad p-a">
               <!-- BRAND ASSET: live visuals — warehouse redline VJ loop still -->
               <button class="pad__btn" type="button"
-                data-modal-src="05-live-visuals/stage-screens/erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png"
+                data-modal-src="web/erosyn-vj-still-warehouse-redline-1600.jpg"
+                data-modal-full="05-live-visuals/stage-screens/erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png"
                 data-modal-idx="V/01"
                 data-modal-title="Warehouse redline — VJ loop still"
                 data-modal-meta="Live visuals · Stage screen · 1920 × 1080"
                 data-modal-alt="Erosyn warehouse redline VJ loop still"
                 data-modal-desc="Stage-screen still from the warehouse redline loop, sized for club projection and LED walls.">
                 <span class="pad__frame art art--redline" data-fallback>
-                  <img src="05-live-visuals/stage-screens/erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+                  <img src="web/erosyn-vj-still-warehouse-redline-1600.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/01</span>
@@ -4907,14 +5151,15 @@
             <li class="pad p-b">
               <!-- BRAND ASSET: live/event — 11x17 flyer template -->
               <button class="pad__btn" type="button"
-                data-modal-src="05-live-visuals/flyers/erosyn-flyer-template-11x17-v01.png"
+                data-modal-src="web/erosyn-flyer-template-1100.jpg"
+                data-modal-full="05-live-visuals/flyers/erosyn-flyer-template-11x17-v01.png"
                 data-modal-idx="V/02"
                 data-modal-title="Flyer template — 11 × 17"
                 data-modal-meta="Live / event · Print flyer · 2200 × 3400"
                 data-modal-alt="Erosyn 11 by 17 flyer template"
                 data-modal-desc="Print and social flyer layout for club nights and DJ bills. Date, venue, and lineup drop into the frame.">
                 <span class="pad__frame art art--flyer" data-fallback>
-                  <img src="05-live-visuals/flyers/erosyn-flyer-template-11x17-v01.png" alt="" width="2200" height="3400" loading="lazy" decoding="async">
+                  <img src="web/erosyn-flyer-template-1100.jpg" alt="" width="1100" height="1700" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-flyer-template-11x17-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/02</span>
@@ -4930,14 +5175,15 @@
             <li class="pad p-c">
               <!-- BRAND ASSET: live visuals — stage-screen logo -->
               <button class="pad__btn" type="button"
-                data-modal-src="05-live-visuals/stage-screens/erosyn-stage-screen-logo-1920x1080-v01.png"
+                data-modal-src="web/erosyn-stage-screen-logo-1600.jpg"
+                data-modal-full="05-live-visuals/stage-screens/erosyn-stage-screen-logo-1920x1080-v01.png"
                 data-modal-idx="V/03"
                 data-modal-title="Stage screen — logo lock"
                 data-modal-meta="Live visuals · Stage screen · 1920 × 1080"
                 data-modal-alt="Erosyn logo stage screen"
                 data-modal-desc="Logo lock for stage screens between sets and on DJ intros.">
                 <span class="pad__frame art art--logo" data-fallback>
-                  <img src="05-live-visuals/stage-screens/erosyn-stage-screen-logo-1920x1080-v01.png" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+                  <img src="web/erosyn-stage-screen-logo-1600.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-stage-screen-logo-1920x1080-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/03</span>
@@ -4953,14 +5199,15 @@
             <li class="pad p-d">
               <!-- BRAND ASSET: press photo, square red-rim crop -->
               <button class="pad__btn" type="button"
-                data-modal-src="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-square-v01.jpg"
+                data-modal-src="web/erosyn-press-photo-square-1000.jpg"
+                data-modal-full="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-square-v01.jpg"
                 data-modal-idx="V/04"
                 data-modal-title="Press crop — red rim"
                 data-modal-meta="Press kit · Headshot · 1600 × 1600"
                 data-modal-alt="Erosyn black-and-white press headshot with red rim light, square crop"
                 data-modal-desc="Black-and-white press headshot with red rim light. Square crop for profiles, listings, and promo posts.">
                 <span class="pad__frame art art--press" data-fallback>
-                  <img src="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-square-v01.jpg" alt="" width="1600" height="1600" loading="lazy" decoding="async">
+                  <img src="web/erosyn-press-photo-square-1000.jpg" alt="" width="1000" height="1000" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-square-v01.jpg</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/04</span>
@@ -4976,14 +5223,15 @@
             <li class="pad p-e">
               <!-- BRAND ASSET: release art template — synth mix cover -->
               <button class="pad__btn" type="button"
-                data-modal-src="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png"
+                data-modal-src="web/erosyn-cover-mix-synth-1600.jpg"
+                data-modal-full="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png"
                 data-modal-idx="V/05"
                 data-modal-title="Mix cover — synth static"
                 data-modal-meta="Release art · Cover template · 3000 × 3000"
                 data-modal-alt="Erosyn mix cover template with synth imagery and logo"
                 data-modal-desc="Square cover template for mixes: synth imagery under the Erosyn logo lockup.">
                 <span class="pad__frame art art--cover" data-fallback>
-                  <img src="04-release-art/templates/erosyn-mix-cover-template-synth-logo-3000-v01.png" alt="" width="3000" height="3000" loading="lazy" decoding="async">
+                  <img src="web/erosyn-cover-mix-synth-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
                   <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-mix-cover-template-synth-logo-3000-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/05</span>
@@ -4999,7 +5247,8 @@
             <li class="pad p-f">
               <!-- BRAND ASSET: wide waveform banner -->
               <button class="pad__btn" type="button"
-                data-modal-src="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png"
+                data-modal-src="web/erosyn-banner-wide-waveform-1600.jpg"
+                data-modal-full="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png"
                 data-modal-idx="V/06"
                 data-modal-title="Waveform tear — wide banner"
                 data-modal-meta="Social · Header banner · 2480 × 520"
@@ -5007,7 +5256,7 @@
                 data-modal-desc="Wide waveform banner for profile headers and page covers.">
                 <span class="pad__frame art art--wave" data-fallback>
                   <svg class="wave-svg" aria-hidden="true" focusable="false"><use href="#i-wave"/></svg>
-                  <img src="03-social/banners/erosyn-banner-wide-waveform-2480x520-v01.png" alt="" width="2480" height="520" loading="lazy" decoding="async">
+                  <img src="web/erosyn-banner-wide-waveform-1600.jpg" alt="" width="1600" height="335" loading="lazy" decoding="async">
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/06</span>
                 <span class="pad__open" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-expand"/></svg></span>
@@ -5043,7 +5292,7 @@
               <div class="panel__bar" aria-hidden="true"><span><b>Display</b></span><span>Press photo</span></div>
               <span class="device__frame art art--press" data-fallback>
                 <!-- BRAND ASSET: press photo, wide red-rim crop -->
-                <img src="02-press-kit/photos/erosyn-press-photo-headshot-bw-redrim-wide-v01.jpg" alt="Erosyn press photo: black-and-white headshot with red rim light" width="2400" height="1350" loading="lazy" decoding="async">
+                <img src="web/erosyn-press-photo-wide-1400.jpg" alt="Erosyn press photo: black-and-white headshot with red rim light" width="1400" height="788" loading="lazy" decoding="async">
                 <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Press photo pending</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-wide-v01.jpg</span></span>
               </span>
               <figcaption class="device__caption mono">
@@ -5144,7 +5393,6 @@
                     <p class="show__venue">Warehouse TBA</p>
                   </div>
                   <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Upcoming</span></p>
-                  <!-- BRAND SWAP: confirm SoundCloud artist URL -->
                   <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">Get updates<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Miami, October 17 (opens in a new tab)</span></a>
                 </li>
                 <li class="show" data-when="upcoming">
@@ -5158,7 +5406,6 @@
                     <p class="show__venue">Club TBA</p>
                   </div>
                   <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Upcoming</span></p>
-                  <!-- BRAND SWAP: confirm SoundCloud artist URL -->
                   <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">Get updates<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Miami, November 7 (opens in a new tab)</span></a>
                 </li>
                 <li class="show" data-when="upcoming">
@@ -5172,7 +5419,6 @@
                     <p class="show__venue">Venue TBA</p>
                   </div>
                   <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Upcoming</span></p>
-                  <!-- BRAND SWAP: confirm SoundCloud artist URL -->
                   <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">Get updates<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — December 12 (opens in a new tab)</span></a>
                 </li>
                 <li class="show" data-when="past">
@@ -5222,8 +5468,12 @@
               </div>
             </div>
 
-            <aside class="panel booking-card" aria-labelledby="booking-card-title">
+            <aside class="panel booking-card scheme-dark" aria-labelledby="booking-card-title">
               <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Booking</b></span><span>Open</span></div>
+              <span class="booking-card__media" data-fallback aria-hidden="true">
+                <!-- BRAND ASSET: DJ silhouette source select (07-source-selects/erosyn-source-select-g-dj-silhouette-clean-v01.png), web copy -->
+                <img src="web/erosyn-dj-silhouette-900.jpg" alt="" width="900" height="940" loading="lazy" decoding="async">
+              </span>
               <div class="booking-card__body">
                 <h3 id="booking-card-title">Put Erosyn on the bill.</h3>
                 <!-- SOURCE: Erosyn press one-sheet v01 (booking copy, live identity) -->
@@ -5394,7 +5644,7 @@
     <footer class="statusbar">
       <span class="status__icon" data-fallback>
         <!-- BRAND ASSET: flat red icon mark -->
-        <img src="01-logos/png/erosyn-logo-icon-red-transparent-v01.png" alt="" width="1100" height="1100" decoding="async">
+        <img src="web/erosyn-icon-red-192.png" alt="" width="192" height="192" decoding="async">
       </span>
 
       <div class="transport" role="group" aria-label="Transport">
@@ -5424,21 +5674,15 @@
       <div class="status__end">
         <ul class="social">
           <li>
-            <!-- BRAND SWAP: confirm SoundCloud artist URL -->
             <a href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener" aria-label="Erosyn on SoundCloud (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-soundcloud"/></svg></a>
           </li>
           <li>
-            <!-- BRAND SWAP: confirmed Instagram URL -->
             <a href="https://www.instagram.com/erosynmusic/" target="_blank" rel="noopener" aria-label="Erosyn on Instagram (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-instagram"/></svg></a>
           </li>
           <li>
-            <!-- BRAND SWAP: confirmed YouTube URL -->
-            <a href="https://www.youtube.com/@erosynmusic" target="_blank" rel="noopener" aria-label="Erosyn on YouTube (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-youtube"/></svg></a>
+            <a href="https://www.threads.com/@erosynmusic" target="_blank" rel="noopener" aria-label="Erosyn on Threads (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-threads"/></svg></a>
           </li>
-          <li>
-            <!-- BRAND SWAP: confirmed Bandcamp URL -->
-            <a href="https://erosynmusic.bandcamp.com/" target="_blank" rel="noopener" aria-label="Erosyn on Bandcamp (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-bandcamp"/></svg></a>
-          </li>
+          <!-- BRAND SWAP: add YouTube / Bandcamp links here once those profiles exist (icons #i-youtube, #i-bandcamp are defined) -->
         </ul>
         <p class="status__copy">© <span data-current-year>2026</span> Erosyn</p>
       </div>
