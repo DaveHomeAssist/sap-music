@@ -24,7 +24,7 @@ Production at `standardacidprocedure.com` is served by **Vercel** (Vercel GitHub
 ## Key pages
 - `index.html` — landing page: hero, releases, shows, press toolkit
 - `drum-machine.html` — interactive drum machine
-- `erosyn/index.html` — Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. Expects the Erosyn artist pack folders (`01-logos/`, `02-press-kit/`, `03-social/`, `04-release-art/`, `05-live-visuals/`) beside it; missing assets fall back to CSS art. The page loads resized copies from `erosyn/web/` (regenerate them from the pack masters when art changes); modal "Open full file" links point at the masters. Placeholders are marked `BRAND SWAP` / `CONTENT SWAP`.
+- `erosyn/index.html` — Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. Expects the Erosyn artist pack folders (`01-logos/`, `02-press-kit/`, `03-social/`, `04-release-art/`, `05-live-visuals/`) beside it; missing assets fall back to CSS art. The page loads resized copies from `erosyn/web/` (regenerate them from the pack masters when art changes); modal "Open full file" links point at the masters. The Music view lists the real catalog from soundcloud.com/erosynmusic (cover art saved in `erosyn/web/releases/`) and loads the SoundCloud widget only when a visitor presses Play. Remaining placeholders are marked `BRAND SWAP` / `CONTENT SWAP`.
 
 ## Key sections (index.html)
 - **Hero** — artist identity and primary CTA
