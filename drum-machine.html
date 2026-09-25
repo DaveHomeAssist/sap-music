@@ -1,44 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; media-src 'self' https://w.soundcloud.com; frame-src https://w.soundcloud.com">
-  <title>SAP — Rhythm Machine</title>
+  <title>Rhythm Machine — Erosyn</title>
+  <meta name="description" content="Sketch a 16-step beat in the Erosyn rhythm machine: dubstep, grime, DnB, psytrance, electro, hardstyle, and rave kits, synthesized in your browser.">
+  <meta name="theme-color" content="#050505">
+  <link rel="icon" type="image/png" href="erosyn/web/erosyn-icon-red-192.png">
   <link rel="stylesheet" href="fonts/fonts.css">
   <style>
     :root {
-      --accent:        #e8609c;
-      --accent-dim:    #8a3a5e;
-      --accent-glow:   rgba(232, 96, 156, 0.14);
-      --accent2:       #5ce0d6;
-      --accent2-dim:   #2a7a75;
-      --accent2-glow:  rgba(92, 224, 214, 0.10);
-      --warning:       #ff6b4a;
-      --signal:        #ffd166;
+      /* Erosyn palette (erosyn/06-web-digital/erosyn-css-tokens.css) */
+      --void-black:    #050505;
+      --signal-red:    #ff1b1b;
+      --blood-red:     #9e0018;
+      --bone-white:    #f4efe7;
+      --static-gray:   #8a8a8a;
+      --warning-amber: #ff9b2f;
 
-      --bg-black:      #0c0e1a;
-      --bg-surface:    #111425;
-      --bg-elevated:   #181c30;
-      --bg-card:       #13162a;
-      --border:        #252940;
-      --border-lite:   #353a55;
+      --bg-black:      var(--void-black);
+      --bg-surface:    #0c0c0c;
+      --bg-elevated:   #151313;
+      --bg-card:       #0a0908;
+      --border:        rgba(244, 239, 231, 0.13);
+      --border-lite:   rgba(244, 239, 231, 0.28);
 
-      --text-primary:   #e2dfe8;
-      --text-secondary: #8a87a0;
-      --text-dim:       #55536a;
+      --text-primary:   var(--bone-white);
+      --text-secondary: #d9d1c8;
+      --text-dim:       #a49d95;
 
-      --font-display: 'Orbitron', sans-serif;
-      --font-body:    'IBM Plex Mono', monospace;
-      --font-sans:    'Space Grotesk', sans-serif;
+      --font-display: 'Space Grotesk', Arial, sans-serif;
+      --font-body:    'IBM Plex Mono', ui-monospace, monospace;
 
-      /* Per-track accent colors */
-      --kick-color:    #e8609c;
-      --snare-color:   #5ce0d6;
-      --hihat-color:   #ffd166;
-      --openhat-color: #ff6b4a;
-      --clap-color:    #b79fff;
+      --t-press: 80ms;
+      --t-fast:  120ms;
+      --t:       150ms;
+      --ease:    cubic-bezier(.2, .7, .2, 1);
+
+      /* Per-track colors: red is the kick's signal, amber stays rare on the sparse open hat. */
+      --kick-color:    var(--signal-red);
+      --snare-color:   var(--bone-white);
+      --hihat-color:   var(--static-gray);
+      --openhat-color: var(--warning-amber);
+      --clap-color:    var(--blood-red);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -64,21 +69,29 @@
       position: fixed;
       inset: 0;
       background-image:
-        repeating-linear-gradient(90deg, var(--border) 0px, var(--border) 1px, transparent 1px, transparent 48px),
-        repeating-linear-gradient(0deg, var(--border) 0px, var(--border) 1px, transparent 1px, transparent 48px);
-      opacity: 0.3;
+        repeating-linear-gradient(90deg, rgba(244,239,231,0.05) 0px, rgba(244,239,231,0.05) 1px, transparent 1px, transparent 48px),
+        repeating-linear-gradient(0deg, rgba(244,239,231,0.05) 0px, rgba(244,239,231,0.05) 1px, transparent 1px, transparent 48px);
       pointer-events: none;
     }
 
-    /* Ambient glow */
+    /* Red wash, low and physical rather than glossy */
     body::after {
       content: '';
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 60% 50% at 20% 50%, rgba(232,96,156,0.06) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 50% at 80% 50%, rgba(92,224,214,0.05) 0%, transparent 70%);
+        radial-gradient(ellipse 55% 45% at 12% 18%, rgba(255,27,27,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 88% 92%, rgba(158,0,24,0.16) 0%, transparent 70%);
       pointer-events: none;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
 
     /* ── MACHINE SHELL ── */
@@ -87,24 +100,20 @@
       z-index: 1;
       background: var(--bg-surface);
       border: 1px solid var(--border-lite);
-      border-radius: 16px;
+      border-radius: 10px;
       width: 100%;
       max-width: 900px;
       padding: 32px;
-      box-shadow:
-        0 0 0 1px rgba(232,96,156,0.05),
-        0 24px 80px rgba(0,0,0,0.6),
-        0 0 60px rgba(92,224,214,0.03);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
     }
 
-    /* Corner accent lines */
+    /* Signal line */
     .drum-machine::before {
       content: '';
       position: absolute;
       top: -1px; left: 24px; right: 24px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
-      border-radius: 0 0 2px 2px;
+      background: linear-gradient(90deg, transparent, var(--signal-red), transparent);
     }
 
     /* ── HEADER ── */
@@ -112,6 +121,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
       margin-bottom: 28px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
@@ -119,28 +129,38 @@
 
     .header-left {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      align-items: center;
+      gap: 18px;
     }
 
     .logo {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
+      display: block;
+      line-height: 0;
+      border-radius: 4px;
+    }
+
+    .logo img {
+      width: auto;
+      height: 44px;
     }
 
     .subtitle {
+      display: flex;
+      align-items: center;
+      gap: 9px;
       font-family: var(--font-body);
-      font-size: 9px;
-      letter-spacing: 0.25em;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--text-dim);
+      color: var(--signal-red);
+    }
+
+    .subtitle::before {
+      content: '';
+      width: 18px;
+      height: 2px;
+      background: var(--signal-red);
     }
 
     .header-right {
@@ -151,13 +171,14 @@
 
     .model-tag {
       font-family: var(--font-body);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--text-dim);
       padding: 4px 8px;
       border: 1px solid var(--border);
       border-radius: 4px;
+      white-space: nowrap;
     }
 
     .status-indicator {
@@ -165,18 +186,18 @@
       height: 8px;
       border-radius: 50%;
       background: var(--border-lite);
-      transition: all 0.3s;
+      transition: background-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
     }
 
     .status-indicator.active {
-      background: var(--accent2);
-      box-shadow: 0 0 10px var(--accent2), 0 0 20px rgba(92,224,214,0.3);
+      background: var(--signal-red);
+      box-shadow: 0 0 10px var(--signal-red), 0 0 20px rgba(255,27,27,0.3);
       animation: pulse-dot 1s ease-in-out infinite;
     }
 
     @keyframes pulse-dot {
-      0%, 100% { box-shadow: 0 0 10px var(--accent2), 0 0 20px rgba(92,224,214,0.3); }
-      50%       { box-shadow: 0 0 4px var(--accent2); }
+      0%, 100% { box-shadow: 0 0 10px var(--signal-red), 0 0 20px rgba(255,27,27,0.3); }
+      50%       { box-shadow: 0 0 4px var(--signal-red); }
     }
 
     /* ── AI INPUT ── */
@@ -190,21 +211,22 @@
 
     .input-field {
       flex: 1;
+      min-width: 0;
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 7px;
+      border: 1px solid var(--border-lite);
+      border-radius: 6px;
       padding: 10px 14px;
       color: var(--text-primary);
       font-family: var(--font-body);
       font-size: 12px;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
       letter-spacing: 0.02em;
     }
 
     .input-field:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(232,96,156,0.1), inset 0 0 20px rgba(232,96,156,0.03);
+      border-color: var(--signal-red);
+      box-shadow: 0 0 0 3px rgba(255,27,27,0.14);
     }
 
     .input-field::placeholder { color: var(--text-dim); }
@@ -212,7 +234,7 @@
     .btn {
       background: var(--bg-elevated);
       border: 1px solid var(--border-lite);
-      border-radius: 7px;
+      border-radius: 6px;
       padding: 10px 16px;
       color: var(--text-secondary);
       font-family: var(--font-body);
@@ -220,7 +242,11 @@
       font-weight: 500;
       letter-spacing: 0.08em;
       cursor: pointer;
-      transition: all 0.2s;
+      transition:
+        background-color var(--t-fast) var(--ease),
+        border-color var(--t-fast) var(--ease),
+        color var(--t-fast) var(--ease),
+        transform var(--t-fast) var(--ease);
       white-space: nowrap;
       display: inline-flex;
       align-items: center;
@@ -229,21 +255,27 @@
     }
 
     .btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 12px rgba(232,96,156,0.1);
+      border-color: var(--signal-red);
+      color: var(--text-primary);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      transition-duration: var(--t-press);
     }
 
     .btn.primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #0c0e1a;
+      background: var(--signal-red);
+      border-color: var(--signal-red);
+      color: var(--void-black);
       font-weight: 700;
+      box-shadow: inset 0 -3px 0 var(--blood-red);
     }
 
     .btn.primary:hover {
-      background: #f070aa;
-      box-shadow: 0 0 20px rgba(232,96,156,0.35);
+      background: var(--blood-red);
+      color: var(--bone-white);
+      box-shadow: inset 0 -3px 0 var(--signal-red);
     }
 
     .btn:disabled {
@@ -262,7 +294,7 @@
 
     .idea-label {
       font-family: var(--font-body);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--text-dim);
@@ -271,18 +303,12 @@
 
     .idea-btn {
       padding: 5px 10px;
-      font-size: 9px;
+      font-size: 10px;
       border-radius: 20px;
       background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--text-secondary);
       letter-spacing: 0.1em;
-    }
-
-    .idea-btn:hover {
-      border-color: var(--accent2-dim);
-      color: var(--accent2);
-      box-shadow: 0 0 8px rgba(92,224,214,0.1);
     }
 
     /* ── DIVIDER ── */
@@ -312,7 +338,7 @@
 
     .tempo-label {
       font-family: var(--font-body);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--text-dim);
@@ -320,9 +346,10 @@
 
     .tempo-slider {
       -webkit-appearance: none;
+      appearance: none;
       width: 120px;
       height: 3px;
-      background: var(--border);
+      background: var(--border-lite);
       border-radius: 2px;
       outline: none;
     }
@@ -331,32 +358,40 @@
       -webkit-appearance: none;
       width: 14px;
       height: 14px;
-      background: var(--accent2);
+      background: var(--signal-red);
       border-radius: 50%;
       cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 0 8px var(--accent2);
+      transition: transform var(--t-fast) var(--ease);
+    }
+
+    .tempo-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border: 0;
+      background: var(--signal-red);
+      border-radius: 50%;
+      cursor: pointer;
     }
 
     .tempo-slider::-webkit-slider-thumb:hover {
       transform: scale(1.2);
-      box-shadow: 0 0 16px var(--accent2);
     }
 
     .tempo-value {
       font-family: var(--font-display);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent2);
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-primary);
       min-width: 72px;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.04em;
     }
 
     /* ── SEQUENCER ── */
     .sequencer {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 20px 24px;
       margin-bottom: 20px;
       position: relative;
@@ -370,47 +405,67 @@
       left: 0;
       width: 0%;
       height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      background: var(--signal-red);
       transition: width 0.05s linear;
-      border-radius: 0 2px 0 0;
     }
 
     .track {
       display: grid;
-      grid-template-columns: 72px repeat(16, 1fr);
-      gap: 4px;
+      grid-template-columns: 84px repeat(16, 1fr);
+      column-gap: 4px;
       align-items: center;
       margin-bottom: 6px;
     }
 
     .track:last-child { margin-bottom: 0; }
 
-    /* Beat group dividers every 4 steps */
-    .track { column-gap: 4px; }
-
     .track-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
       font-family: var(--font-body);
-      font-size: 9px;
-      letter-spacing: 0.15em;
+      font-size: 10px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text-dim);
-      padding-right: 12px;
+      color: var(--text-secondary);
+      padding-right: 8px;
+      white-space: nowrap;
     }
 
-    /* Track color overrides */
-    .track[data-track="kick"]    .track-label { color: var(--kick-color); opacity: 0.8; }
-    .track[data-track="snare"]   .track-label { color: var(--snare-color); opacity: 0.8; }
-    .track[data-track="hihat"]   .track-label { color: var(--hihat-color); opacity: 0.8; }
-    .track[data-track="openhat"] .track-label { color: var(--openhat-color); opacity: 0.8; }
-    .track[data-track="clap"]    .track-label { color: var(--clap-color); opacity: 0.8; }
+    /* Swatch keys each row to its step color; the label text stays readable. */
+    .track-label::before {
+      content: '';
+      flex: none;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--swatch);
+    }
+
+    .track-code { display: none; }
+
+    .track[data-track="kick"]    { --swatch: var(--kick-color); }
+    .track[data-track="snare"]   { --swatch: var(--snare-color); }
+    .track[data-track="hihat"]   { --swatch: var(--hihat-color); }
+    .track[data-track="openhat"] { --swatch: var(--openhat-color); }
+    .track[data-track="clap"]    { --swatch: var(--clap-color); }
+    .track[data-track="clap"] .track-label::before { outline: 1px solid var(--signal-red); outline-offset: -1px; }
 
     .step {
+      appearance: none;
+      -webkit-appearance: none;
+      display: block;
+      width: 100%;
+      padding: 0;
       aspect-ratio: 1;
       background: var(--bg-elevated);
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 4px;
       cursor: pointer;
-      transition: all 0.1s;
+      transition:
+        background-color 0.1s,
+        border-color 0.1s,
+        transform var(--t-fast) var(--ease);
       position: relative;
     }
 
@@ -423,25 +478,31 @@
 
     .step:hover {
       border-color: var(--border-lite);
-      background: var(--bg-surface);
+      background: #1d1a1a;
       transform: scale(1.05);
     }
 
-    /* Track-colored active states */
-    .track[data-track="kick"]    .step.active { background: var(--kick-color); border-color: var(--kick-color); box-shadow: 0 0 8px rgba(232,96,156,0.4); }
-    .track[data-track="snare"]   .step.active { background: var(--snare-color); border-color: var(--snare-color); box-shadow: 0 0 8px rgba(92,224,214,0.4); }
-    .track[data-track="hihat"]   .step.active { background: var(--hihat-color); border-color: var(--hihat-color); box-shadow: 0 0 8px rgba(255,209,102,0.4); }
-    .track[data-track="openhat"] .step.active { background: var(--openhat-color); border-color: var(--openhat-color); box-shadow: 0 0 8px rgba(255,107,74,0.4); }
-    .track[data-track="clap"]    .step.active { background: var(--clap-color); border-color: var(--clap-color); box-shadow: 0 0 8px rgba(183,159,255,0.4); }
+    .step:active {
+      transform: scale(0.92);
+      transition-duration: var(--t-press);
+    }
+
+    .step.active {
+      background: var(--swatch);
+      border-color: var(--swatch);
+    }
+
+    /* Bloodline alone is too dark against the cells, so the clap keeps a signal-red edge. */
+    .track[data-track="clap"] .step.active { border-color: var(--signal-red); }
 
     .step.playing {
-      outline: 2px solid rgba(255,255,255,0.2);
+      outline: 2px solid rgba(244,239,231,0.35);
       outline-offset: 2px;
       transform: scale(1.1);
     }
 
     .step.active.playing {
-      filter: brightness(1.3);
+      filter: brightness(1.25);
       transform: scale(1.12);
     }
 
@@ -455,7 +516,7 @@
 
     .presets-label {
       font-family: var(--font-body);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--text-dim);
@@ -464,7 +525,7 @@
 
     .preset-btn {
       padding: 6px 14px;
-      font-size: 9px;
+      font-size: 10px;
       border-radius: 4px;
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -472,15 +533,31 @@
       letter-spacing: 0.12em;
     }
 
-    .preset-btn:hover {
-      border-color: var(--accent-dim);
-      color: var(--accent);
+    .preset-btn.active-preset {
+      border-color: var(--signal-red);
+      color: var(--text-primary);
+      background: rgba(255,27,27,0.12);
     }
 
-    .preset-btn.active-preset {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-glow);
+    .back-link {
+      display: inline-block;
+      margin-top: 24px;
+      color: var(--text-dim);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .back-link:hover { color: var(--text-primary); }
+
+    .btn:focus-visible,
+    .step:focus-visible,
+    .logo:focus-visible,
+    .back-link:focus-visible,
+    .tempo-slider:focus-visible {
+      outline: 2px solid var(--bone-white);
+      outline-offset: 2px;
     }
 
     /* ── STATUS TOAST ── */
@@ -491,7 +568,7 @@
       transform: translateX(-50%) translateY(16px);
       background: var(--bg-elevated);
       border: 1px solid var(--border-lite);
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 9px 18px;
       font-family: var(--font-body);
       font-size: 11px;
@@ -500,7 +577,7 @@
       color: var(--text-secondary);
       opacity: 0;
       pointer-events: none;
-      transition: all 0.3s;
+      transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
       z-index: 100;
       white-space: nowrap;
     }
@@ -510,56 +587,98 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .status-message.error   { border-color: var(--warning); color: var(--warning); }
-    .status-message.success { border-color: var(--accent2); color: var(--accent2); }
+    .status-message.error   { border-color: var(--signal-red); color: var(--signal-red); }
+    .status-message.success { border-color: var(--warning-amber); color: var(--text-primary); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       .drum-machine { padding: 20px 16px; }
-      .track { grid-template-columns: 52px repeat(16, 1fr); gap: 3px; }
+      .header { flex-wrap: wrap; }
+      .header-left { gap: 12px; }
+      .logo img { height: 34px; }
+      .track { grid-template-columns: 70px repeat(16, 1fr); column-gap: 3px; }
+      .track-label { font-size: 9px; letter-spacing: 0.06em; gap: 5px; }
       .tempo-control { margin-left: 0; }
       .transport { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* Phones: sixteen steps in one row would be too small to tap, so each track wraps into two rows of eight. */
+    @media (max-width: 560px) {
+      body { padding: 12px; }
+      .drum-machine { padding: 18px 12px; }
+      .sequencer { padding: 14px 10px; }
+      .track { grid-template-columns: 34px repeat(8, 1fr); gap: 4px; margin-bottom: 12px; }
+      .track-label { grid-row: span 2; align-self: center; padding-right: 0; font-weight: 600; }
+      .track-name { display: none; }
+      .track-code { display: inline; }
+      .step[data-step="8"] { margin-left: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .btn:active,
+      .step:hover,
+      .step:active,
+      .step.playing,
+      .step.active.playing,
+      .tempo-slider::-webkit-slider-thumb:hover {
+        transform: none;
+      }
+    }
+
+    /* Forced colors drop background fills, so active steps use a system highlight. */
+    @media (forced-colors: active) {
+      .step.active { background: Highlight; border-color: Highlight; }
+      .step.playing { outline-color: CanvasText; }
+      .track-label::before { forced-color-adjust: none; }
     }
   </style>
 </head>
 <body>
 
-  <div class="drum-machine">
+  <main class="drum-machine">
 
     <!-- HEADER -->
-    <div class="header">
+    <header class="header">
       <div class="header-left">
-        <div class="logo">SAP</div>
-        <div class="subtitle">Rhythm Machine · Model 303</div>
+        <a class="logo" href="/" aria-label="Erosyn — back to the homepage">
+          <img src="erosyn/web/erosyn-wordmark-white-800.png" alt="Erosyn" width="800" height="490">
+        </a>
+        <h1 class="subtitle">Rhythm Machine</h1>
       </div>
       <div class="header-right">
-        <div class="model-tag">AI-Powered</div>
-        <div class="status-indicator" id="statusIndicator"></div>
+        <div class="model-tag">16 Step · 5 Voice</div>
+        <div class="status-indicator" id="statusIndicator" aria-hidden="true"></div>
       </div>
-    </div>
+    </header>
 
-    <!-- AI INPUT -->
+    <!-- BEAT DESCRIPTION -->
     <div class="ai-section">
       <div class="ai-input">
+        <label class="visually-hidden" for="beatInput">Describe your beat</label>
         <input
           type="text"
           class="input-field"
           id="beatInput"
-          placeholder="Describe your beat — 'dubstep halftime', 'glitch hop', 'acid techno'..."
+          placeholder="Describe your beat — 'warehouse halftime', 'eski grime', '174 rollers'..."
           autocomplete="off"
         />
-        <button class="btn primary" id="generateBtn">Generate</button>
+        <button type="button" class="btn primary" id="generateBtn">Generate</button>
       </div>
 
       <div class="idea-buttons">
         <span class="idea-label">Quick load:</span>
-        <button class="btn idea-btn" data-idea="dubstep halftime groove">Halftime</button>
-        <button class="btn idea-btn" data-idea="experimental glitch drums">Glitch</button>
-        <button class="btn idea-btn" data-idea="acid techno rave">Acid Techno</button>
-        <button class="btn idea-btn" data-idea="trap 808 bounce">Trap 808</button>
-        <button class="btn idea-btn" data-idea="lo-fi hip hop beat">Lo-Fi</button>
-        <button class="btn idea-btn" data-idea="psy bass festival">Psy</button>
-        <button class="btn idea-btn" data-idea="minimal ambient pulse">Minimal</button>
+        <button type="button" class="btn idea-btn" data-idea="warehouse halftime pressure">Warehouse halftime</button>
+        <button type="button" class="btn idea-btn" data-idea="eski grime riddim">Eski grime</button>
+        <button type="button" class="btn idea-btn" data-idea="174 rollers">174 rollers</button>
+        <button type="button" class="btn idea-btn" data-idea="psy tension build">Psy tension</button>
+        <button type="button" class="btn idea-btn" data-idea="miami electro bass">Miami electro</button>
+        <button type="button" class="btn idea-btn" data-idea="hard kick drive">Hard kick drive</button>
+        <button type="button" class="btn idea-btn" data-idea="old skool rave break">Old skool break</button>
       </div>
     </div>
 
@@ -568,23 +687,23 @@
     <!-- TRANSPORT -->
     <div class="transport">
       <div class="transport-controls">
-        <button class="btn" id="playBtn">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <button type="button" class="btn" id="playBtn">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           Play
         </button>
-        <button class="btn" id="stopBtn">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <button type="button" class="btn" id="stopBtn">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
           Stop
         </button>
-        <button class="btn" id="clearBtn">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+        <button type="button" class="btn" id="clearBtn">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
           Clear
         </button>
       </div>
       <div class="tempo-control">
-        <span class="tempo-label">Tempo</span>
+        <label class="tempo-label" for="tempoSlider">Tempo</label>
         <input type="range" class="tempo-slider" id="tempoSlider" min="60" max="180" value="140" />
-        <span class="tempo-value" id="tempoValue">140 BPM</span>
+        <output class="tempo-value" id="tempoValue" for="tempoSlider">140 BPM</output>
       </div>
     </div>
 
@@ -592,83 +711,116 @@
     <div class="sequencer" id="sequencer">
       <div class="playhead-bar" id="playheadBar"></div>
       <div class="track" data-track="kick">
-        <div class="track-label">Kick</div>
+        <div class="track-label"><span class="track-name">Kick</span><span class="track-code" aria-hidden="true">BD</span></div>
       </div>
       <div class="track" data-track="snare">
-        <div class="track-label">Snare</div>
+        <div class="track-label"><span class="track-name">Snare</span><span class="track-code" aria-hidden="true">SD</span></div>
       </div>
       <div class="track" data-track="hihat">
-        <div class="track-label">HiHat</div>
+        <div class="track-label"><span class="track-name">Hi-hat</span><span class="track-code" aria-hidden="true">CH</span></div>
       </div>
       <div class="track" data-track="openhat">
-        <div class="track-label">Open</div>
+        <div class="track-label"><span class="track-name">Open hat</span><span class="track-code" aria-hidden="true">OH</span></div>
       </div>
       <div class="track" data-track="clap">
-        <div class="track-label">Clap</div>
+        <div class="track-label"><span class="track-name">Clap</span><span class="track-code" aria-hidden="true">CP</span></div>
       </div>
     </div>
 
     <!-- PRESETS -->
-    <div class="presets-row">
-      <span class="presets-label">Presets:</span>
-      <button class="btn preset-btn" data-preset="techno">Techno</button>
-      <button class="btn preset-btn" data-preset="house">House</button>
-      <button class="btn preset-btn" data-preset="trap">Trap</button>
-      <button class="btn preset-btn" data-preset="breakbeat">Breakbeat</button>
-      <button class="btn preset-btn" data-preset="minimal">Minimal</button>
-      <button class="btn preset-btn" data-preset="halftime">Halftime</button>
+    <div class="presets-row" role="group" aria-labelledby="presetsLabel">
+      <span class="presets-label" id="presetsLabel">Presets:</span>
+      <button type="button" class="btn preset-btn" data-preset="dubstep" aria-pressed="false">Dubstep</button>
+      <button type="button" class="btn preset-btn" data-preset="grime" aria-pressed="false">Grime</button>
+      <button type="button" class="btn preset-btn" data-preset="dnb" aria-pressed="false">DnB</button>
+      <button type="button" class="btn preset-btn" data-preset="psytrance" aria-pressed="false">Psytrance</button>
+      <button type="button" class="btn preset-btn" data-preset="electro" aria-pressed="false">Electro</button>
+      <button type="button" class="btn preset-btn" data-preset="hardstyle" aria-pressed="false">Hardstyle</button>
+      <button type="button" class="btn preset-btn" data-preset="rave" aria-pressed="false">Rave</button>
     </div>
 
-  </div>
+    <a class="back-link" href="/">← Back to Erosyn</a>
 
-  <div class="status-message" id="statusMessage"></div>
+  </main>
+
+  <div class="status-message" id="statusMessage" role="status" aria-live="polite"></div>
 
   <script>
     const STEPS = 16;
     const instruments = ['kick', 'snare', 'hihat', 'openhat', 'clap'];
+    const instrumentLabels = { kick: 'Kick', snare: 'Snare', hihat: 'Hi-hat', openhat: 'Open hat', clap: 'Clap' };
 
+    // Erosyn kits. Each preset sets its own tempo. Keys must match VALID_PRESETS in api/generate-beat.js.
     const presets = {
-      techno: {
-        kick:    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
-        snare:   [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],
-        hihat:   [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
-        openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        clap:    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
+      dubstep: {
+        label: 'Dubstep', bpm: 140,
+        pattern: {
+          kick:    [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+          snare:   [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+          hihat:   [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1],
+          openhat: [0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+          clap:    [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
+        }
       },
-      house: {
-        kick:    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
-        snare:   [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],
-        hihat:   [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
-        openhat: [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
-        clap:    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
+      grime: {
+        label: 'Grime', bpm: 140,
+        pattern: {
+          kick:    [1,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0],
+          snare:   [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+          hihat:   [0,0,1,0,0,0,1,1,0,0,1,0,0,0,1,0],
+          openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          clap:    [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
+        }
       },
-      trap: {
-        kick:    [1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0],
-        snare:   [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-        hihat:   [1,0,1,0,1,0,1,0,1,1,0,1,0,1,1,1],
-        openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
-        clap:    [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
+      dnb: {
+        label: 'DnB', bpm: 174,
+        pattern: {
+          kick:    [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+          snare:   [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],
+          hihat:   [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],
+          openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+          clap:    [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0]
+        }
       },
-      breakbeat: {
-        kick:    [1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0],
-        snare:   [0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0],
-        hihat:   [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],
-        openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
-        clap:    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      psytrance: {
+        label: 'Psytrance', bpm: 145,
+        pattern: {
+          kick:    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+          snare:   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          hihat:   [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
+          openhat: [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
+          clap:    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
+        }
       },
-      minimal: {
-        kick:    [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
-        snare:   [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-        hihat:   [0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-        openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        clap:    [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
+      electro: {
+        label: 'Electro', bpm: 128,
+        pattern: {
+          kick:    [1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0],
+          snare:   [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],
+          hihat:   [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1],
+          openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          clap:    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
+        }
       },
-      halftime: {
-        kick:    [1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0],
-        snare:   [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-        hihat:   [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
-        openhat: [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
-        clap:    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+      hardstyle: {
+        label: 'Hardstyle', bpm: 150,
+        pattern: {
+          kick:    [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0],
+          snare:   [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+          hihat:   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          openhat: [0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0],
+          clap:    [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
+        }
+      },
+      rave: {
+        label: 'Rave', bpm: 138,
+        pattern: {
+          kick:    [1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0],
+          snare:   [0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,1],
+          hihat:   [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],
+          openhat: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+          clap:    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        }
       }
     };
 
@@ -688,33 +840,42 @@
       const tracks = document.querySelectorAll('.track');
       instruments.forEach((inst, i) => {
         for (let j = 0; j < STEPS; j++) {
-          const step = document.createElement('div');
+          const step = document.createElement('button');
+          step.type = 'button';
           step.className = 'step';
           step.dataset.instrument = inst;
           step.dataset.step = j;
+          step.setAttribute('aria-label', `${instrumentLabels[inst]}, step ${j + 1}`);
+          step.setAttribute('aria-pressed', 'false');
           step.addEventListener('click', toggleStep);
           tracks[i].appendChild(step);
         }
       });
     }
 
+    function setStepState(el, on) {
+      el.classList.toggle('active', !!on);
+      el.setAttribute('aria-pressed', String(!!on));
+    }
+
     function toggleStep(e) {
-      const inst = e.target.dataset.instrument;
-      const step = parseInt(e.target.dataset.step);
+      const el = e.currentTarget;
+      const inst = el.dataset.instrument;
+      const step = parseInt(el.dataset.step);
       pattern[inst][step] = pattern[inst][step] ? 0 : 1;
-      e.target.classList.toggle('active');
+      setStepState(el, pattern[inst][step]);
     }
 
     function updatePattern() {
       instruments.forEach(inst => {
         pattern[inst].forEach((value, step) => {
           const el = document.querySelector(`[data-instrument="${inst}"][data-step="${step}"]`);
-          if (el) el.classList.toggle('active', !!value);
+          if (el) setStepState(el, value);
         });
       });
     }
 
-    // Sound synthesis — with SAP-flavored tuning (sub bass, crisp hats)
+    // Sound synthesis — sub-heavy kick, crisp hats
     function playSound(inst) {
       if (!audioContext) return;
       const now = audioContext.currentTime;
@@ -822,7 +983,7 @@
 
         const playBtn = document.getElementById('playBtn');
         playBtn.innerHTML = `
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <rect x="6" y="4" width="4" height="16"/>
             <rect x="14" y="4" width="4" height="16"/>
           </svg>
@@ -841,7 +1002,7 @@
       document.getElementById('statusIndicator').classList.remove('active');
       const playBtn = document.getElementById('playBtn');
       playBtn.innerHTML = `
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <polygon points="5 3 19 12 5 21 5 3"/>
         </svg>
         Play`;
@@ -854,34 +1015,64 @@
       document.getElementById('playheadBar').style.width = '0%';
     }
 
+    function markPreset(name) {
+      document.querySelectorAll('.preset-btn').forEach(b => {
+        const on = b.dataset.preset === name;
+        b.classList.toggle('active-preset', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+    }
+
     function clear() {
       instruments.forEach(inst => pattern[inst].fill(0));
       updatePattern();
-      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active-preset'));
+      markPreset(null);
     }
 
+    function setTempo(bpm) {
+      document.getElementById('tempoSlider').value = bpm;
+      document.getElementById('tempoValue').textContent = `${bpm} BPM`;
+      if (isPlaying) { pause(); play(); }
+    }
+
+    function loadPreset(name, note) {
+      const preset = presets[name];
+      pattern = JSON.parse(JSON.stringify(preset.pattern));
+      updatePattern();
+      setTempo(preset.bpm);
+      markPreset(name);
+      showStatus(`${preset.label} · ${preset.bpm} BPM${note ? ` · ${note}` : ''}`, 'success');
+    }
+
+    // Keys match at the start of a word, so "house" doesn't fire inside "warehouse" but "psy" still finds "psytrance".
+    // Order matters: specific genres first, the broad "bass" family last.
     function classifyByKeyword(text) {
       const t = text.toLowerCase();
       const map = [
-        { keys: ['halftime', 'half time', 'dubstep', 'dub step', 'sub', 'bass'], preset: 'halftime' },
-        { keys: ['trap', '808', 'drill', 'bounce'], preset: 'trap' },
-        { keys: ['house', 'four on the floor', 'disco', 'garage', 'deep'], preset: 'house' },
-        { keys: ['techno', 'industrial', 'rave', 'berlin', 'hard', 'acid'], preset: 'techno' },
-        { keys: ['break', 'jungle', 'dnb', 'drum and bass', 'amen', 'funky', 'glitch', 'idm'], preset: 'breakbeat' },
-        { keys: ['minimal', 'ambient', 'sparse', 'lo-fi', 'chill', 'downtempo', 'psy', 'space'], preset: 'minimal' },
-        { keys: ['rock', 'stadium', 'punk', 'metal'], preset: 'breakbeat' },
-        { keys: ['jazz', 'swing', 'fusion', 'bossa'], preset: 'minimal' },
-        { keys: ['pop', 'r&b', 'rnb', 'soul', 'funk'], preset: 'house' }
+        { keys: ['dnb', 'd&b', 'drum and bass', 'drum & bass', 'drum n bass', 'jungle', 'amen', '174', 'roller', 'neuro', 'liquid', 'jump up'], preset: 'dnb' },
+        { keys: ['grime', 'eski', 'drill', 'garage', '2 step', '2-step'], preset: 'grime' },
+        { keys: ['psy', 'goa', 'trance', 'forest', 'hypnotic', 'techno', 'house', 'acid', 'four on the floor', 'industrial'], preset: 'psytrance' },
+        { keys: ['hardstyle', 'rawstyle', 'gabber', 'hard kick', 'kick drive', 'reverse bass', 'euphoric'], preset: 'hardstyle' },
+        { keys: ['electro', 'miami bass', 'robot', 'cyber', 'funk', 'breakdance'], preset: 'electro' },
+        { keys: ['rave', 'break', 'hardcore', 'old skool', 'old school', 'oldskool', '90s'], preset: 'rave' },
+        { keys: ['dubstep', 'dub step', 'halftime', 'half time', 'riddim', 'wobble', 'tearout', 'trap', '808', 'bass', 'sub'], preset: 'dubstep' }
       ];
+      const escape = (key) => key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const startsWord = (key) => new RegExp(`(^|[^a-z0-9])${escape(key)}`).test(t);
       for (const { keys, preset } of map) {
-        if (keys.some(k => t.includes(k))) return preset;
+        if (keys.some(startsWord)) return preset;
       }
       return null;
     }
 
+    // The AI classifier is token-protected for the site owner: open the page with ?ai to be asked for the token.
+    // Visitors get the local keyword classifier and never see a prompt.
+    const aiMode = new URLSearchParams(window.location.search).has('ai');
+
     function getAIAccessToken() {
+      if (!aiMode) return '';
       if (aiAccessToken) return aiAccessToken;
-      const nextToken = window.prompt('Paste the SAP AI access token to use the protected classifier:');
+      const nextToken = window.prompt('Paste the AI access token to use the protected classifier:');
       aiAccessToken = nextToken ? nextToken.trim() : '';
       return aiAccessToken;
     }
@@ -923,15 +1114,9 @@
         }
       } catch (_) {}
 
-      if (!preset) preset = classifyByKeyword(input) || 'halftime';
+      if (!preset) preset = classifyByKeyword(input) || 'dubstep';
 
-      pattern = JSON.parse(JSON.stringify(presets[preset]));
-      updatePattern();
-      showStatus(`Pattern loaded — ${preset}${usedAI ? '' : ' · local classifier'}`, usedAI ? 'success' : 'info');
-
-      document.querySelectorAll('.preset-btn').forEach(b => {
-        b.classList.toggle('active-preset', b.dataset.preset === preset);
-      });
+      loadPreset(preset, usedAI ? 'AI match' : '');
 
       btn.disabled = false;
       btn.textContent = 'Generate';
@@ -941,7 +1126,8 @@
       const el = document.getElementById('statusMessage');
       el.textContent = message;
       el.className = `status-message show ${type}`;
-      setTimeout(() => el.classList.remove('show'), 3000);
+      clearTimeout(showStatus.timer);
+      showStatus.timer = setTimeout(() => el.classList.remove('show'), 3000);
     }
 
     // Events
@@ -951,21 +1137,11 @@
     document.getElementById('generateBtn').addEventListener('click', generateBeat);
     document.getElementById('beatInput').addEventListener('keypress', e => { if (e.key === 'Enter') generateBeat(); });
 
-    document.getElementById('tempoSlider').addEventListener('input', e => {
-      document.getElementById('tempoValue').textContent = `${e.target.value} BPM`;
-      if (isPlaying) { pause(); play(); }
-    });
+    document.getElementById('tempoSlider').addEventListener('input', e => setTempo(e.target.value));
 
     document.querySelectorAll('.preset-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const p = btn.dataset.preset;
-        if (presets[p]) {
-          pattern = JSON.parse(JSON.stringify(presets[p]));
-          updatePattern();
-          showStatus(`${p} preset loaded`, 'success');
-          document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active-preset'));
-          btn.classList.add('active-preset');
-        }
+        if (presets[btn.dataset.preset]) loadPreset(btn.dataset.preset);
       });
     });
 
@@ -976,12 +1152,16 @@
       });
     });
 
+    // iOS Safari applies :active press states only when a touch listener exists.
+    document.addEventListener('touchstart', () => {}, { passive: true });
+
     createSequencer();
 
-    // Load halftime by default — it's on brand
-    pattern = JSON.parse(JSON.stringify(presets.halftime));
+    // Open on the dubstep kit, quietly: no toast on page load.
+    pattern = JSON.parse(JSON.stringify(presets.dubstep.pattern));
     updatePattern();
-    document.querySelector('[data-preset="halftime"]').classList.add('active-preset');
+    setTempo(presets.dubstep.bpm);
+    markPreset('dubstep');
   </script>
 
 </body>
