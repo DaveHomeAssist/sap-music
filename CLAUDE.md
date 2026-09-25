@@ -63,3 +63,16 @@ Then open http://localhost:8000.
 - **Predictions never cause a network request.** The saved track is preselected, never autoplayed; SoundCloud still loads only on Play. The Home resume chip links; it never redirects. "New" means a track slug that wasn't in `knownTracks` on the previous visit, so a first visit marks nothing.
 - **Next step** lives in the status bar (`#status-next`, from 768px up), driven by `NEXT_STEPS`; its `data-reason` reuses the form's Book-shortcut handler.
 - **Motion tokens:** `--t-press` 80ms (press in), `--t-fast` 120ms (release, hover, focus), `--t` 150ms (state change), `--t-feedback` 180ms (shake, confirm, prefill flash); `--ease` for entering, `--ease-exit` for leaving. Keep feedback motion ≤ 180ms and animate only transform, opacity, and colors. Restart one-shot feedback with `pulse(element, className)`. The reduced-motion block cancels every press transform and the shake; add new pressable selectors there too.
+
+## Status naming
+
+Name work with one string everywhere (chat status title, session title, Notion
+Status Check Runs "Human Name"):
+
+`Project | 🚦 | Phase | Title → state, reason | MM-DD`
+
+- 🚦: 🟢 complete and verified · 🟡 partial · 🔴 not started, blocked or failed · ⚪ unverifiable.
+  Add ⏳ scheduled, 🙋 awaiting Dave or 🚧 blocked to 🟡/🔴/⚪, never to 🟢.
+- Phase: Research, Design, Build, Audit or Scheduled. MM-DD: date of the latest light change.
+- Every light change gets a new name: a `RENAME:` line in chat and the Notion row updated.
+- Canonical source: https://github.com/DaveHomeAssist/skills/blob/master/status-naming.md
