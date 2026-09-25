@@ -78,9 +78,12 @@
       --pad: clamp(12px, 1.4vw, 20px);
       --radius: 8px;
       --radius-sm: 6px;
+      --t-press: 80ms;
       --t-fast: 120ms;
       --t: 150ms;
+      --t-feedback: 180ms;
       --ease: cubic-bezier(.2, .7, .2, 1);
+      --ease-exit: cubic-bezier(.4, 0, 1, 1);
     }
 
     /* 2. THEME TOKENS — dark is canonical; .scheme-dark pins dark inside the light theme */
@@ -316,6 +319,7 @@
         border-color var(--t) var(--ease),
         color var(--t) var(--ease),
         box-shadow var(--t) var(--ease),
+        filter var(--t-fast) var(--ease),
         transform var(--t-fast) var(--ease);
     }
 
@@ -359,8 +363,11 @@
       }
     }
 
+    /* Press lands in --t-press; release eases back over --t-fast, so letting go reads softer than pressing. */
     .btn:active {
-      transform: translateY(0);
+      filter: brightness(.88);
+      transform: translateY(0) scale(.97);
+      transition-duration: var(--t-press);
     }
 
     .icon-btn {
@@ -3696,6 +3703,391 @@
     .meters i:nth-child(7) { --l: .65; animation-duration: 1.2s; }
     .meters i:nth-child(8) { --l: .45; animation-duration: 1.5s; }
 
+    /* =========================================================
+       TACTILE FEEDBACK — press, hover preview, result. Every motion ≤ --t-feedback (180ms).
+       ========================================================= */
+    .icon-btn,
+    .tbtn {
+      transition:
+        border-color var(--t) var(--ease),
+        color var(--t-fast) var(--ease),
+        transform var(--t-fast) var(--ease);
+    }
+
+    .icon-btn:active,
+    .tbtn:active {
+      color: var(--accent);
+      transform: scale(.92);
+      transition-duration: var(--t-press);
+    }
+
+    /* Transport steps nudge toward the direction of travel. */
+    .tbtn[data-step="-1"]:active {
+      transform: translateX(-2px) scale(.94);
+    }
+
+    .tbtn[data-step="1"]:active {
+      transform: translateX(2px) scale(.94);
+    }
+
+    .ext-link,
+    .chip,
+    .resume__link,
+    .status__next {
+      transition:
+        background-color var(--t-fast) var(--ease),
+        border-color var(--t-fast) var(--ease),
+        color var(--t-fast) var(--ease),
+        transform var(--t-fast) var(--ease);
+    }
+
+    .ext-link:active,
+    .chip:active,
+    .resume__link:active,
+    .status__next:active {
+      transform: scale(.96);
+      transition-duration: var(--t-press);
+    }
+
+    .browser__link {
+      transition:
+        background-color var(--t) var(--ease),
+        color var(--t) var(--ease),
+        border-color var(--t) var(--ease),
+        transform var(--t-fast) var(--ease);
+    }
+
+    .browser__link:active {
+      transform: scale(.97);
+      transition-duration: var(--t-press);
+    }
+
+    /* Track rows: full-width, so press sinks 1px instead of scaling. Hover previews the selection bar. */
+    .track__select {
+      transition: background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+    }
+
+    .track__select:active {
+      background-color: rgba(255, 27, 27, .14);
+      transform: translateY(1px);
+      transition-duration: var(--t-press);
+    }
+
+    .track__thumb img {
+      transition: filter var(--t-fast) var(--ease);
+    }
+
+    @media (hover: hover) {
+      .track__select:not([aria-pressed="true"]):hover::before {
+        transform: scaleY(.45);
+      }
+
+      .track__select:hover .track__thumb img {
+        filter: brightness(1.18);
+      }
+    }
+
+    .pad__btn {
+      transition: transform var(--t-fast) var(--ease);
+    }
+
+    .pad__btn:active {
+      transform: scale(.98);
+      transition-duration: var(--t-press);
+    }
+
+    /* Deck: confirm the load, fade the player in. */
+    #deck-state.is-confirm {
+      animation: confirm-flash var(--t-feedback) var(--ease-exit);
+    }
+
+    .deck__player:not([hidden]) {
+      animation: fade-in var(--t) var(--ease);
+    }
+
+    /* Form: quicker focus, shake the first invalid field once, mark the status result. */
+    .input {
+      transition:
+        border-color var(--t-fast) var(--ease),
+        box-shadow var(--t-fast) var(--ease),
+        background-color var(--t-fast) var(--ease);
+    }
+
+    .input.is-shake {
+      animation: field-shake var(--t-feedback) linear;
+    }
+
+    /* Reason preselected by a Book link: one flash, held until the view has faded in. */
+    .input.is-prefilled {
+      animation: prefill-flash var(--t-feedback) var(--ease-exit) var(--t) both;
+    }
+
+    .form__status[data-state]::before {
+      display: inline-block;
+      margin-right: .5rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .form__status[data-state="success"]::before {
+      content: "✓";
+      content: "✓" / "";
+      color: var(--warning-amber);
+    }
+
+    .form__status[data-state="error"]::before {
+      content: "!";
+      content: "!" / "";
+      color: var(--signal-red);
+    }
+
+    .form__status.is-pulse {
+      animation: status-in var(--t-feedback) var(--ease);
+    }
+
+    .form__status.is-pulse::before {
+      animation: mark-in 160ms var(--ease);
+    }
+
+    @keyframes confirm-flash {
+      from { color: var(--accent-text); }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+    }
+
+    @keyframes field-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-2px); }
+    }
+
+    @keyframes prefill-flash {
+      from {
+        background-color: rgba(255, 27, 27, .16);
+        box-shadow: 0 0 0 3px rgba(255, 27, 27, .35);
+      }
+    }
+
+    @keyframes status-in {
+      from { opacity: .4; transform: translateY(2px); }
+    }
+
+    @keyframes mark-in {
+      from { opacity: 0; transform: scale(.6); }
+    }
+
+    /* =========================================================
+       ANTICIPATION — resume, next step, track hints, form memory.
+       Everything here is a hint from this device's own storage; nothing is sent.
+       ========================================================= */
+    .resume {
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+      margin-top: .75rem;
+    }
+
+    .resume__link {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      min-width: 0;
+      min-height: 44px;
+      padding: .4rem .8rem;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: .875rem;
+      text-decoration: none;
+    }
+
+    .resume__label,
+    .status__next b {
+      color: var(--accent-text);
+      font-family: var(--font-mono);
+      font-size: .6875rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .resume__text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .resume__dismiss {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--muted);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .status__next {
+      display: none;
+      flex: none;
+      align-items: center;
+      gap: .45rem;
+      min-height: 40px;
+      padding: 0 .7rem;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .app .status__next {
+      display: inline-flex;
+    }
+
+    .status__next .icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .track__badge {
+      display: inline-block;
+      margin-right: .45rem;
+      padding: .05rem .35rem;
+      border: 1px solid currentColor;
+      border-radius: 3px;
+      color: var(--accent-text);
+      font-weight: 700;
+    }
+
+    .track__badge--next {
+      border-style: dashed;
+      color: var(--text-soft);
+    }
+
+    .track.is-next .track__select::before {
+      opacity: .6;
+      transform: scaleY(.45);
+    }
+
+    .prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .5rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: .3rem .75rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-soft);
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+
+    .form__remember {
+      display: flex;
+      flex-direction: column;
+      gap: .15rem;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      min-height: 44px;
+      font-size: .875rem;
+      cursor: pointer;
+    }
+
+    .check input {
+      width: 1.125rem;
+      height: 1.125rem;
+      margin: 0;
+      accent-color: var(--signal-red);
+    }
+
+    /* Inline text buttons: padding widens the tap area without moving the text. */
+    .linkish {
+      margin: -.6rem 0;
+      padding: .6rem .15rem;
+      border: 0;
+      background: none;
+      color: var(--accent-text);
+      font: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+
+    @media (pointer: coarse) {
+      .chip {
+        min-height: 44px;
+      }
+    }
+
+    @media (hover: hover) {
+      .resume__link:hover,
+      .status__next:hover {
+        border-color: var(--accent);
+        border-style: solid;
+      }
+
+      .resume__dismiss:hover {
+        color: var(--text);
+      }
+
+      .chip:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+    }
+
+    /* Phones: no room beside transport and position, so the next-step link shows from 768px up. */
+    @media (max-width: 767.98px) {
+      .app .status__next {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* Keep the color, border, and icon feedback; drop every scale, nudge, and shake. */
+      .btn:hover,
+      .btn:active,
+      .icon-btn:active,
+      .tbtn:active,
+      .ext-link:active,
+      .chip:active,
+      .resume__link:active,
+      .status__next:active,
+      .browser__link:active,
+      .track__select:active,
+      .pad__btn:active {
+        transform: none !important;
+      }
+
+      .input.is-shake,
+      .form__status.is-pulse,
+      .form__status.is-pulse::before {
+        animation: none !important;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -3731,6 +4123,9 @@
       .icon-btn,
       .tbtn,
       .ext-link,
+      .chip,
+      .resume__link,
+      .status__next,
       .track__select,
       .browser-toggle,
       .browser__link {
@@ -3794,6 +4189,7 @@
         { id: 'contact', label: 'Contact', mode: 'Record' }
       ];
       const VIEW_IDS = VIEWS.map((view) => view.id);
+      const viewListeners = [];
       const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       const lightSchemeQuery = window.matchMedia('(prefers-color-scheme: light)');
       const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -3806,6 +4202,103 @@
 
       root.classList.add('js', 'app');
       root.dataset.view = viewFromHash() || 'home';
+      const initialView = root.dataset.view;
+
+      /* ---------- Device memory: hints kept in this browser only, never sent anywhere ---------- */
+      const MEMORY_KEY = 'erosyn:v1';
+      const DRAFT_KEY = 'erosyn:draft';
+      const MEMORY_MAX_DAYS = 180;
+      const RESUME_MAX_DAYS = 30;
+      let memoryPaused = false;
+
+      function localDay() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      }
+
+      function daysSince(day) {
+        const then = new Date(`${day}T00:00:00`);
+        return Number.isNaN(then.getTime()) ? Infinity : (new Date(`${localDay()}T00:00:00`) - then) / 86400000;
+      }
+
+      function readJSON(area, key) {
+        try {
+          const raw = window[area].getItem(key);
+          const value = raw ? JSON.parse(raw) : null;
+          return value && typeof value === 'object' ? value : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function writeJSON(area, key, value) {
+        if (memoryPaused) {
+          return;
+        }
+        try {
+          if (value) {
+            window[area].setItem(key, JSON.stringify(value));
+          } else {
+            window[area].removeItem(key);
+          }
+        } catch (error) {
+          /* Storage blocked or full: everything still works, it just isn't remembered. */
+        }
+      }
+
+      /* Read once, before this visit changes anything, so predictions come from the previous visit. */
+      const memory = (() => {
+        const stored = readJSON('localStorage', MEMORY_KEY);
+        return stored && stored.v === 1 && daysSince(stored.lastVisit) <= MEMORY_MAX_DAYS ? stored : { v: 1 };
+      })();
+      const previousVisit = {
+        day: memory.lastVisit,
+        view: memory.lastView,
+        track: memory.lastTrack,
+        known: Array.isArray(memory.knownTracks) ? memory.knownTracks : null
+      };
+
+      function remember(changes) {
+        Object.assign(memory, changes, { lastVisit: localDay() });
+        writeJSON('localStorage', MEMORY_KEY, memory);
+      }
+
+      function trackSlug(button) {
+        return (button.dataset.href || '').split('/').filter(Boolean).pop() || '';
+      }
+
+      /* Restart a one-shot feedback animation, even if the same class is already on.
+         Only the element's own animation ends it: a ::before mark or a child finishing first must not cut it short. */
+      const pulseHandlers = new WeakMap();
+      function pulse(element, className) {
+        if (!element) {
+          return;
+        }
+        const handlers = pulseHandlers.get(element) || new Map();
+        pulseHandlers.set(element, handlers);
+        if (handlers.has(className)) {
+          element.removeEventListener('animationend', handlers.get(className));
+        }
+        element.classList.remove(className);
+        void element.offsetWidth;
+        element.classList.add(className);
+        const name = window.getComputedStyle(element).animationName;
+        const done = (event) => {
+          if (event.target !== element || event.pseudoElement || event.animationName !== name) {
+            return;
+          }
+          element.classList.remove(className);
+          element.removeEventListener('animationend', done);
+          handlers.delete(className);
+        };
+        handlers.set(className, done);
+        element.addEventListener('animationend', done);
+      }
+
+      function onViewShown(listener) {
+        viewListeners.push(listener);
+        listener(root.dataset.view);
+      }
 
       function readStoredTheme() {
         try {
@@ -3817,6 +4310,9 @@
       }
 
       function storeTheme(theme) {
+        if (memoryPaused) {
+          return;
+        }
         try {
           window.localStorage.setItem(THEME_KEY, theme);
         } catch (error) {
@@ -3955,6 +4451,7 @@
               heading.focus({ preventScroll: true });
             }
           }
+          viewListeners.forEach((listener) => listener(id));
         };
 
         document.addEventListener('click', (event) => {
@@ -4103,16 +4600,48 @@
           if (wave) wave.hidden = true;
           if (progress) progress.hidden = true;
           if (playButton) playButton.hidden = true;
-          if (state) state.textContent = 'Deck A · Loaded';
+          if (state) {
+            state.textContent = 'Deck A · Loaded';
+            pulse(state, 'is-confirm');
+          }
           deck.classList.add('is-playing');
           playerOn = true;
+          remember({ lastTrack: trackSlug(button) });
+          markNext(button);
           if (live) live.textContent = `${button.dataset.title} loaded in the SoundCloud player.`;
           if (moveFocus) {
             frame.focus();
           }
         };
 
-        const load = (button) => {
+        const addBadge = (button, label, isNext) => {
+          const meta = button.querySelector('.track__meta');
+          if (!meta) {
+            return;
+          }
+          const badge = document.createElement('span');
+          badge.className = isNext ? 'track__badge track__badge--next' : 'track__badge';
+          badge.textContent = label;
+          meta.prepend(badge);
+        };
+
+        /* Once a track is in the player, the next row is the likely next pick. */
+        const markNext = (button) => {
+          list.querySelectorAll('.track.is-next').forEach((row) => {
+            row.classList.remove('is-next');
+            const badge = row.querySelector('.track__badge--next');
+            if (badge) badge.remove();
+          });
+          const following = buttons[buttons.indexOf(button) + 1];
+          if (following && following.closest('.track')) {
+            following.closest('.track').classList.add('is-next');
+            addBadge(following, 'Up next', true);
+          }
+        };
+
+        /* quiet: restore a saved pick without announcing, scrolling, or re-saving it. */
+        const load = (button, options) => {
+          const quiet = Boolean(options && options.quiet);
           const data = button.dataset;
           current = button;
           if (text.index) text.index.textContent = `Clip ${data.index} / ${String(buttons.length).padStart(2, '0')}`;
@@ -4131,6 +4660,10 @@
           if (linkContext) linkContext.textContent = ` — ${data.title} (opens in a new tab)`;
           if (playContext) playContext.textContent = ` — ${data.title}`;
           buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+          if (quiet) {
+            return;
+          }
+          remember({ lastTrack: trackSlug(button) });
           if (playerOn) {
             startPlayer(button, false);
           } else if (live) {
@@ -4150,6 +4683,90 @@
 
         if (playButton) {
           playButton.addEventListener('click', () => startPlayer(current, true));
+        }
+
+        /* Returning visitor: preselect their last track (never autoplay: SoundCloud loads only on Play). */
+        const saved = buttons.find((item) => trackSlug(item) === previousVisit.track);
+        if (saved && saved !== current) {
+          load(saved, { quiet: true });
+        }
+
+        /* "New" = not in the catalog on the previous visit. A first visit marks nothing. */
+        const slugs = buttons.map(trackSlug);
+        if (previousVisit.known) {
+          const known = new Set(previousVisit.known);
+          buttons.forEach((button, position) => {
+            if (!known.has(slugs[position])) {
+              addBadge(button, 'New', false);
+            }
+          });
+        }
+        remember({ knownTracks: slugs.slice(0, 100) });
+      }
+
+      /* ---------- Anticipation: suggest the next step, offer to resume the last view ---------- */
+      const NEXT_STEPS = {
+        home: { href: '#music', text: 'Load a track' },
+        music: { href: '#contact', text: 'Book Erosyn', reason: 'booking' },
+        visuals: { href: '#press', text: 'Press kit' },
+        about: { href: '#music', text: 'Listen' },
+        shows: { href: '#contact', text: 'Booking inquiry', reason: 'booking' },
+        press: { href: '#contact', text: 'Press inquiry', reason: 'press' }
+      };
+
+      function initAnticipation() {
+        const next = document.getElementById('status-next');
+        const nextText = document.getElementById('status-next-text');
+
+        onViewShown((id) => {
+          remember({ lastView: id });
+          if (!next) {
+            return;
+          }
+          const step = NEXT_STEPS[id];
+          next.hidden = !step;
+          if (!step) {
+            return;
+          }
+          next.setAttribute('href', step.href);
+          next.setAttribute('aria-label', `Next: ${step.text}`);
+          if (nextText) nextText.textContent = step.text;
+          /* data-reason reuses the form's "Book" shortcut handler to preselect the reason. */
+          if (step.reason) {
+            next.dataset.reason = step.reason;
+          } else {
+            delete next.dataset.reason;
+          }
+        });
+
+        const resume = document.getElementById('resume');
+        const link = document.getElementById('resume-link');
+        const text = document.getElementById('resume-text');
+        const dismiss = document.getElementById('resume-dismiss');
+        const last = VIEWS.find((view) => view.id === previousVisit.view);
+        const recent = previousVisit.day && daysSince(previousVisit.day) <= RESUME_MAX_DAYS;
+        if (!resume || !link || !last || last.id === 'home' || !recent || initialView !== 'home') {
+          return;
+        }
+        let label = last.label;
+        if (last.id === 'music' && previousVisit.track) {
+          const track = Array.from(document.querySelectorAll('[data-track]'))
+            .find((button) => trackSlug(button) === previousVisit.track);
+          if (track) label += ` · ${track.dataset.title}`;
+        }
+        link.setAttribute('href', `#${last.id}`);
+        link.setAttribute('aria-label', `Continue: ${label}`);
+        if (text) text.textContent = label;
+        resume.hidden = false;
+        link.addEventListener('click', () => {
+          resume.hidden = true;
+        });
+        if (dismiss) {
+          dismiss.addEventListener('click', () => {
+            resume.hidden = true;
+            const heading = document.getElementById('home-title');
+            if (heading) heading.focus({ preventScroll: true });
+          });
         }
       }
 
@@ -4445,6 +5062,22 @@
           });
         });
 
+        const nameInput = form.elements.namedItem('name');
+        const emailInput = form.elements.namedItem('email');
+        const reason = form.elements.namedItem('reason');
+        const message = form.elements.namedItem('message');
+        const rememberBox = document.getElementById('f-remember');
+        const rememberNote = document.getElementById('f-remember-note');
+        const rememberText = document.getElementById('f-remember-text');
+        const draftNote = document.getElementById('f-draft-note');
+
+        const showRememberNote = (value) => {
+          if (rememberNote && rememberText) {
+            rememberText.textContent = value;
+            rememberNote.hidden = false;
+          }
+        };
+
         form.addEventListener('submit', (event) => {
           event.preventDefault();
           attempted = true;
@@ -4455,32 +5088,174 @@
               status.textContent = invalid.length === 1
                 ? '1 field needs attention.'
                 : `${invalid.length} fields need attention.`;
+              pulse(status, 'is-pulse');
             }
             invalid[0].el.focus();
+            pulse(invalid[0].el, 'is-shake');
             return;
           }
           /* Values are preserved. Nothing is transmitted until a production endpoint is connected. */
           if (status) {
             status.dataset.state = 'success';
             status.textContent = 'Demo confirmation: your message passed local validation. Connect this form to the production booking endpoint before launch.';
+            pulse(status, 'is-pulse');
+          }
+          /* Opt-in only: name and email stay on this device for next time. */
+          if (rememberBox && rememberBox.checked && !memoryPaused) {
+            remember({ contact: { name: nameInput.value.trim(), email: emailInput.value.trim() } });
+            showRememberNote('Saved on this device.');
           }
         });
 
-        /* "Book" shortcuts elsewhere preselect the reason. */
-        const reason = form.elements.namedItem('reason');
+        /* Prompt chips add a labeled line for what this kind of inquiry usually needs. */
+        const prompts = document.getElementById('f-prompts');
+        const PROMPTS = {
+          booking: ['Date', 'City / venue', 'Capacity', 'Set length'],
+          press: ['Outlet', 'Deadline', 'Format'],
+          collaboration: ['Project', 'Timeline']
+        };
+        const renderPrompts = () => {
+          if (!prompts || !reason) {
+            return;
+          }
+          const labels = PROMPTS[reason.value] || [];
+          prompts.replaceChildren(...labels.map((label) => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'chip';
+            chip.dataset.prompt = label;
+            chip.textContent = `+ ${label}`;
+            chip.setAttribute('aria-label', `Add a ${label} line`);
+            return chip;
+          }));
+          prompts.hidden = !labels.length;
+        };
+
+        if (prompts && message) {
+          prompts.addEventListener('click', (event) => {
+            const chip = event.target.closest('[data-prompt]');
+            if (!chip) {
+              return;
+            }
+            const value = message.value;
+            const start = message.selectionStart;
+            const end = message.selectionEnd;
+            const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+            const onNewLine = !value.slice(lineStart, start).trim();
+            message.setRangeText(`${onNewLine ? '' : '\n'}${chip.dataset.prompt}: `, start, end, 'end');
+            message.focus();
+            message.dispatchEvent(new Event('input', { bubbles: true }));
+          });
+        }
+
+        /* Draft: kept for this tab only (sessionStorage), so a reload doesn't lose the message. */
+        const saveDraft = () => {
+          if (!message) {
+            return;
+          }
+          writeJSON('sessionStorage', DRAFT_KEY, message.value.trim()
+            ? { reason: reason ? reason.value : '', message: message.value }
+            : null);
+        };
+        const hasOption = (value) => Boolean(reason) && Array.from(reason.options).some((option) => option.value === value);
+        const draft = readJSON('sessionStorage', DRAFT_KEY);
+        if (draft && message && !message.value && typeof draft.message === 'string') {
+          message.value = draft.message;
+          if (reason && !reason.value && hasOption(draft.reason)) {
+            reason.value = draft.reason;
+          }
+          if (draftNote) draftNote.hidden = false;
+        }
+        if (message) {
+          message.addEventListener('input', saveDraft);
+        }
+        const discard = document.getElementById('f-draft-discard');
+        if (discard && message) {
+          discard.addEventListener('click', () => {
+            message.value = '';
+            writeJSON('sessionStorage', DRAFT_KEY, null);
+            if (draftNote) draftNote.hidden = true;
+            message.focus();
+          });
+        }
+
+        /* Remembered contact details (only if the visitor opted in on an earlier visit). */
+        if (rememberBox && memory.contact) {
+          if (nameInput && !nameInput.value) nameInput.value = memory.contact.name || '';
+          if (emailInput && !emailInput.value) emailInput.value = memory.contact.email || '';
+          rememberBox.checked = true;
+          showRememberNote('Filled from this device.');
+        }
+        const forgetContact = () => {
+          remember({ contact: undefined });
+          if (rememberNote) rememberNote.hidden = true;
+        };
+        if (rememberBox) {
+          rememberBox.addEventListener('change', () => {
+            if (!rememberBox.checked) forgetContact();
+          });
+        }
+        const forget = document.getElementById('f-forget');
+        if (forget && rememberBox) {
+          forget.addEventListener('click', () => {
+            forgetContact();
+            rememberBox.checked = false;
+            rememberBox.focus();
+          });
+        }
+
+        if (reason) {
+          reason.addEventListener('change', () => {
+            renderPrompts();
+            saveDraft();
+          });
+        }
+        renderPrompts();
+
+        /* "Book" shortcuts elsewhere preselect the reason; the select flashes once so the prefill is seen. */
         document.addEventListener('click', (event) => {
           const shortcut = event.target.closest('a[data-reason]');
           if (!shortcut || !reason) {
             return;
           }
           const value = shortcut.dataset.reason;
-          if (Array.from(reason.options).some((option) => option.value === value)) {
+          if (hasOption(value)) {
             reason.value = value;
+            renderPrompts();
+            saveDraft();
+            pulse(reason, 'is-prefilled');
             if (attempted) {
               validate(fields.find((field) => field.el === reason));
             }
           }
         });
+
+        /* Clear everything this site stored on the device, and stop saving for the rest of the visit. */
+        const clear = document.getElementById('memory-clear');
+        const note = document.getElementById('memory-note');
+        const announce = document.getElementById('memory-status');
+        if (clear) {
+          clear.addEventListener('click', () => {
+            [['localStorage', MEMORY_KEY], ['localStorage', THEME_KEY], ['sessionStorage', DRAFT_KEY]].forEach(([area, key]) => {
+              try {
+                window[area].removeItem(key);
+              } catch (error) {
+                /* Nothing stored, or storage blocked. */
+              }
+            });
+            memoryPaused = true;
+            if (rememberBox) rememberBox.checked = false;
+            if (rememberNote) rememberNote.hidden = true;
+            if (draftNote) draftNote.hidden = true;
+            const done = 'Saved data cleared. Nothing more is saved during this visit.';
+            if (note) {
+              note.textContent = done;
+              note.tabIndex = -1;
+              note.focus();
+            }
+            if (announce) announce.textContent = done;
+          });
+        }
       }
 
       function setCurrentYear() {
@@ -4491,11 +5266,15 @@
       }
 
       function init() {
+        /* iOS Safari applies :active press states only when a touch listener exists. */
+        document.addEventListener('touchstart', () => {}, { passive: true });
+
         const steps = [
           initTheme,
           initViews,
           initBrowserMenu,
           initReleaseDeck,
+          initAnticipation,
           initMediaModal,
           initShowFilters,
           initContactForm,
@@ -4757,6 +5536,12 @@
                 </a>
                 <a class="btn btn--ghost btn--lg" href="#contact" data-reason="booking">Booking / Contact</a>
               </div>
+
+              <!-- Returning visitors: offer the view they left off on. Filled from this device's storage only. -->
+              <p class="resume" id="resume" hidden>
+                <a class="resume__link" id="resume-link" href="#music"><span class="resume__label">Continue</span><span class="resume__text" id="resume-text">Music</span></a>
+                <button class="resume__dismiss" type="button" id="resume-dismiss" aria-label="Dismiss the continue suggestion">×</button>
+              </p>
 
               <dl class="hero__facts">
                 <div><dt>Base</dt><dd>Miami, FL</dd></div>
@@ -5592,7 +6377,7 @@
               <!-- BRAND SWAP: production booking email / form endpoint -->
               <form class="form" id="inquiry-form" action="#contact" method="get" aria-labelledby="form-title">
                 <h3 class="visually-hidden" id="form-title">Send an inquiry</h3>
-                <p class="form__req mono">All fields required</p>
+                <p class="form__req mono">Name, email, reason, and message required</p>
 
                 <div class="form__row">
                   <div class="field">
@@ -5622,7 +6407,14 @@
                   <label for="f-message">Message</label>
                   <textarea class="input" id="f-message" name="message" rows="5" maxlength="4000" required aria-describedby="f-message-hint"></textarea>
                   <p class="field__hint" id="f-message-hint">For booking: date, city, venue, capacity, and set length.</p>
+                  <div class="prompts" id="f-prompts" role="group" aria-label="Add a detail line to your message" hidden></div>
+                  <p class="field__hint" id="f-draft-note" hidden>Draft restored from this tab. <button class="linkish" type="button" id="f-draft-discard">Discard</button></p>
                   <p class="field__error" id="f-message-error" hidden></p>
+                </div>
+
+                <div class="form__remember">
+                  <label class="check" for="f-remember"><input type="checkbox" id="f-remember" name="remember"> Remember my name and email on this device</label>
+                  <p class="field__hint" id="f-remember-note" hidden><span id="f-remember-text">Filled from this device.</span> <button class="linkish" type="button" id="f-forget">Forget</button></p>
                 </div>
 
                 <div class="form__foot">
@@ -5630,6 +6422,8 @@
                 </div>
 
                 <p class="form__status" id="form-status" role="status"></p>
+                <p class="field__hint" id="memory-note">This site remembers your theme, last view, and last track on this device only. Nothing is sent. <button class="linkish" type="button" id="memory-clear">Clear saved data</button></p>
+                <p class="visually-hidden" id="memory-status" role="status"></p>
                 <noscript><p class="form__noscript">This form needs JavaScript. Reach Erosyn on SoundCloud in the meantime.</p></noscript>
               </form>
             </div>
@@ -5657,6 +6451,7 @@
       <p class="visually-hidden" id="view-status" role="status"></p>
 
       <span class="meters" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <a class="status__next" id="status-next" href="#music" hidden><b>Next</b><span id="status-next-text">Load a track</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-next"/></svg></a>
       <p class="status__desc">Hybrid bass and rave pressure from Miami.</p>
 
       <nav class="status__nav" aria-label="Footer">

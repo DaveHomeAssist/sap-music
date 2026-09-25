@@ -57,3 +57,9 @@ Then open http://localhost:8000.
 - Do not reintroduce third-party font or analytics CDNs without an explicit reason — CSP is locked down.
 - New release cards should follow the existing click-to-play poster pattern; lazy-load any embedded iframes.
 - Edit the relevant CSS file by concern (tokens/base/components/layout) — do not inline large style blocks in HTML.
+
+## Erosyn homepage (`index.html`): device memory and feedback
+- **Device memory is a hint, never a requirement.** Keys: `erosyn:v1` (localStorage: `lastVisit` as a day only, `lastView`, `lastTrack` as a SoundCloud slug, `knownTracks`, and `contact` only when the visitor ticks "Remember me"), `erosyn:draft` (sessionStorage: the unsent message, cleared when the tab closes), and the existing `erosyn-theme`. Go through `readJSON` / `writeJSON` / `remember()`, which swallow storage errors. Data older than 180 days is ignored. "Clear saved data" in Contact removes all three keys and stops saving for the rest of the visit. Nothing is sent anywhere.
+- **Predictions never cause a network request.** The saved track is preselected, never autoplayed; SoundCloud still loads only on Play. The Home resume chip links; it never redirects. "New" means a track slug that wasn't in `knownTracks` on the previous visit, so a first visit marks nothing.
+- **Next step** lives in the status bar (`#status-next`, from 768px up), driven by `NEXT_STEPS`; its `data-reason` reuses the form's Book-shortcut handler.
+- **Motion tokens:** `--t-press` 80ms (press in), `--t-fast` 120ms (release, hover, focus), `--t` 150ms (state change), `--t-feedback` 180ms (shake, confirm, prefill flash); `--ease` for entering, `--ease-exit` for leaving. Keep feedback motion ≤ 180ms and animate only transform, opacity, and colors. Restart one-shot feedback with `pulse(element, className)`. The reduced-motion block cancels every press transform and the shake; add new pressable selectors there too.
