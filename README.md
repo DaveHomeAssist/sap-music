@@ -1,6 +1,11 @@
 # SAP Music
 
-Artist site for **SAP — Standard Acid Procedure**, a South Florida bass music producer (dubstep, halftime, glitch hop, psy bass). Live at [standardacidprocedure.com](https://standardacidprocedure.com).
+Artist site for **Erosyn** (formerly **SAP — Standard Acid Procedure**), a South Florida bass music producer and DJ. Live at [standardacidprocedure.com](https://standardacidprocedure.com).
+
+- `/` — the Erosyn site (`index.html`; its assets live under `erosyn/`)
+- `/erosyn/brand.html` — Erosyn brand system and artist asset pack
+- `/sap.html` — the legacy SAP page
+- `/erosyn/` — redirects to `/`
 
 ## Stack
 - Static HTML (no build step)
@@ -20,7 +25,7 @@ Then open http://localhost:8000.
 Any other static server works (`npx serve`, `caddy file-server`, etc.).
 
 ## Deploy
-Pushes to `main` auto-deploy to GitHub Pages. The `CNAME` file pins the custom domain `standardacidprocedure.com`.
+Production is served by Vercel: pushes to `main` deploy `standardacidprocedure.com`, and PR branches get preview URLs. A GitHub Pages workflow also publishes on push to `main`; the `CNAME` file pins the custom domain there.
 
 ## Notable features
 - **Click-to-play release cards** — poster art loads first, SoundCloud iframes lazy-load on interaction
