@@ -65,8 +65,18 @@ Required resources:
   - If Option B: design tool or prompt to generate branded card
 
 
-PHASE 3 — Hosting Decision: GitHub Pages vs Vercel  [BLOCKED ON DECISION]
-===========================================================================
+PHASE 3 — Hosting Decision: GitHub Pages vs Vercel  [DECIDED 2026-10-01: VERCEL]
+====================================================================================
+Decision (Dave, 2026-10-01): Vercel is the canonical host for the site and its api/
+functions. It has served standardacidprocedure.com and www since 2026-03-25 (DNS at
+Namecheap points at Vercel). The GitHub Pages workflow and CNAME file were removed;
+the Pages setting stays on so davehomeassist.github.io/sap-music/ keeps redirecting
+to the domain.
+Open: confirm the Vercel team's plan (Hobby is for non-commercial personal use).
+The text below is the original March decision record, kept for history.
+
+(Original) PHASE 3 — Hosting Decision: GitHub Pages vs Vercel
+============================================================
 Owner: Dave
 Timeline: Decision needed before Notion intake goes live
 
