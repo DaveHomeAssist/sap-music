@@ -25,7 +25,7 @@ Then open http://localhost:8000.
 Any other static server works (`npx serve`, `caddy file-server`, etc.).
 
 ## Deploy
-Production is served by Vercel: pushes to `main` deploy `standardacidprocedure.com`, and PR branches get preview URLs. A GitHub Pages workflow also publishes on push to `main`; the `CNAME` file pins the custom domain there.
+Production is served by Vercel, the canonical host for the site and its `api/` functions: pushes to `main` deploy `standardacidprocedure.com`, and PR branches get preview URLs. The repository no longer publishes to GitHub Pages.
 
 ## Notable features
 - **Click-to-play release cards** — poster art loads first, SoundCloud iframes lazy-load on interaction
