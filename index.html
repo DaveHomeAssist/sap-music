@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -3272,6 +3272,11 @@
       }
     }
 
+    .app .press-materials { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+    .press-materials .cutting--lead { grid-column: 1; grid-row: 1; }
+    .press-materials .cutting__body { align-items: flex-start; max-width: 56rem; }
+    .press-materials h3 { font-size: clamp(1.5rem, 3vw, 3rem); line-height: 1.1; }
+
     .cutting {
       --notch: 16px;
       clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% 100%, 0 100%);
@@ -3352,6 +3357,10 @@
       .app .record {
         grid-template-rows: minmax(0, 1fr);
       }
+    }
+
+    @media (max-width: 1023px) {
+      .record .rec-panel { order: -1; }
     }
 
     .routing__body {
@@ -4373,13 +4382,13 @@
         const metas = Array.from(document.querySelectorAll('meta[name="theme-color"]'));
         let manual = Boolean(storedTheme);
 
-        const activeTheme = () => root.getAttribute('data-theme') || (lightSchemeQuery.matches ? 'light' : 'dark');
+        const activeTheme = () => root.getAttribute('data-theme') || 'light';
 
         const sync = () => {
           const theme = activeTheme();
           const isDark = theme === 'dark';
           metas.forEach((meta) => {
-            meta.setAttribute('content', manual ? THEME_COLORS[theme] : meta.dataset.default);
+            meta.setAttribute('content', THEME_COLORS[theme]);
           });
           if (!toggle) {
             return;
@@ -4976,7 +4985,7 @@
         apply('upcoming');
       }
 
-      /* ---------- Contact form (local validation only) ---------- */
+      /* ---------- Contact form: validate and prepare an email ---------- */
       function initContactForm() {
         const form = document.getElementById('inquiry-form');
         if (!form) {
@@ -5049,7 +5058,10 @@
         };
 
         const clearStatus = () => {
-          if (status && status.dataset.state === 'success') {
+          if (status && status.dataset.state === 'prepared') {
+            document.getElementById('email-draft').hidden = true;
+            document.getElementById('copy-inquiry').hidden = true;
+            document.getElementById('email-copy').hidden = true;
             status.textContent = '';
             delete status.dataset.state;
           }
@@ -5099,6 +5111,24 @@
           }
         };
 
+        let preparedInquiry = '';
+        const emailDraft = document.getElementById('email-draft');
+        const copyInquiry = document.getElementById('copy-inquiry');
+        const emailCopy = document.getElementById('email-copy');
+        copyInquiry.addEventListener('click', async () => {
+          const inquiry = preparedInquiry;
+          try {
+            await navigator.clipboard.writeText(inquiry);
+            if (status.dataset.state === 'prepared' && inquiry === preparedInquiry) status.textContent = 'Inquiry copied. Paste it into an email to erosynmusic@gmail.com.';
+          } catch {
+            if (status.dataset.state !== 'prepared' || inquiry !== preparedInquiry) return;
+            emailCopy.hidden = false;
+            emailCopy.value = inquiry;
+            emailCopy.focus();
+            emailCopy.select();
+            status.textContent = 'Select and copy the prepared inquiry below, then email erosynmusic@gmail.com.';
+          }
+        });
         form.addEventListener('submit', (event) => {
           event.preventDefault();
           attempted = true;
@@ -5115,12 +5145,13 @@
             pulse(invalid[0].el, 'is-shake');
             return;
           }
-          /* Values are preserved. Nothing is transmitted until a production endpoint is connected. */
-          if (status) {
-            status.dataset.state = 'success';
-            status.textContent = 'Demo confirmation: your message passed local validation. Connect this form to the production booking endpoint before launch.';
-            pulse(status, 'is-pulse');
-          }
+          const subject = ({booking: 'Booking inquiry', press: 'Press inquiry', collaboration: 'Collaboration', general: 'General inquiry'})[reason.value];
+          preparedInquiry = `Name: ${nameInput.value.trim()}\nReply to: ${emailInput.value.trim()}\n\n${message.value.trim()}`;
+          emailDraft.href = `mailto:erosynmusic@gmail.com?subject=${encodeURIComponent('Erosyn — ' + subject)}&body=${encodeURIComponent(preparedInquiry)}`;
+          emailDraft.hidden = false; copyInquiry.hidden = false; emailCopy.hidden = true;
+          status.dataset.state = 'prepared';
+          status.textContent = 'Email draft prepared. Open your email app and send it to erosynmusic@gmail.com. Nothing has been sent yet.';
+          emailDraft.focus();
           /* Opt-in only: name and email stay on this device for next time. */
           if (rememberBox && rememberBox.checked && !memoryPaused) {
             remember({ contact: { name: nameInput.value.trim(), email: emailInput.value.trim() } });
@@ -5194,6 +5225,7 @@
         if (discard && message) {
           discard.addEventListener('click', () => {
             message.value = '';
+            clearStatus();
             writeJSON('sessionStorage', DRAFT_KEY, null);
             if (draftNote) draftNote.hidden = true;
             message.focus();
@@ -5242,6 +5274,7 @@
           const value = shortcut.dataset.reason;
           if (hasOption(value)) {
             reason.value = value;
+            clearStatus();
             renderPrompts();
             saveDraft();
             pulse(reason, 'is-prefilled');
@@ -6158,118 +6191,11 @@
           </header>
 
           <div class="shows view__body">
-            <!-- CONTENT SWAP: replace with confirmed show schedule (timeline markers mirror the list below) -->
-            <div class="panel locators" aria-hidden="true" data-filter="upcoming">
-              <div class="panel__bar"><span><b>Timeline</b></span><span>Apr — Dec 2026</span></div>
-              <div class="locators__body">
-                <div class="locators__months">
-                  <span style="--at:0%">Apr</span><span style="--at:10.95%">May</span><span style="--at:22.26%">Jun</span><span style="--at:33.21%">Jul</span><span style="--at:44.53%">Aug</span><span style="--at:55.84%">Sep</span><span style="--at:66.79%">Oct</span><span style="--at:78.1%">Nov</span><span style="--at:89.05%">Dec</span>
-                </div>
-                <div class="locators__lane">
-                  <span class="marker is-past" data-date="2026-04-18" style="--at:6.2%"></span>
-                  <span class="marker is-past" data-date="2026-06-13" style="--at:26.64%"></span>
-                  <span class="marker is-past" data-date="2026-08-22" style="--at:52.19%"></span>
-                  <span class="marker" data-date="2026-10-17" style="--at:72.63%"></span>
-                  <span class="marker" data-date="2026-11-07" style="--at:80.29%"></span>
-                  <span class="marker" data-date="2026-12-12" style="--at:93.07%"></span>
-                  <span class="today" data-start="2026-04-01" data-end="2026-12-31" style="--at:64.23%"><span>Today</span></span>
-                </div>
-              </div>
-            </div>
-
             <div class="panel shows__panel">
-              <div class="shows-toolbar">
-                <div class="filters" role="group" aria-label="Filter shows">
-                  <button class="filter-btn" type="button" aria-pressed="true" data-show-filter="upcoming">Upcoming</button>
-                  <button class="filter-btn" type="button" aria-pressed="false" data-show-filter="past">Past</button>
-                </div>
-                <p class="shows-count mono" id="shows-status" role="status">3 upcoming dates</p>
-              </div>
-
-              <!-- CONTENT SWAP: replace with confirmed show schedule -->
-              <ol class="show-list" id="show-list">
-                <li class="show" data-when="upcoming">
-                  <time class="show__date" datetime="2026-10-17">
-                    <span class="show__weekday">Sat</span>
-                    <span class="show__day">17</span>
-                    <span class="show__month">Oct 2026</span>
-                  </time>
-                  <div class="show__where">
-                    <p class="show__city">Miami, FL</p>
-                    <p class="show__venue">Warehouse TBA</p>
-                  </div>
-                  <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Upcoming</span></p>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">Get updates<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Miami, October 17 (opens in a new tab)</span></a>
-                </li>
-                <li class="show" data-when="upcoming">
-                  <time class="show__date" datetime="2026-11-07">
-                    <span class="show__weekday">Sat</span>
-                    <span class="show__day">07</span>
-                    <span class="show__month">Nov 2026</span>
-                  </time>
-                  <div class="show__where">
-                    <p class="show__city">Miami, FL</p>
-                    <p class="show__venue">Club TBA</p>
-                  </div>
-                  <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Upcoming</span></p>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">Get updates<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — Miami, November 7 (opens in a new tab)</span></a>
-                </li>
-                <li class="show" data-when="upcoming">
-                  <time class="show__date" datetime="2026-12-12">
-                    <span class="show__weekday">Sat</span>
-                    <span class="show__day">12</span>
-                    <span class="show__month">Dec 2026</span>
-                  </time>
-                  <div class="show__where">
-                    <p class="show__city">City TBA</p>
-                    <p class="show__venue">Venue TBA</p>
-                  </div>
-                  <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Upcoming</span></p>
-                  <a class="ext-link" href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener">Get updates<svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external"/></svg><span class="visually-hidden"> — December 12 (opens in a new tab)</span></a>
-                </li>
-                <li class="show" data-when="past">
-                  <time class="show__date" datetime="2026-08-22">
-                    <span class="show__weekday">Sat</span>
-                    <span class="show__day">22</span>
-                    <span class="show__month">Aug 2026</span>
-                  </time>
-                  <div class="show__where">
-                    <p class="show__city">Miami, FL</p>
-                    <p class="show__venue">Venue TBA</p>
-                  </div>
-                  <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Past</span></p>
-                  <a class="ext-link" href="#contact" data-reason="booking">Book a date<span class="visually-hidden"> — booking inquiry</span></a>
-                </li>
-                <li class="show" data-when="past">
-                  <time class="show__date" datetime="2026-06-13">
-                    <span class="show__weekday">Sat</span>
-                    <span class="show__day">13</span>
-                    <span class="show__month">Jun 2026</span>
-                  </time>
-                  <div class="show__where">
-                    <p class="show__city">Miami, FL</p>
-                    <p class="show__venue">Warehouse TBA</p>
-                  </div>
-                  <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Past</span></p>
-                  <a class="ext-link" href="#contact" data-reason="booking">Book a date<span class="visually-hidden"> — booking inquiry</span></a>
-                </li>
-                <li class="show" data-when="past">
-                  <time class="show__date" datetime="2026-04-18">
-                    <span class="show__weekday">Sat</span>
-                    <span class="show__day">18</span>
-                    <span class="show__month">Apr 2026</span>
-                  </time>
-                  <div class="show__where">
-                    <p class="show__city">Miami, FL</p>
-                    <p class="show__venue">Club TBA</p>
-                  </div>
-                  <p class="show__status"><span class="chip chip--utility">Placeholder</span><span class="chip show__when">Past</span></p>
-                  <a class="ext-link" href="#contact" data-reason="booking">Book a date<span class="visually-hidden"> — booking inquiry</span></a>
-                </li>
-              </ol>
-
-              <div class="shows-empty" id="shows-empty" hidden>
-                <p id="shows-empty-text">No upcoming dates posted right now.</p>
+              <div class="panel__bar"><b>Dates</b><span>Announcements</span></div>
+              <div class="shows-empty" id="shows-empty">
+                <p id="shows-empty-text">No confirmed dates are published here yet.</p>
+                <p>New dates will appear once the artist confirms them.</p>
                 <a class="btn btn--ghost btn--sm" href="#contact" data-reason="booking">Send a booking inquiry</a>
               </div>
             </div>
@@ -6304,60 +6230,20 @@
               <p class="view__idx">06 / Signal log</p>
               <h2 class="view__title" id="press-title" tabindex="-1" data-view-heading>Press</h2>
             </div>
-            <p class="view__desc">What comes back from the rooms, the press, and the people running the nights.</p>
+            <p class="view__desc">Artist biography and visual materials for press and promoters.</p>
           </header>
 
-          <!-- CONTENT SWAP: replace with verified press / promoter quotes -->
-          <div class="log view__body">
-            <figure class="panel cutting cutting--lead">
-              <p class="panel__bar"><b>RX/01</b><span>Independent electronic press</span><span class="chip chip--utility">Placeholder</span></p>
+          <div class="log press-materials view__body">
+            <article class="panel cutting cutting--lead">
+              <p class="panel__bar"><b>Press kit</b><span>Artist materials</span></p>
               <div class="cutting__body">
-                <blockquote>
-                  <p>“Grime weight, DnB speed, and a psytrance edge that never settles. Built for rooms that stay loud past close.”</p>
-                </blockquote>
-                <figcaption>Independent electronic press — placeholder attribution</figcaption>
+                <h3>Erosyn, in the artist’s own words.</h3>
+                <p>Biography, artist imagery and visual assets for a feature or a show announcement.</p>
+                <a class="btn btn--primary" href="erosyn/02-press-kit/one-sheet/erosyn-one-sheet-press-v01.pdf">Read the one-sheet</a>
+                <a class="btn btn--ghost" href="#visuals">Browse visuals</a>
+                <a class="btn btn--ghost" href="#contact" data-reason="press">Press inquiry</a>
               </div>
-            </figure>
-
-            <figure class="panel cutting">
-              <p class="panel__bar"><b>RX/02</b><span>Promoter note</span><span class="chip chip--utility">Placeholder</span></p>
-              <div class="cutting__body">
-                <blockquote>
-                  <p>“Asked for pressure, got pressure. The floor held until the lights came up.”</p>
-                </blockquote>
-                <figcaption>Promoter note — placeholder attribution</figcaption>
-              </div>
-            </figure>
-
-            <figure class="panel cutting">
-              <p class="panel__bar"><b>RX/03</b><span>Event curator</span><span class="chip chip--utility">Placeholder</span></p>
-              <div class="cutting__body">
-                <blockquote>
-                  <p>“Fits the late slot: hard enough for the heads, controlled enough to hold the room.”</p>
-                </blockquote>
-                <figcaption>Event curator — placeholder attribution</figcaption>
-              </div>
-            </figure>
-
-            <figure class="panel cutting">
-              <p class="panel__bar"><b>RX/04</b><span>Collaborator</span><span class="chip chip--utility">Placeholder</span></p>
-              <div class="cutting__body">
-                <blockquote>
-                  <p>“Sessions move fast. Ideas get printed before they get polished.”</p>
-                </blockquote>
-                <figcaption>Collaborator — placeholder attribution</figcaption>
-              </div>
-            </figure>
-
-            <figure class="panel cutting">
-              <p class="panel__bar"><b>RX/05</b><span>Listener</span><span class="chip chip--utility">Placeholder</span></p>
-              <div class="cutting__body">
-                <blockquote>
-                  <p>“Found it on SoundCloud at 3am. Ran it back twice.”</p>
-                </blockquote>
-                <figcaption>Listener — placeholder attribution</figcaption>
-              </div>
-            </figure>
+            </article>
           </div>
         </section>
 
@@ -6395,8 +6281,8 @@
 
             <div class="panel rec-panel">
               <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Record</b></span><span>Input armed</span></div>
-              <!-- BRAND SWAP: production booking email / form endpoint -->
-              <form class="form" id="inquiry-form" action="#contact" method="get" aria-labelledby="form-title">
+              <!-- Booking destination confirmed by Dave: erosynmusic@gmail.com. -->
+              <form class="form" id="inquiry-form" action="mailto:erosynmusic@gmail.com" method="post" enctype="text/plain" aria-labelledby="form-title">
                 <h3 class="visually-hidden" id="form-title">Send an inquiry</h3>
                 <p class="form__req mono">Name, email, reason, and message required</p>
 
@@ -6439,13 +6325,17 @@
                 </div>
 
                 <div class="form__foot">
-                  <button class="btn btn--primary btn--lg" type="submit">Submit inquiry</button>
+                  <button class="btn btn--primary btn--lg" type="submit">Prepare email</button>
+                  <a class="btn btn--ghost" id="email-draft" href="mailto:erosynmusic@gmail.com" hidden>Open email app</a>
+                  <button class="btn btn--ghost" id="copy-inquiry" type="button" hidden>Copy inquiry</button>
                 </div>
 
                 <p class="form__status" id="form-status" role="status"></p>
-                <p class="field__hint" id="memory-note">This site remembers your theme, last view, and last track on this device only. Nothing is sent. <button class="linkish" type="button" id="memory-clear">Clear saved data</button></p>
+                <textarea class="input" id="email-copy" readonly aria-label="Prepared inquiry to copy" rows="5" hidden></textarea>
+                <p class="field__hint">Booking: <a href="mailto:erosynmusic@gmail.com">erosynmusic@gmail.com</a>. Preparing an email keeps these details in this tab until you send from your email app.</p>
+                <p class="field__hint" id="memory-note">Theme, last view, and last track stay on this device. This page does not send your inquiry. <button class="linkish" type="button" id="memory-clear">Clear saved data</button></p>
                 <p class="visually-hidden" id="memory-status" role="status"></p>
-                <noscript><p class="form__noscript">This form needs JavaScript. Reach Erosyn on SoundCloud in the meantime.</p></noscript>
+                <noscript><p class="form__noscript">Email <a href="mailto:erosynmusic@gmail.com">erosynmusic@gmail.com</a> with your date, city, venue, capacity, and set length.</p></noscript>
               </form>
             </div>
           </div>
