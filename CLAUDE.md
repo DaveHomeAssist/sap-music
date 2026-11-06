@@ -3,7 +3,7 @@
 Orientation doc for Claude / Claude Code working in this repo.
 
 ## Project
-**SAP Music** — Standard Acid Procedure. Artist site for a South Florida bass music producer (dubstep, halftime, glitch hop, glitch pop, psy bass). The artist rebranded from SAP to **Erosyn**: the Erosyn site is the homepage (`index.html`), and the legacy SAP page lives at `sap.html`.
+**SAP Music**: Standard Acid Procedure. Artist site for a South Florida bass music producer (dubstep, halftime, glitch hop, glitch pop, psy bass). The artist rebranded from SAP to **Erosyn**: the Erosyn site is the homepage (`index.html`), and the retired SAP page redirects to Erosyn.
 
 ## Domain
 erosynmusic.com (primary). standardacidprocedure.com remains a working legacy alias.
@@ -16,23 +16,20 @@ erosynmusic.com (primary). standardacidprocedure.com remains a working legacy al
   - `components.css` — reusable component styles (cards, buttons, modals, etc.)
   - `layout.css` — page layout / grid / section-level rules
 - Vanilla JS inline in HTML where needed
-- Fonts: Orbitron, IBM Plex Mono, Space Grotesk, self-hosted as `.woff2` in `fonts/` and declared by `fonts/fonts.css`. That stylesheet sits beside the files, so its `url()`s resolve no matter which page links it; link it as `fonts/fonts.css` (as `drum-machine.html` does). Orbitron and Space Grotesk are variable fonts (one file covers every weight); IBM Plex Mono has one file per weight. No page's CSP allows Google Fonts. Legacy exceptions, left as-is: `sap.html` still links `css/fonts.css`, whose `url(fonts/…)` paths resolve to a nonexistent `css/fonts/` (it falls back to system fonts), and the SAP `brand.html` loads the Google Fonts CDN.
+- Fonts: Orbitron, IBM Plex Mono, Space Grotesk, self-hosted as `.woff2` in `fonts/` and declared by `fonts/fonts.css`. That stylesheet sits beside the files, so its `url()`s resolve no matter which page links it; link it as `fonts/fonts.css` (as `drum-machine.html` does). Orbitron and Space Grotesk are variable fonts (one file covers every weight); IBM Plex Mono has one file per weight. No page's CSP allows Google Fonts. The legacy SAP HTML routes now redirect to Erosyn and do not load their old font stylesheets.
 
 ## Deploy
 Production at `erosynmusic.com` is served by **Vercel** (Vercel GitHub integration), the canonical host for the site and its `api/` functions (decided 2026-10-01). Pushes to `main` deploy production and PR branches get preview URLs. The repository no longer publishes to GitHub Pages. The Pages setting stays on only so that `davehomeassist.github.io/sap-music/` keeps redirecting to the domain; its last build is not served there.
 
 ## Key pages
 - `index.html`: homepage: the Erosyn rebrand site (formerly SAP). Standalone single file (one `<style>`, one `<script>`, no shared CSS) built as a no-scroll, DAW-style app with hash-routed views. It lives at the root but its assets stay under `erosyn/`, so every asset path carries the `erosyn/` prefix (`erosyn/01-logos/`, `erosyn/02-press-kit/`, `erosyn/web/`, …); keep that prefix on new assets. Missing assets fall back to CSS art. The page loads resized copies from `erosyn/web/` (regenerate them from the pack masters when art changes); modal "Open full file" links point at the masters. The Home and Music views feature Scorcher with verified Spotify, Apple Music and SoundCloud links (see `docs/LAUNCH.md`). The Music view lists the real catalog from soundcloud.com/erosynmusic (cover art saved in `erosyn/web/releases/`) and loads the SoundCloud widget only when a visitor presses Play. Shows remain empty until verified dates exist; Press contains artist materials, not invented reviews.
-- `sap.html` — legacy SAP landing page (hero, releases, shows, press toolkit), formerly `index.html`. Its canonical and `og:url` point at `/sap.html`, not the root.
+- `sap.html` redirects to `/`; root `brand.html` redirects to `/erosyn/brand.html`. Both have static fallback stubs and permanent Vercel redirects. Preserve old content in Git history only.
 - `drum-machine.html` — Erosyn rhythm machine, linked from the Erosyn Music view. It uses the Erosyn palette and wordmark; fonts come from `fonts/fonts.css` (IBM Plex Mono for the UI, Space Grotesk for the BPM readout). It has seven kits (dubstep, grime, dnb, psytrance, electro, hardstyle, rave), and each preset sets its own BPM. The preset keys must match `VALID_PRESETS` in `api/generate-beat.js`. Visitors get the local keyword classifier, with no prompt. The token-protected AI classifier is owner-only: open the page with `?ai` to be asked for the token. Step cells are buttons with `aria-pressed`, and on phones (≤560px) each track wraps into two rows of eight. The Web Audio voices are unchanged from the SAP version.
 - `erosyn/index.html` — redirect stub only: sends `/erosyn/` to `/` and keeps the `#view`, so old deep links such as `/erosyn/#music` still work. Do not build here.
 - `erosyn/brand.html` — Erosyn brand system v01 guide. Standalone single file; asset paths resolve relative to the page (pack folders sit beside it). Pack Map folder cards link to the GitHub tree view because Vercel serves no directory listings. The Download ZIP button points to a GitHub Release asset (tag `erosyn-pack-v01`), not a file in the repo. When the pack changes, rebuild the zip from the committed tree (the site-only `index.html` and `web/` are excluded) with `git archive --format=zip -9 --prefix=artist-asset-pack/ -o erosyn-artist-asset-pack-v01.zip HEAD:erosyn -- ':!index.html' ':!web'`, then run `gh release upload erosyn-pack-v01 erosyn-artist-asset-pack-v01.zip --clobber`.
 
-## Key sections (sap.html)
-- **Hero** — artist identity and primary CTA
-- **Releases** — click-to-play poster cards (SoundCloud iframes lazy-loaded)
-- **Shows** — split into **confirmed** vs **booking / inquiries**
-- **Press toolkit** — assets, bio, links for press / venues / promoters
+## Press sheet
+The source is `erosyn/02-press-kit/press-copy.json`. Build the selectable PDF and Markdown bio with `tools/build-press-sheet.py`; render the PDF to its matching PNG. Update the existing release ZIP when changing pack assets.
 
 ## Recent work
 - Tier 1 + 2 + 3 audit fixes:
@@ -43,7 +40,7 @@ Production at `erosynmusic.com` is served by **Vercel** (Vercel GitHub integrati
   - CSP meta tag added to the SAP page (now `sap.html`) and `drum-machine.html`
 
 ## Follow-ups
-- Legacy SAP pages only: `sap.html` (broken `css/fonts.css`) and the root `brand.html` (Google Fonts CDN) either get pointed at `fonts/fonts.css` or retired. Once neither uses it, delete `css/fonts.css`.
+- The old SAP HTML pages are retired redirects. Their unused CSS is retained as history-adjacent assets; do not reintroduce the old copy.
 
 ## Build / dev
 No build. Serve the directory statically:

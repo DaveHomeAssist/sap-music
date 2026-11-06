@@ -1,24 +1,17 @@
-# 📰 Erosyn EPK Copy
+# Erosyn press copy
 
-- Use this copy in the one-sheet, booking packet, website, and press folder.
-- Replace placeholder contact fields before sending externally.
-- Keep the former SAP reference only during the rebrand transition.
+## Short bio
 
----
+Erosyn is the electronic music project of Miami-based producer and DJ Connor, previously known as SAP. His music and sets draw on dubstep, grime, drum and bass, psytrance, electro, hardstyle and old-school rave. Scorcher, released November 5, 2026, is available on Spotify, Apple Music and SoundCloud.
 
-## 🧬 EPK Headline
+## Booking
 
-**Erosyn**  
-Hybrid bass and rave pressure from Miami.
+For a booking inquiry, include the date, city, venue, capacity and proposed set length. Set details and technical requirements can be discussed by email.
 
----
+Contact: [erosynmusic@gmail.com](mailto:erosynmusic@gmail.com)
 
-## 📝 Press Blurb
+## Voice
 
-Erosyn is Connor's rebranded producer/DJ project, formerly SAP. The sound stays rooted in experimental bass, dubstep, DnB, UK grime, psytrance, electro, hardstyle, and classic rave, now sharpened through a darker visual system built around red signal glow, warehouse pressure, and distorted audio textures.
+Finding beauty in the dark.
 
----
-
-## 🎫 Booking Blurb
-
-Erosyn delivers underground electronic sets built for late rooms, heavy systems, and high-pressure club energy. The set direction moves across experimental bass, grime, DnB, psytrance, hardstyle, electro, and classic rave without losing the raw SoundCloud-era edge.
+Use third person for press and show announcements. Keep the artist's first-person website introduction separate from attributed quotations.

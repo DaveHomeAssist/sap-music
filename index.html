@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Erosyn | Scorcher out now | Hybrid Bass Producer &amp; DJ</title>
   <!-- BRAND SWAP: final SEO description -->
-  <meta name="description" content="Scorcher is out now. Listen to Erosyn on Spotify, Apple Music and SoundCloud. Hybrid bass and rave pressure from Miami.">
+  <meta name="description" content="Scorcher is out now. Listen to Erosyn on Spotify, Apple Music and SoundCloud. Bass music from Miami. Finding beauty in the dark.">
   <!-- BRAND SWAP: production URL -->
   <link rel="canonical" href="https://erosynmusic.com/">
   <meta name="robots" content="index, follow">
@@ -17,7 +17,7 @@
   <meta property="og:site_name" content="Erosyn">
   <meta property="og:title" content="Erosyn | Scorcher out now">
   <!-- BRAND SWAP: final SEO description -->
-  <meta property="og:description" content="Scorcher is out now. Listen to Erosyn on Spotify, Apple Music and SoundCloud. Hybrid bass and rave pressure from Miami.">
+  <meta property="og:description" content="Scorcher is out now. Listen to Erosyn on Spotify, Apple Music and SoundCloud. Bass music from Miami. Finding beauty in the dark.">
   <!-- BRAND SWAP: production URL -->
   <meta property="og:url" content="https://erosynmusic.com/">
   <!-- BRAND SWAP: social preview image -->
@@ -29,7 +29,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Erosyn | Scorcher out now">
   <!-- BRAND SWAP: final SEO description -->
-  <meta name="twitter:description" content="Scorcher is out now. Listen to Erosyn on Spotify, Apple Music and SoundCloud. Hybrid bass and rave pressure from Miami.">
+  <meta name="twitter:description" content="Scorcher is out now. Listen to Erosyn on Spotify, Apple Music and SoundCloud. Bass music from Miami. Finding beauty in the dark.">
   <!-- BRAND SWAP: social preview image -->
   <meta name="twitter:image" content="https://erosynmusic.com/erosyn/03-social/banners/erosyn-hero-banner-warehouse-1920x1080-v01.png">
   <meta name="twitter:image:alt" content="Erosyn warehouse hero banner">
@@ -4240,13 +4240,13 @@
       const THEME_COLORS = { dark: '#050505', light: '#f4efe7' };
       const BASE_TITLE = document.title;
       const VIEWS = [
-        { id: 'home', label: 'Home', mode: 'Arrangement' },
-        { id: 'music', label: 'Music', mode: 'Clips' },
-        { id: 'visuals', label: 'Visuals', mode: 'Media pool' },
-        { id: 'about', label: 'About', mode: 'Device' },
-        { id: 'shows', label: 'Shows', mode: 'Locators' },
-        { id: 'press', label: 'Press', mode: 'Signal log' },
-        { id: 'contact', label: 'Contact', mode: 'Record' }
+        { id: 'home', label: 'Home', mode: 'Start here' },
+        { id: 'music', label: 'Music', mode: 'Tracks & mixes' },
+        { id: 'visuals', label: 'Visuals', mode: 'Artwork' },
+        { id: 'about', label: 'About', mode: 'Connor' },
+        { id: 'shows', label: 'Shows', mode: 'Dates' },
+        { id: 'press', label: 'Press', mode: 'Bio & downloads' },
+        { id: 'contact', label: 'Contact', mode: 'Inquiries' }
       ];
       const VIEW_IDS = VIEWS.map((view) => view.id);
       const viewListeners = [];
@@ -4661,7 +4661,7 @@
           if (progress) progress.hidden = true;
           if (playButton) playButton.hidden = true;
           if (state) {
-            state.textContent = 'Deck A · Loaded';
+            state.textContent = 'Player loaded';
             pulse(state, 'is-confirm');
           }
           deck.classList.add('is-playing');
@@ -4704,7 +4704,7 @@
           const quiet = Boolean(options && options.quiet);
           const data = button.dataset;
           current = button;
-          if (text.index) text.index.textContent = `Clip ${data.index} / ${String(buttons.length).padStart(2, '0')}`;
+          if (text.index) text.index.textContent = `Track ${data.index} / ${String(buttons.length).padStart(2, '0')}`;
           if (text.title) text.title.textContent = data.title;
           if (text.desc) text.desc.textContent = data.desc;
           if (text.type) text.type.textContent = data.type;
@@ -4727,7 +4727,7 @@
           if (playerOn) {
             startPlayer(button, false);
           } else if (live) {
-            live.textContent = `${data.title} loaded in the inspector.`;
+            live.textContent = `${data.title} selected. Press Play here to listen.`;
           }
           if (stacked.matches) {
             deck.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
@@ -4766,7 +4766,7 @@
 
       /* ---------- Anticipation: suggest the next step, offer to resume the last view ---------- */
       const NEXT_STEPS = {
-        home: { href: '#music', text: 'Load a track' },
+        home: { href: '#music', text: 'Pick a track' },
         music: { href: '#contact', text: 'Book Erosyn', reason: 'booking' },
         visuals: { href: '#press', text: 'Press kit' },
         about: { href: '#music', text: 'Listen' },
@@ -5560,17 +5560,17 @@
       <nav class="browser" id="browser" aria-label="Primary">
         <p class="browser__head"><span>Browser</span><span>07 views</span></p>
         <ul class="browser__list">
-          <li><a class="browser__link" href="#home" data-view-link><span class="browser__idx">01</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-arrange"/></svg><span class="browser__text"><span class="browser__label">Home</span><span class="browser__hint">Arrangement</span></span></a></li>
-          <li><a class="browser__link" href="#music" data-view-link><span class="browser__idx">02</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-clips"/></svg><span class="browser__text"><span class="browser__label">Music</span><span class="browser__hint">Clips</span></span></a></li>
-          <li><a class="browser__link" href="#visuals" data-view-link><span class="browser__idx">03</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-pool"/></svg><span class="browser__text"><span class="browser__label">Visuals</span><span class="browser__hint">Media pool</span></span></a></li>
-          <li><a class="browser__link" href="#about" data-view-link><span class="browser__idx">04</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-device"/></svg><span class="browser__text"><span class="browser__label">About</span><span class="browser__hint">Device</span></span></a></li>
-          <li><a class="browser__link" href="#shows" data-view-link><span class="browser__idx">05</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-locator"/></svg><span class="browser__text"><span class="browser__label">Shows</span><span class="browser__hint">Locators</span></span></a></li>
-          <li><a class="browser__link" href="#press" data-view-link><span class="browser__idx">06</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-log"/></svg><span class="browser__text"><span class="browser__label">Press</span><span class="browser__hint">Signal log</span></span></a></li>
-          <li><a class="browser__link" href="#contact" data-view-link><span class="browser__idx">07</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-rec"/></svg><span class="browser__text"><span class="browser__label">Contact</span><span class="browser__hint">Record</span></span></a></li>
+          <li><a class="browser__link" href="#home" data-view-link><span class="browser__idx">01</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-arrange"/></svg><span class="browser__text"><span class="browser__label">Home</span><span class="browser__hint">Start here</span></span></a></li>
+          <li><a class="browser__link" href="#music" data-view-link><span class="browser__idx">02</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-clips"/></svg><span class="browser__text"><span class="browser__label">Music</span><span class="browser__hint">Tracks &amp; mixes</span></span></a></li>
+          <li><a class="browser__link" href="#visuals" data-view-link><span class="browser__idx">03</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-pool"/></svg><span class="browser__text"><span class="browser__label">Visuals</span><span class="browser__hint">Artwork</span></span></a></li>
+          <li><a class="browser__link" href="#about" data-view-link><span class="browser__idx">04</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-device"/></svg><span class="browser__text"><span class="browser__label">About</span><span class="browser__hint">Connor</span></span></a></li>
+          <li><a class="browser__link" href="#shows" data-view-link><span class="browser__idx">05</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-locator"/></svg><span class="browser__text"><span class="browser__label">Shows</span><span class="browser__hint">Dates</span></span></a></li>
+          <li><a class="browser__link" href="#press" data-view-link><span class="browser__idx">06</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-log"/></svg><span class="browser__text"><span class="browser__label">Press</span><span class="browser__hint">Bio &amp; downloads</span></span></a></li>
+          <li><a class="browser__link" href="#contact" data-view-link><span class="browser__idx">07</span><svg class="browser__icon" aria-hidden="true" focusable="false"><use href="#i-rec"/></svg><span class="browser__text"><span class="browser__label">Contact</span><span class="browser__hint">Inquiries</span></span></a></li>
         </ul>
         <div class="browser__foot">
           <!-- SOURCE: Erosyn press one-sheet v01 (transition line) -->
-          <p class="browser__note"><b>Formerly SAP.</b> Same sound, sharper signal.</p>
+          <p class="browser__note">Finding beauty in the dark.<br>Music by Connor, from Miami.</p>
           <ul class="social browser__social">
             <li>
               <a href="https://soundcloud.com/erosynmusic" target="_blank" rel="noopener" aria-label="Erosyn on SoundCloud (opens in a new tab)"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-soundcloud"/></svg></a>
@@ -5621,7 +5621,7 @@
 
               <!-- Launch and artist sources: docs/LAUNCH.md -->
               <p class="hero__headline">Scorcher is out now.</p>
-              <p class="hero__lede">Finding beauty in the dark. The new Erosyn single brings hybrid bass and rave pressure from Miami.</p>
+              <p class="hero__lede">Finding beauty in the dark. Scorcher is out now. Pick your player and turn it up.</p>
 
               <div class="hero__actions">
                 <a class="btn btn--primary btn--lg" href="#music"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-play"/></svg>Listen to Scorcher</a>
@@ -5679,7 +5679,7 @@
         <section class="view" id="music" aria-labelledby="music-title">
           <header class="view__head">
             <div>
-              <p class="view__idx">02 / Clips</p>
+              <p class="view__idx">02 / Tracks &amp; mixes</p>
               <h2 class="view__title" id="music-title" tabindex="-1" data-view-heading>Music</h2>
             </div>
             <p class="view__desc">Scorcher is out now on <a href="https://open.spotify.com/track/6bCqCFf0fjrOiBsiZHSq1j" target="_blank" rel="noopener">Spotify</a>, <a href="https://music.apple.com/us/album/scorcher/6821793136?i=6821793137" target="_blank" rel="noopener">Apple Music</a> and SoundCloud. Explore the catalog below or try the <a href="drum-machine.html">rhythm machine</a>.</p>
@@ -5688,7 +5688,7 @@
           <!-- Scorcher verified against SoundCloud on 2026-11-05; existing catalog retained. Scorcher is also verified on Spotify and Apple Music; see docs/LAUNCH.md. -->
           <div class="music view__body">
             <div class="panel clips">
-              <div class="panel__bar"><span><b>Clips</b></span><span>11 tracks</span></div>
+              <div class="panel__bar"><span><b>Tracks &amp; mixes</b></span><span>11 tracks</span></div>
               <h3 class="visually-hidden">Releases</h3>
               <ol class="tracks">
                 <li class="track">
@@ -5963,14 +5963,14 @@
 
             <article class="panel deck" id="deck" aria-labelledby="deck-title">
               <!-- Click-to-play: the SoundCloud player iframe loads only after a visitor presses Play. -->
-              <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Inspector</b></span><span id="deck-state">Deck A · Cued</span></div>
+              <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Selected track</b></span><span id="deck-state">Ready to play</span></div>
 
               <div class="deck__body">
                 <div class="deck__art art art--cover" data-fallback>
                   <img id="deck-art" src="erosyn/web/releases/scorcher.jpg" alt="Scorcher single cover" width="500" height="500" loading="lazy" decoding="async">
                 </div>
                 <div class="deck__info">
-                  <p class="deck__index mono" id="deck-index">Clip 01 / 11</p>
+                  <p class="deck__index mono" id="deck-index">Track 01 / 11</p>
                   <h3 class="deck__title" id="deck-title">Scorcher</h3>
                   <p class="deck__desc" id="deck-desc">The new Erosyn single. Out now on Spotify, Apple Music and SoundCloud.</p>
                   <dl class="deck__meta">
@@ -5998,7 +5998,7 @@
               <div class="deck__foot">
                 <button class="btn btn--primary" type="button" id="deck-play">
                   <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-play"/></svg>
-                  Play in deck<span class="visually-hidden" id="deck-play-context">: Scorcher</span>
+                  Play here<span class="visually-hidden" id="deck-play-context">: Scorcher</span>
                 </button>
                 <a class="btn btn--ghost" id="deck-link" href="https://soundcloud.com/erosynmusic/scorcher" target="_blank" rel="noopener">
                   <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-soundcloud"/></svg>
@@ -6016,10 +6016,10 @@
         <section class="view" id="visuals" aria-labelledby="visuals-title">
           <header class="view__head">
             <div>
-              <p class="view__idx">03 / Media pool</p>
+              <p class="view__idx">03 / Artwork</p>
               <h2 class="view__title" id="visuals-title" tabindex="-1" data-view-heading>Visuals</h2>
             </div>
-            <p class="view__desc">Stage screens, flyer art, cover systems, and press crops from the Erosyn visual kit. Open any pad full size.</p>
+            <p class="view__desc">Artwork, press photos and stage-screen files. Open an image to see it full size.</p>
           </header>
 
           <ul class="pool view__body">
@@ -6035,7 +6035,7 @@
                 data-modal-desc="Stage-screen still from the warehouse redline loop, sized for club projection and LED walls.">
                 <span class="pad__frame art art--redline" data-fallback>
                   <img src="erosyn/web/erosyn-vj-still-warehouse-redline-1600.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
-                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png</span></span>
+                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Image unavailable</span><span class="media-fallback__path">erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/01</span>
                 <span class="pad__open" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-expand"/></svg></span>
@@ -6059,7 +6059,7 @@
                 data-modal-desc="Print and social flyer layout for club nights and DJ bills. Date, venue, and lineup drop into the frame.">
                 <span class="pad__frame art art--flyer" data-fallback>
                   <img src="erosyn/web/erosyn-flyer-template-1100.jpg" alt="" width="1100" height="1700" loading="lazy" decoding="async">
-                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-flyer-template-11x17-v01.png</span></span>
+                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Image unavailable</span><span class="media-fallback__path">erosyn-flyer-template-11x17-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/02</span>
                 <span class="pad__open" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-expand"/></svg></span>
@@ -6083,7 +6083,7 @@
                 data-modal-desc="Logo lock for stage screens between sets and on DJ intros.">
                 <span class="pad__frame art art--logo" data-fallback>
                   <img src="erosyn/web/erosyn-stage-screen-logo-1600.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
-                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-stage-screen-logo-1920x1080-v01.png</span></span>
+                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Image unavailable</span><span class="media-fallback__path">erosyn-stage-screen-logo-1920x1080-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/03</span>
                 <span class="pad__open" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-expand"/></svg></span>
@@ -6107,7 +6107,7 @@
                 data-modal-desc="Black-and-white press headshot with red rim light. Square crop for profiles, listings, and promo posts.">
                 <span class="pad__frame art art--press" data-fallback>
                   <img src="erosyn/web/erosyn-press-photo-square-1000.jpg" alt="" width="1000" height="1000" loading="lazy" decoding="async">
-                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-square-v01.jpg</span></span>
+                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Image unavailable</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-square-v01.jpg</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/04</span>
                 <span class="pad__open" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-expand"/></svg></span>
@@ -6131,7 +6131,7 @@
                 data-modal-desc="Square cover template for mixes: synth imagery under the Erosyn logo lockup.">
                 <span class="pad__frame art art--cover" data-fallback>
                   <img src="erosyn/web/erosyn-cover-mix-synth-800.jpg" alt="" width="800" height="800" loading="lazy" decoding="async">
-                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset pending</span><span class="media-fallback__path">erosyn-mix-cover-template-synth-logo-3000-v01.png</span></span>
+                  <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Image unavailable</span><span class="media-fallback__path">erosyn-mix-cover-template-synth-logo-3000-v01.png</span></span>
                 </span>
                 <span class="pad__idx" aria-hidden="true">V/05</span>
                 <span class="pad__open" aria-hidden="true"><svg class="icon" focusable="false"><use href="#i-expand"/></svg></span>
@@ -6169,8 +6169,8 @@
           </ul>
 
           <div class="pool__foot">
-            <p>Promoters: stage-screen files and flyer templates come with the booking pack.</p>
-            <a class="btn btn--ghost btn--sm" href="#contact" data-reason="booking">Request the pack</a>
+            <p>Making a flyer or announcing a show? Grab the artwork here, or get in touch if you need another format.</p>
+            <a class="btn btn--ghost btn--sm" href="#contact" data-reason="booking">Ask about artwork</a>
           </div>
         </section>
 
@@ -6180,19 +6180,19 @@
         <section class="view" id="about" aria-labelledby="about-title">
           <header class="view__head">
             <div>
-              <p class="view__idx">04 / Device</p>
+              <p class="view__idx">04 / Connor</p>
               <h2 class="view__title" id="about-title" tabindex="-1" data-view-heading>About</h2>
             </div>
-            <p class="view__desc">Raw hybrid club sound from the Miami underground.</p>
+            <p class="view__desc">A little about the person behind the music.</p>
           </header>
 
           <div class="device view__body">
             <figure class="panel device__photo">
-              <div class="panel__bar" aria-hidden="true"><span><b>Display</b></span><span>Press photo</span></div>
+              <div class="panel__bar" aria-hidden="true"><span><b>Photo</b></span><span>Press photo</span></div>
               <span class="device__frame art art--press" data-fallback>
                 <!-- BRAND ASSET: press photo, wide red-rim crop -->
                 <img src="erosyn/web/erosyn-press-photo-wide-1400.jpg" alt="Erosyn press photo: black-and-white headshot with red rim light" width="1400" height="788" loading="lazy" decoding="async">
-                <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Press photo pending</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-wide-v01.jpg</span></span>
+                <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Photo unavailable</span><span class="media-fallback__path">erosyn-press-photo-headshot-bw-redrim-wide-v01.jpg</span></span>
               </span>
               <figcaption class="device__caption mono">
                 <span>B&amp;W / Red rim</span>
@@ -6204,10 +6204,10 @@
             <div class="panel device__notes-panel">
               <div class="panel__bar" aria-hidden="true"><span><b>Notes</b></span><span>Bio · Sound</span></div>
               <div class="device__notes">
-                <!-- SOURCE: Erosyn press one-sheet v01 (artist bio, sound, live identity) -->
-                <p class="device__lead">Erosyn is Connor’s underground electronic producer/DJ project, based in Miami.</p>
-                <p>The music stays rooted in experimental bass, dubstep, DnB, UK grime, psytrance, electro, hardstyle, and classic rave — now sharpened into a darker visual system.</p>
-                <p>Corrupted low-end, grime pressure, rave damage, distorted club rhythms, red signal energy, and warehouse system intensity. Built for late rooms, heavy systems, and high-pressure hybrid bass sets.</p>
+                <!-- Voice: existing artist descriptions; verified facts in press-copy.json. -->
+                <p class="device__lead">I'm Connor. I make music and DJ as Erosyn, based in Miami.</p>
+                <p>Dubstep, grime, DnB, psytrance, electro, hardstyle and old-school rave all find their way into what I make and play.</p>
+                <p>You might know the older tracks as SAP. Start with Scorcher, or get lost in a mix. If you're here listening, thank you.</p>
                 <div class="device__actions">
                   <!-- BRAND ASSET: press one-sheet PDF -->
                   <a class="btn btn--ghost btn--sm" href="erosyn/02-press-kit/one-sheet/erosyn-one-sheet-press-v01.pdf">Press one-sheet (PDF)</a>
@@ -6218,12 +6218,12 @@
             </div>
 
             <div class="panel device__params">
-              <div class="panel__bar" aria-hidden="true"><span><b>Parameters</b></span><span>05</span></div>
+              <div class="panel__bar" aria-hidden="true"><span><b>At a glance</b></span><span>05</span></div>
               <dl class="params">
                 <div class="param"><dt><span class="knob" style="--turn:.18" aria-hidden="true"></span>Base</dt><dd>Miami, FL</dd></div>
                 <div class="param"><dt><span class="knob" style="--turn:.5" aria-hidden="true"></span>Format</dt><dd>Producer / DJ</dd></div>
                 <div class="param"><dt><span class="knob" style="--turn:.92" aria-hidden="true"></span>Sound</dt><dd>Hybrid bass</dd></div>
-                <div class="param"><dt><span class="knob" style="--turn:.74" aria-hidden="true"></span>Environment</dt><dd>Clubs, warehouses, underground systems</dd></div>
+                <div class="param"><dt><span class="knob" style="--turn:.74" aria-hidden="true"></span>Listen</dt><dd>Tracks, flips and DJ sets</dd></div>
                 <div class="param"><dt><span class="knob" style="--turn:0" aria-hidden="true"></span>Previously</dt><dd>SAP</dd></div>
               </dl>
             </div>
@@ -6231,9 +6231,9 @@
             <!-- SOURCE: Erosyn press one-sheet v01 (transition line) -->
             <figure class="panel device__preset">
               <blockquote>
-                <p>Formerly SAP. Same sound, sharper signal.</p>
+                <p>Finding beauty in the dark.</p>
               </blockquote>
-              <figcaption class="mono">Preset / Press one-sheet</figcaption>
+              <figcaption class="mono">Erosyn</figcaption>
             </figure>
           </div>
         </section>
@@ -6244,10 +6244,10 @@
         <section class="view" id="shows" aria-labelledby="shows-title">
           <header class="view__head">
             <div>
-              <p class="view__idx">05 / Locators</p>
+              <p class="view__idx">05 / Dates</p>
               <h2 class="view__title" id="shows-title" tabindex="-1" data-view-heading>Shows</h2>
             </div>
-            <p class="view__desc">Club nights, warehouse dates, and DJ bills. Dates post here once they are confirmed.</p>
+            <p class="view__desc">Want to catch a set? Confirmed dates will appear here.</p>
           </header>
 
           <div class="shows view__body">
@@ -6255,7 +6255,7 @@
               <div class="panel__bar"><b>Dates</b><span>Announcements</span></div>
               <div class="shows-empty" id="shows-empty">
                 <p id="shows-empty-text">No confirmed dates are published here yet.</p>
-                <p>New dates will appear once the artist confirms them.</p>
+                <p>For a show or guest mix, send an inquiry below.</p>
                 <a class="btn btn--ghost btn--sm" href="#contact" data-reason="booking">Send a booking inquiry</a>
               </div>
             </div>
@@ -6267,13 +6267,13 @@
                 <img src="erosyn/web/erosyn-dj-silhouette-900.jpg" alt="" width="900" height="940" loading="lazy" decoding="async">
               </span>
               <div class="booking-card__body">
-                <h3 id="booking-card-title">Put Erosyn on the bill.</h3>
+                <h3 id="booking-card-title">Got a night in mind?</h3>
                 <!-- SOURCE: Erosyn press one-sheet v01 (booking copy, live identity) -->
-                <p>Underground electronic sets that move between bass pressure, rave tempo shifts, grime aggression, and classic club energy.</p>
+                <p>Tell me about the room, the lineup and the set you have in mind.</p>
                 <ul>
-                  <li>High-pressure hybrid bass sets</li>
-                  <li>Warehouse visuals + DJ intros</li>
-                  <li>Club flyers + one-sheet ready</li>
+                  <li>DJ sets and guest mixes</li>
+                  <li>Include your date, venue and set length</li>
+                  <li>Discuss setup and details by email</li>
                 </ul>
                 <a class="btn btn--primary" href="#contact" data-reason="booking">Booking inquiry</a>
               </div>
@@ -6287,20 +6287,21 @@
         <section class="view" id="press" aria-labelledby="press-title">
           <header class="view__head">
             <div>
-              <p class="view__idx">06 / Signal log</p>
+              <p class="view__idx">06 / Bio &amp; downloads</p>
               <h2 class="view__title" id="press-title" tabindex="-1" data-view-heading>Press</h2>
             </div>
-            <p class="view__desc">Artist biography and visual materials for press and promoters.</p>
+            <p class="view__desc">A short bio, current release links and artwork for your feature or show announcement.</p>
           </header>
 
           <div class="log press-materials view__body">
             <article class="panel cutting cutting--lead">
               <p class="panel__bar"><b>Press kit</b><span>Artist materials</span></p>
               <div class="cutting__body">
-                <h3>Erosyn, in the artist’s own words.</h3>
-                <p>Biography, artist imagery and visual assets for a feature or a show announcement.</p>
-                <a class="btn btn--primary" href="erosyn/02-press-kit/one-sheet/erosyn-one-sheet-press-v01.pdf">Read the one-sheet</a>
-                <a class="btn btn--ghost" href="#visuals">Browse visuals</a>
+                <h3>About Erosyn</h3>
+                <p>Erosyn is the electronic music project of Miami-based producer and DJ Connor, previously known as SAP. His music and sets draw on dubstep, grime, drum and bass, psytrance, electro, hardstyle and old-school rave. Scorcher, released November 5, 2026, is available on Spotify, Apple Music and SoundCloud.</p>
+                <a class="btn btn--primary" href="erosyn/02-press-kit/one-sheet/erosyn-one-sheet-press-v01.pdf">Download press sheet</a>
+                <a class="btn btn--ghost" href="erosyn/02-press-kit/press-bio.md" download>Download text bio</a>
+                <a class="btn btn--ghost" href="#visuals">Browse artwork</a>
                 <a class="btn btn--ghost" href="#contact" data-reason="press">Press inquiry</a>
               </div>
             </article>
@@ -6313,22 +6314,22 @@
         <section class="view" id="contact" aria-labelledby="contact-title">
           <header class="view__head">
             <div>
-              <p class="view__idx">07 / Record</p>
+              <p class="view__idx">07 / Inquiries</p>
               <h2 class="view__title" id="contact-title" tabindex="-1" data-view-heading>Contact</h2>
             </div>
-            <p class="view__desc">Booking, press, and collaboration. Send the details up front — date, city, room, and what you need.</p>
+            <p class="view__desc">Bookings, press, collaborations, or just saying hello. Tell me what you have in mind.</p>
           </header>
 
           <div class="record view__body">
             <div class="panel routing">
-              <div class="panel__bar" aria-hidden="true"><span><b>Input routing</b></span><span>04 channels</span></div>
+              <div class="panel__bar" aria-hidden="true"><span><b>Get in touch</b></span><span>Booking / Press / Hello</span></div>
               <div class="routing__body">
                 <!-- SOURCE: Erosyn press one-sheet v01 (booking copy) -->
-                <p class="routing__lede">Underground electronic sets that move between bass pressure, rave tempo shifts, grime aggression, and classic club energy.</p>
+                <p class="routing__lede">Got a show, a track, or an idea to share? Start here.</p>
                 <dl class="channels">
-                  <div><dt>Booking</dt><dd>Clubs, warehouses, DJ bills. Include date, city, venue, capacity, and set length.</dd></div>
-                  <div><dt>Press</dt><dd>Interviews, features, premieres. One-sheet and press photos are ready.</dd></div>
-                  <div><dt>Collaboration</dt><dd>Producers, vocalists, visual artists, and labels.</dd></div>
+                  <div><dt>Booking</dt><dd>Include your date, city, venue, capacity and proposed set length.</dd></div>
+                  <div><dt>Press</dt><dd>Interviews, features and release coverage. Include your outlet and deadline.</dd></div>
+                  <div><dt>Collaboration</dt><dd>Making something together? Send a link and a little about the idea.</dd></div>
                   <div><dt>General</dt><dd>Anything else.</dd></div>
                 </dl>
                 <div class="routing__assets">
@@ -6340,11 +6341,11 @@
             </div>
 
             <div class="panel rec-panel">
-              <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Record</b></span><span>Input armed</span></div>
+              <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Your message</b></span><span>Email draft</span></div>
               <!-- Booking destination confirmed by Dave: erosynmusic@gmail.com. -->
               <form class="form" id="inquiry-form" action="mailto:erosynmusic@gmail.com" method="post" enctype="text/plain" aria-labelledby="form-title">
-                <h3 class="visually-hidden" id="form-title">Send an inquiry</h3>
-                <p class="form__req mono">Name, email, reason, and message required</p>
+                <h3 class="visually-hidden" id="form-title">Prepare an email inquiry</h3>
+                <p class="form__req">Fill in all four fields. Then open the draft in your email app to send it.</p>
 
                 <div class="form__row">
                   <div class="field">
@@ -6392,7 +6393,7 @@
 
                 <p class="form__status" id="form-status" role="status"></p>
                 <textarea class="input" id="email-copy" readonly aria-label="Prepared inquiry to copy" rows="5" hidden></textarea>
-                <p class="field__hint">Booking: <a href="mailto:erosynmusic@gmail.com">erosynmusic@gmail.com</a>. Preparing an email keeps these details in this tab until you send from your email app.</p>
+                <p class="field__hint">Booking: <a href="mailto:erosynmusic@gmail.com">erosynmusic@gmail.com</a>. The button prepares a draft. Send it from your email app when you are ready.</p>
                 <p class="field__hint" id="memory-note">Theme, last view, and last track stay on this device. This page does not send your inquiry. <button class="linkish" type="button" id="memory-clear">Clear saved data</button></p>
                 <p class="visually-hidden" id="memory-status" role="status"></p>
                 <noscript><p class="form__noscript">Email <a href="mailto:erosynmusic@gmail.com">erosynmusic@gmail.com</a> with your date, city, venue, capacity, and set length.</p></noscript>
@@ -6422,8 +6423,8 @@
       <p class="visually-hidden" id="view-status" role="status"></p>
 
       <span class="meters" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-      <a class="status__next" id="status-next" href="#music" hidden><b>Next</b><span id="status-next-text">Load a track</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-next"/></svg></a>
-      <p class="status__desc">Hybrid bass and rave pressure from Miami.</p>
+      <a class="status__next" id="status-next" href="#music" hidden><b>Next</b><span id="status-next-text">Pick a track</span><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-next"/></svg></a>
+      <p class="status__desc">Bass music from Miami. Finding beauty in the dark.</p>
 
       <nav class="status__nav" aria-label="Footer">
         <ul>
@@ -6468,7 +6469,7 @@
       </div>
       <div class="modal__media" data-fallback>
         <img id="media-modal-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
-        <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">Asset not found beside this page</span><span class="media-fallback__path" id="media-modal-path">erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png</span></span>
+        <span class="media-fallback" aria-hidden="true"><span class="media-fallback__label">This image could not be loaded</span><span class="media-fallback__path" id="media-modal-path">erosyn-vj-loop-still-warehouse-redline-1920x1080-v01.png</span></span>
       </div>
       <div class="modal__foot">
         <div class="modal__text">

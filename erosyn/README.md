@@ -16,7 +16,7 @@ This is the reusable artist-facing pack for Erosyn, formerly SAP. It organizes t
 |---|---|
 | `00-start-here` | Quick scan assets and handoff notes |
 | `01-logos` | PNG logo exports and SVG trace starters |
-| `02-press-kit` | Press photos, source references, one-sheet PDF/PNG |
+| `02-press-kit` | Press photos, selectable biography, one-sheet PDF/PNG |
 | `03-social` | Avatar, banners, posts, stories |
 | `04-release-art` | Cover backgrounds and release templates |
 | `05-live-visuals` | Flyers, stage screens, VJ stills |
@@ -38,4 +38,4 @@ This is the reusable artist-facing pack for Erosyn, formerly SAP. It organizes t
 - The PNG logos are useful for layout and social tests.
 - The SVG logos are trace starters and should be hand-cleaned before final commercial logo lock.
 - Keep the system dark, red, physical, and legible. Do not let glow effects replace basic hierarchy.
-- Keep final contact links, booking email, DSP links, and social URLs outside this v01 pack until confirmed.
+- Current booking and listening links are in `02-press-kit/press-bio.md` and the press sheet. Only add a new platform after verifying its URL.

@@ -1,34 +1,21 @@
-# 📣 Erosyn Platform Copy
+# Erosyn platform copy
 
-- Short copy for bios, captions, posts, booking, and EPK use.
-- Keep SAP visible only during the transition period.
-- Use direct language. No vague EDM branding fluff.
+## Short bio
 
----
+Finding beauty in the dark. Music and DJ sets from Miami.
 
-## 🎧 SoundCloud Bio
+## Scorcher
 
-Erosyn.  
-Hybrid bass, grime pressure, rave damage, and distorted electronic systems from Miami.  
-Formerly SAP.
+Scorcher is out now. Pick your player and turn it up.
 
----
+- [Spotify](https://open.spotify.com/track/6bCqCFf0fjrOiBsiZHSq1j)
+- [Apple Music](https://music.apple.com/us/album/scorcher/6821793136?i=6821793137)
+- [SoundCloud](https://soundcloud.com/erosynmusic/scorcher)
 
-## 📱 Instagram Bio
+## Contact
 
-EROSYN  
-hybrid bass / rave pressure / miami  
-formerly SAP  
-↓ music + mixes
+Bookings, press or a collaboration idea: erosynmusic@gmail.com
 
----
+## Former name
 
-## 🔁 Rebrand Caption
-
-SAP is now Erosyn.
-
-The sound stays the same: bass pressure, rave damage, grime, DnB, psytrance, electro, hardstyle, and everything in between.
-
-New name. Same system. More pressure.
-
-Everything new drops under Erosyn.
+Use "Previously known as SAP" only where existing listeners need the connection. Erosyn is the public name.

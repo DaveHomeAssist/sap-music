@@ -1,25 +1,10 @@
-# 🌐 Erosyn Link-in-Bio Copy
+# Erosyn link in bio
 
-- Use these blocks for Linktree, Beacons, Carrd, Bio Sites, or a custom landing page.
-- Keep the link order focused: music first, shows second, social third, contact last.
-- The starter landing page is included in this folder.
+Finding beauty in the dark.
+Music and DJ sets from Miami.
 
----
+1. [Listen to Scorcher](https://erosynmusic.com/#music)
+2. [Tracks and mixes](https://soundcloud.com/erosynmusic)
+3. [Booking and contact](https://erosynmusic.com/#contact)
 
-## 🔗 Link Order
-
-1. Latest release or mix
-2. SoundCloud
-3. Spotify
-4. YouTube
-5. Instagram
-6. TikTok
-7. Booking contact
-
----
-
-## 📝 Bio Header
-
-**EROSYN**  
-Hybrid bass, rave pressure, and corrupted electronic systems from Miami.  
-Formerly SAP.
+Only add another platform after verifying the artist and release URL.

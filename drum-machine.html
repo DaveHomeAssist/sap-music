@@ -659,18 +659,19 @@
     <!-- BEAT DESCRIPTION -->
     <div class="ai-section">
       <div class="ai-input">
-        <label class="visually-hidden" for="beatInput">Describe your beat</label>
+        <label class="visually-hidden" for="beatInput">Describe a style</label>
         <input
           type="text"
           class="input-field"
           id="beatInput"
-          placeholder="Describe your beat — 'warehouse halftime', 'eski grime', '174 rollers'..."
+          placeholder="Describe a style: 'warehouse halftime', 'eski grime', '174 rollers'..."
           autocomplete="off"
         />
-        <button type="button" class="btn primary" id="generateBtn">Generate</button>
+        <button type="button" class="btn primary" id="generateBtn">Load pattern</button>
       </div>
 
-      <div class="idea-buttons">
+      <p class="field-hint">Choose a style to load a starting pattern, then tap the steps to make it yours.</p>
+    <div class="idea-buttons">
         <span class="idea-label">Quick load:</span>
         <button type="button" class="btn idea-btn" data-idea="warehouse halftime pressure">Warehouse halftime</button>
         <button type="button" class="btn idea-btn" data-idea="eski grime riddim">Eski grime</button>
@@ -1079,11 +1080,11 @@
 
     async function generateBeat() {
       const input = document.getElementById('beatInput').value;
-      if (!input.trim()) { showStatus('Describe your beat first', 'error'); return; }
+      if (!input.trim()) { showStatus('Describe a style first', 'error'); return; }
 
       const btn = document.getElementById('generateBtn');
       btn.disabled = true;
-      btn.textContent = 'Generating...';
+      btn.textContent = 'Matching...';
 
       let preset = null;
       let usedAI = false;
@@ -1114,12 +1115,13 @@
         }
       } catch (_) {}
 
-      if (!preset) preset = classifyByKeyword(input) || 'dubstep';
+      const match = preset || classifyByKeyword(input);
+      preset = match || 'dubstep';
 
-      loadPreset(preset, usedAI ? 'AI match' : '');
+      loadPreset(preset, usedAI ? 'AI match' : match ? 'Pattern loaded. Tap the steps to edit.' : 'No close match. Try this pattern or choose a preset.');
 
       btn.disabled = false;
-      btn.textContent = 'Generate';
+      btn.textContent = 'Load pattern';
     }
 
     function showStatus(message, type = 'info') {

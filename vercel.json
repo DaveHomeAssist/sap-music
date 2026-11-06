@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/sap.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/brand.html",
+      "destination": "/erosyn/brand.html",
+      "permanent": true
+    }
+  ]
+}
