@@ -1,6 +1,6 @@
 # SAP Music
 
-Artist site for **Erosyn** (formerly **SAP — Standard Acid Procedure**), a South Florida bass music producer and DJ. Live at [standardacidprocedure.com](https://standardacidprocedure.com).
+Artist site for **Erosyn** (formerly **SAP, Standard Acid Procedure**), a South Florida bass music producer and DJ. Live at [erosynmusic.com](https://erosynmusic.com).
 
 - `/` — the Erosyn site (`index.html`; its assets live under `erosyn/`)
 - `/erosyn/brand.html` — Erosyn brand system and artist asset pack
@@ -25,7 +25,11 @@ Then open http://localhost:8000.
 Any other static server works (`npx serve`, `caddy file-server`, etc.).
 
 ## Deploy
-Production is served by Vercel, the canonical host for the site and its `api/` functions: pushes to `main` deploy `standardacidprocedure.com`, and PR branches get preview URLs. The repository no longer publishes to GitHub Pages.
+Production is served by Vercel, the canonical host for the site and its `api/` functions: pushes to `main` deploy `erosynmusic.com`, and PR branches get preview URLs. The repository no longer publishes to GitHub Pages.
+
+## Launch
+
+Scorcher, the new Erosyn single, was released on November 5, 2026. The homepage and Music view feature its verified cover and listening links. Research and scope: [launch record](docs/LAUNCH.md).
 
 ## Notable features
 - **Click-to-play release cards** — poster art loads first, SoundCloud iframes lazy-load on interaction
@@ -41,4 +45,4 @@ Production is served by Vercel, the canonical host for the site and its `api/` f
 
 ## Booking regression checks
 
-Install test-only Playwright (`npm install --no-save --package-lock=false playwright@1.63.0`), run `npx playwright install chromium`, then `node tests/booking.mjs`. The script starts its own static server and checks phone, landscape, desktop and ultrawide layouts in both themes. It validates and inspects email drafts without opening an email client or sending an inquiry. The same checks run for homepage PRs.
+Install test-only Playwright (`npm install --no-save --package-lock=false playwright@1.63.0`), run `npx playwright install chromium`, then `node tests/booking.mjs` and `node tests/launch.mjs`. The script starts its own static server and checks phone, landscape, desktop and ultrawide layouts in both themes. It validates and inspects email drafts without opening an email client or sending an inquiry. The same checks run for homepage PRs.
