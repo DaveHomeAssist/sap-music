@@ -2,7 +2,7 @@
 
 ## Brand Sentence
 
-Erosyn: corrupted bass pressure, red signal, and underground rave systems.
+Erosyn. Finding beauty in the dark. Music and DJ sets from Miami.
 
 ## Immediate Pulls
 
@@ -14,11 +14,7 @@ Erosyn: corrupted bass pressure, red signal, and underground rave systems.
 
 ## Copy Direction
 
-- Same sound. Sharper signal.
-- Corrupted bass pressure from Miami.
-- Red signal rave systems.
-- Hybrid bass for late rooms.
-- Underground pressure, rebuilt.
+Use the current [press bio](../02-press-kit/press-bio.md) for announcements, and keep listener-facing copy short and conversational. The dark visuals carry the atmosphere; the words should help someone listen, book or get in touch.
 
 ## Handoff Warning
 

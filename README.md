@@ -4,8 +4,8 @@ Artist site for **Erosyn** (formerly **SAP, Standard Acid Procedure**), a South 
 
 - `/` — the Erosyn site (`index.html`; its assets live under `erosyn/`)
 - `/erosyn/brand.html` — Erosyn brand system and artist asset pack
-- `/sap.html` — the legacy SAP page
-- `/erosyn/` — redirects to `/`
+- `/sap.html` redirects to the current Erosyn homepage
+- `/erosyn/` redirects to `/`
 
 ## Stack
 - Static HTML (no build step)
@@ -26,6 +26,10 @@ Any other static server works (`npx serve`, `caddy file-server`, etc.).
 
 ## Deploy
 Production is served by Vercel, the canonical host for the site and its `api/` functions: pushes to `main` deploy `erosynmusic.com`, and PR branches get preview URLs. The repository no longer publishes to GitHub Pages.
+
+## Press materials
+
+The current [press sheet](erosyn/02-press-kit/one-sheet/erosyn-one-sheet-press-v01.pdf) has selectable text and clickable links. Its [text bio](erosyn/02-press-kit/press-bio.md) is available separately. Rebuild from `erosyn/02-press-kit/press-copy.json` with `python3 tools/build-press-sheet.py` (ReportLab required), then render its matching PNG preview with Poppler. Retired `/sap.html` and `/brand.html` routes redirect to Erosyn; Git preserves their original content.
 
 ## Launch
 

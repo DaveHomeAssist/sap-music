@@ -1,10 +1,10 @@
 name: Booking and public content
 on:
   pull_request:
-    paths: ['index.html', 'tests/booking.mjs', 'tests/launch.mjs', '.github/workflows/booking.yml']
+    paths: ['index.html', 'tests/booking.mjs', 'tests/launch.mjs', 'tests/editorial.mjs', 'sap.html', 'brand.html', 'drum-machine.html', 'vercel.json', 'erosyn/**', '.github/workflows/booking.yml']
   push:
     branches: [main]
-    paths: ['index.html', 'tests/booking.mjs', 'tests/launch.mjs', '.github/workflows/booking.yml']
+    paths: ['index.html', 'tests/booking.mjs', 'tests/launch.mjs', 'tests/editorial.mjs', 'sap.html', 'brand.html', 'drum-machine.html', 'vercel.json', 'erosyn/**', '.github/workflows/booking.yml']
 permissions:
   contents: read
 jobs:
@@ -20,3 +20,4 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: node tests/booking.mjs
       - run: node tests/launch.mjs
+      - run: node tests/editorial.mjs
