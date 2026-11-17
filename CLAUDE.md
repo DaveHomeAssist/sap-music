@@ -67,15 +67,10 @@ Then open http://localhost:8000.
 - **Form keyboard:** Name and Email carry `enterkeyhint="next"`, and a keydown handler makes Enter move to the next field instead of submitting.
 - **Motion tokens:** `--t-press` 80ms (press in), `--t-fast` 120ms (release, hover, focus), `--t` 150ms (state change), `--t-feedback` 180ms (shake, confirm, prefill flash); `--ease` for entering, `--ease-exit` for leaving. Keep feedback motion ≤ 180ms and animate only transform, opacity, and colors. Restart one-shot feedback with `pulse(element, className)`. The reduced-motion block cancels every press transform and the shake; add new pressable selectors there too.
 
-## Status naming
+## Session naming
 
-Name work with one string everywhere (chat status title, session title, Notion
-Status Check Runs "Human Name"):
+Follow [Status Naming](https://github.com/DaveHomeAssist/skills/blob/master/status-naming.md), the canonical authority for the format, emoji registry, phases, time semantics and exceptions.
 
-`Project | 🚦 | Phase | Title → state, reason | MM-DD`
+`<group emoji> | PHASE | Durable Purpose | MM-DD h:mm AM/PM`
 
-- 🚦: 🟢 complete and verified · 🟡 partial · 🔴 not started, blocked or failed · ⚪ unverifiable.
-  Add ⏳ scheduled, 🙋 awaiting Dave or 🚧 blocked to 🟡/🔴/⚪, never to 🟢.
-- Phase: Research, Design, Build, Audit or Scheduled. MM-DD: date of the latest light change.
-- Every light change gets a new name: a `RENAME:` line in chat and the Notion row updated.
-- Canonical source: https://github.com/DaveHomeAssist/skills/blob/master/status-naming.md
+The time is the session's creation time in America/New_York and never changes. Status, traffic lights and "→ state" clauses never go in the title, and a status change never triggers a rename. Preserve Dave's manual titles and protected or uncertain sessions. Local instructions extend this rule only through a named, purposeful exception; they do not maintain a competing format.
