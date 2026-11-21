@@ -4,6 +4,8 @@ const ALLOWED_HOSTS = (process.env.SAP_ALLOWED_HOSTS
       'erosynmusic.com',
       'www.erosynmusic.com',
       'davehomeassist.github.io',
+      'erosynmusic.com',
+      'www.erosynmusic.com',
       'standardacidprocedure.com',
       'www.standardacidprocedure.com',
       'localhost',
