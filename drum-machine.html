@@ -1108,6 +1108,8 @@
             aiNote = 'AI blocked for this domain — using local classifier';
           } else if (response.status === 429) {
             aiNote = 'AI rate limited — using local classifier';
+          } else if (response.status === 503) {
+            aiNote = 'AI disabled on the server — using local classifier';
           } else if (response.ok) {
             const data = await response.json();
             if (data.preset && presets[data.preset]) {
