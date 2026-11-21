@@ -2,6 +2,8 @@ const ALLOWED_HOSTS = (process.env.SAP_ALLOWED_HOSTS
   ? process.env.SAP_ALLOWED_HOSTS.split(',').map((entry) => entry.trim()).filter(Boolean)
   : [
       'davehomeassist.github.io',
+      'erosynmusic.com',
+      'www.erosynmusic.com',
       'standardacidprocedure.com',
       'www.standardacidprocedure.com',
       'localhost',

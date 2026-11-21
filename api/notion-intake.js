@@ -8,6 +8,8 @@ const NOTION_API_URL = 'https://api.notion.com/v1/pages';
 const NOTION_VERSION = '2022-06-28';
 const DEFAULT_ALLOWED_HOSTS = [
   'davehomeassist.github.io',
+  'erosynmusic.com',
+  'www.erosynmusic.com',
   'standardacidprocedure.com',
   'www.standardacidprocedure.com',
   'localhost',

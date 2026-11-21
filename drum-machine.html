@@ -1088,6 +1088,7 @@
 
       let preset = null;
       let usedAI = false;
+      let aiNote = '';
 
       try {
         const accessToken = getAIAccessToken();
@@ -1102,9 +1103,11 @@
           });
           if (response.status === 401) {
             aiAccessToken = '';
-            showStatus('AI access denied — using local classifier', 'error');
+            aiNote = 'AI access denied — using local classifier';
+          } else if (response.status === 403) {
+            aiNote = 'AI blocked for this domain — using local classifier';
           } else if (response.status === 429) {
-            showStatus('AI rate limited — using local classifier', 'error');
+            aiNote = 'AI rate limited — using local classifier';
           } else if (response.ok) {
             const data = await response.json();
             if (data.preset && presets[data.preset]) {
@@ -1119,6 +1122,8 @@
       preset = match || 'dubstep';
 
       loadPreset(preset, usedAI ? 'AI match' : match ? 'Pattern loaded. Tap the steps to edit.' : 'No close match. Try this pattern or choose a preset.');
+      // loadPreset writes its own status line, so an AI failure note has to follow it to be seen.
+      if (aiNote) showStatus(aiNote, 'error');
 
       btn.disabled = false;
       btn.textContent = 'Load pattern';
