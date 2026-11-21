@@ -19,3 +19,16 @@ Make the official launch easy to find: feature Scorcher on the homepage, cue it 
 - Home and Music remain usable in both themes at phone, landscape, desktop and ultrawide sizes. The document has no page overflow.
 - Canonical, social and recording metadata use erosynmusic.com. The old domain continues to work; no hosting redirects or legacy SAP pages change.
 - Existing booking regression and focused launch checks pass before release.
+
+## Recheck, November 21, 2026
+
+An information pass compared the site with each public source. Nothing on the public pages needed to change.
+
+- SoundCloud: the profile lists 11 tracks and the newest is still Scorcher (November 5). All 11 titles, release months and runtimes in the Music view match their track pages. The profile reads "Miami, FL" and "Finding beauty in the dark".
+- Apple Music: the public catalog lookup for artist 6821129153 returns one release, Scorcher - Single (November 5, 2026; 210857 ms; Dubstep).
+- Spotify: the artist embed for 4wR3loMCdXnWA2GJBjaBfP lists one track, Scorcher (210857 ms).
+- No fourth platform was verified. A Deezer search for the artist and title found no listing. Keep the three listening links.
+- The Instagram and Threads links respond, but an automated check could not read either profile, so those handles remain unconfirmed here.
+- No confirmed show dates were found in the project notes, so the Shows view stays empty.
+- erosynmusic.com was registered on November 5, 2026 and is served by Vercel. Production matched `main`, and the launch, booking and editorial checks passed against the live site.
+- Fixed in this pass: both API functions now accept requests from erosynmusic.com. Before this they refused it while still accepting the legacy domain. `tests/api-origin.mjs` covers this.

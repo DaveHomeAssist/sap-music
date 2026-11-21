@@ -9,13 +9,10 @@ Orientation doc for Claude / Claude Code working in this repo.
 erosynmusic.com (primary). standardacidprocedure.com remains a working legacy alias.
 
 ## Stack
-- Static HTML, no build step
-- Modular CSS split into four files under `css/`:
-  - `tokens.css` — design tokens (colors, spacing, type scale)
-  - `base.css` — resets, typography, base element styles
-  - `components.css` — reusable component styles (cards, buttons, modals, etc.)
-  - `layout.css` — page layout / grid / section-level rules
+- Static HTML, no build step. Each live page (`index.html`, `drum-machine.html`, `erosyn/brand.html`) is a standalone single file with its own `<style>` and `<script>`.
+- The four files under `css/` (`tokens.css`, `base.css`, `components.css`, `layout.css`) belonged to the retired SAP page. No live page loads them.
 - Vanilla JS inline in HTML where needed
+- Two Vercel functions under `api/`. `generate-beat.js` serves the owner-only classifier on the rhythm machine. `notion-intake.js` is the legacy SAP intake and no live page calls it. Both accept requests only from the hosts in their allowlists: `erosynmusic.com`, the legacy domain, the old GitHub Pages host and local development (`notion-intake.js` also accepts Vercel preview hosts). `tests/api-origin.mjs` checks this; add any new domain to both lists.
 - Fonts: Orbitron, IBM Plex Mono, Space Grotesk, self-hosted as `.woff2` in `fonts/` and declared by `fonts/fonts.css`. That stylesheet sits beside the files, so its `url()`s resolve no matter which page links it; link it as `fonts/fonts.css` (as `drum-machine.html` does). Orbitron and Space Grotesk are variable fonts (one file covers every weight); IBM Plex Mono has one file per weight. No page's CSP allows Google Fonts. The legacy SAP HTML routes now redirect to Erosyn and do not load their old font stylesheets.
 
 ## Deploy
@@ -32,12 +29,10 @@ Production at `erosynmusic.com` is served by **Vercel** (Vercel GitHub integrati
 The source is `erosyn/02-press-kit/press-copy.json`. Build the selectable PDF and Markdown bio with `tools/build-press-sheet.py`; render the PDF to its matching PNG. Update the existing release ZIP when changing pack assets.
 
 ## Recent work
-- Tier 1 + 2 + 3 audit fixes:
-  - Exit-intent modal removed
-  - ARIA tabs downgraded to plain buttons (accessibility simplification)
-  - SoundCloud iframes lazy-loaded (`loading="lazy"`)
-  - CSS split from single file into 4 modular files
-  - CSP meta tag added to the SAP page (now `sap.html`) and `drum-machine.html`
+- 2026-11-05: Scorcher launch. The homepage and Music view feature the single with verified Spotify, Apple Music and SoundCloud links, and metadata moved to erosynmusic.com (`docs/LAUNCH.md`).
+- 2026-11-06: copy pass, completed press sheet, and the SAP pages retired to redirects (`docs/EDITORIAL.md`).
+- 2026-11-21: information recheck against SoundCloud, Apple Music and Spotify. The public pages needed no changes. The API allowlists gained erosynmusic.com (recorded at the end of `docs/LAUNCH.md`).
+- Earlier SAP-era audit work (CSP meta tags, lazy-loaded embeds, the four-file CSS split) is in Git history.
 
 ## Follow-ups
 - The old SAP HTML pages are retired redirects. Their unused CSS is retained as history-adjacent assets; do not reintroduce the old copy.
@@ -53,7 +48,7 @@ Then open http://localhost:8000.
 - Keep HTML semantic — prefer native elements over ARIA roles.
 - Do not reintroduce third-party font or analytics CDNs without an explicit reason — CSP is locked down.
 - New release cards should follow the existing click-to-play poster pattern; lazy-load any embedded iframes.
-- Edit the relevant CSS file by concern (tokens/base/components/layout) — do not inline large style blocks in HTML.
+- Style each page in its own `<style>` block. Do not add rules to the retired files under `css/`.
 
 ## Erosyn homepage (`index.html`): device memory and feedback
 - **Device memory is a hint, never a requirement.** Keys: `erosyn:v1` (localStorage: `lastVisit` as a day only, `lastView`, `lastTrack` as a SoundCloud slug, `knownTracks`, and `contact` only when the visitor ticks "Remember me"), `erosyn:draft` (sessionStorage: the unsent message, cleared when the tab closes), and the existing `erosyn-theme`. Go through `readJSON` / `writeJSON` / `remember()`, which swallow storage errors. Data older than 180 days is ignored. "Clear saved data" in Contact removes all three keys and stops saving for the rest of the visit. Preferences stay local. The contact form prepares a mailto draft to Dave-confirmed `erosynmusic@gmail.com` and offers a copy fallback. It never claims delivery or sends in the background. The existing legacy Notion intake is not used by this homepage.

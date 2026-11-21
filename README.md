@@ -8,10 +8,11 @@ Artist site for **Erosyn** (formerly **SAP, Standard Acid Procedure**), a South 
 - `/erosyn/` redirects to `/`
 
 ## Stack
-- Static HTML (no build step)
-- Modular CSS: `css/tokens.css`, `css/base.css`, `css/components.css`, `css/layout.css`
+- Static HTML (no build step). Each live page is a single file with its own styles and script.
 - Vanilla JS
 - Self-hosted fonts under `fonts/`
+- Two Vercel functions under `api/`
+- The files under `css/` belonged to the retired SAP page. No live page loads them.
 
 ## Local dev
 Serve the directory statically:
@@ -25,7 +26,7 @@ Then open http://localhost:8000.
 Any other static server works (`npx serve`, `caddy file-server`, etc.).
 
 ## Deploy
-Production is served by Vercel, the canonical host for the site and its `api/` functions: pushes to `main` deploy `erosynmusic.com`, and PR branches get preview URLs. The repository no longer publishes to GitHub Pages.
+Production is served by Vercel, the canonical host for the site and its `api/` functions: pushes to `main` deploy `erosynmusic.com`, and PR branches get preview URLs. `standardacidprocedure.com` serves the same site as a legacy alias. The repository no longer publishes to GitHub Pages.
 
 ## Press materials
 
@@ -49,4 +50,6 @@ Scorcher, the new Erosyn single, was released on November 5, 2026. The homepage 
 
 ## Booking regression checks
 
-Install test-only Playwright (`npm install --no-save --package-lock=false playwright@1.63.0`), run `npx playwright install chromium`, then `node tests/booking.mjs` and `node tests/launch.mjs`. The script starts its own static server and checks phone, landscape, desktop and ultrawide layouts in both themes. It validates and inspects email drafts without opening an email client or sending an inquiry. The same checks run for homepage PRs.
+Install test-only Playwright (`npm install --no-save --package-lock=false playwright@1.63.0`), run `npx playwright install chromium`, then `node tests/booking.mjs`, `node tests/launch.mjs` and `node tests/editorial.mjs`. Each script starts its own static server and checks phone, landscape, desktop and ultrawide layouts in both themes. It validates and inspects email drafts without opening an email client or sending an inquiry. The same checks run for homepage PRs.
+
+`node tests/api-origin.mjs` needs no browser. It confirms that the API functions accept requests from `erosynmusic.com` and the legacy domain, and refuse other sites.

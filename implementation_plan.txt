@@ -5,6 +5,18 @@ Repo: DaveHomeAssist/sap-music
 Domain: standardacidprocedure.com
 Stack: Static HTML + Vercel serverless (api/) + SoundCloud embeds + Notion intake
 
+STATUS (updated 2026-11-21): HISTORICAL. This is the March 2026 plan for the SAP site.
+Do not treat its open checkboxes as current work.
+  - The artist is now Erosyn. The Erosyn site is the homepage and the SAP pages redirect to it.
+  - Primary domain: erosynmusic.com (registered 2026-11-05, served by Vercel).
+    standardacidprocedure.com still works as a legacy alias.
+  - Phases 0 to 2 describe the GitHub Pages DNS setup and the SAP page, both retired.
+    Phase 3 is decided (see below).
+  - The site's booking contact is erosynmusic@gmail.com. It does not use the
+    @standardacidprocedure.com addresses listed in Phase 4.
+  - Current records: docs/LAUNCH.md (Scorcher launch and source checks) and
+    docs/EDITORIAL.md (copy and press sheet).
+
 
 PHASE 0 — DNS & Domain Finalization  [IN PROGRESS]
 ====================================================
