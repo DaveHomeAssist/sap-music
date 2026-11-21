@@ -1,0 +1,13 @@
+# Repository files that should not be served on erosynmusic.com.
+# Paths are anchored to the repository root, so erosyn/README.md
+# (the asset pack notes linked from erosyn/brand.html) is still deployed.
+# Keep vercel.json, api/, fonts/, erosyn/ and the HTML pages deployed.
+/CLAUDE.md
+/README.md
+/implementation_plan.txt
+/docs
+/tests
+/tools
+/.github
+/.claude
+/.env.example
