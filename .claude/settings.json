@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Notion",
+      "mcp__claude_ai_Notion"
+    ]
+  }
+}
