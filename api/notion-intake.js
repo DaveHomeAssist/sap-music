@@ -7,8 +7,6 @@ const ANALYTICS_DATABASE_ID =
 const NOTION_API_URL = 'https://api.notion.com/v1/pages';
 const NOTION_VERSION = '2022-06-28';
 const DEFAULT_ALLOWED_HOSTS = [
-  'erosynmusic.com',
-  'www.erosynmusic.com',
   'davehomeassist.github.io',
   'erosynmusic.com',
   'www.erosynmusic.com',

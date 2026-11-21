@@ -1,8 +1,6 @@
 const ALLOWED_HOSTS = (process.env.SAP_ALLOWED_HOSTS
   ? process.env.SAP_ALLOWED_HOSTS.split(',').map((entry) => entry.trim()).filter(Boolean)
   : [
-      'erosynmusic.com',
-      'www.erosynmusic.com',
       'davehomeassist.github.io',
       'erosynmusic.com',
       'www.erosynmusic.com',

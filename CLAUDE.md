@@ -31,7 +31,7 @@ The source is `erosyn/02-press-kit/press-copy.json`. Build the selectable PDF an
 ## Recent work
 - 2026-11-05: Scorcher launch. The homepage and Music view feature the single with verified Spotify, Apple Music and SoundCloud links, and metadata moved to erosynmusic.com (`docs/LAUNCH.md`).
 - 2026-11-06: copy pass, completed press sheet, and the SAP pages retired to redirects (`docs/EDITORIAL.md`).
-- 2026-11-21: information recheck against SoundCloud, Apple Music and Spotify. The public pages needed no changes. The API allowlists gained erosynmusic.com (recorded at the end of `docs/LAUNCH.md`).
+- 2026-11-21: information recheck against SoundCloud, Apple Music and Spotify. The public pages needed no changes. The API allowlists gained erosynmusic.com in pull request 17, and `tests/api-origin.mjs` now guards them (recorded at the end of `docs/LAUNCH.md`).
 - Earlier SAP-era audit work (CSP meta tags, lazy-loaded embeds, the four-file CSS split) is in Git history.
 
 ## Follow-ups

@@ -31,4 +31,4 @@ An information pass compared the site with each public source. Nothing on the pu
 - The Instagram and Threads links respond, but an automated check could not read either profile, so those handles remain unconfirmed here.
 - No confirmed show dates were found in the project notes, so the Shows view stays empty.
 - erosynmusic.com was registered on November 5, 2026 and is served by Vercel. Production matched `main`, and the launch, booking and editorial checks passed against the live site.
-- Fixed in this pass: both API functions now accept requests from erosynmusic.com. Before this they refused it while still accepting the legacy domain. `tests/api-origin.mjs` covers this.
+- Found in this pass and fixed the same day in pull request 17: both API functions now accept requests from erosynmusic.com. Before that they refused it while still accepting the legacy domain. `tests/api-origin.mjs` covers this.
