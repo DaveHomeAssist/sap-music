@@ -367,7 +367,7 @@
     }
 
     .btn--sm {
-      min-height: 40px;
+      min-height: 44px;
       padding: .4rem .8rem;
       font-size: .8125rem;
     }
@@ -834,7 +834,8 @@
         white-space: nowrap;
       }
 
-      .rec-btn {
+      .rec-btn,
+      .app .browser-toggle {
         min-width: 44px;
         justify-content: center;
         padding: 0;
@@ -1130,7 +1131,7 @@
       display: grid;
       place-items: center;
       width: 44px;
-      height: 40px;
+      height: 44px;
       padding: 0;
       border: 1px solid var(--border);
       border-radius: 5px;
@@ -1228,8 +1229,8 @@
     .social a {
       display: grid;
       place-items: center;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border: 1px solid var(--border);
       border-radius: 5px;
       color: var(--text);
@@ -2727,10 +2728,12 @@
       color: var(--muted);
     }
 
+    /* The negative margin keeps the caption row at its text height while the tap area reaches 44px. */
     .device__caption a {
       display: inline-flex;
       align-items: center;
-      min-height: 24px;
+      min-height: 44px;
+      margin: -10px 0;
       color: var(--text);
       text-underline-offset: 3px;
     }
@@ -3047,7 +3050,7 @@
 
     .filter-btn {
       min-width: 6.75rem;
-      min-height: 40px;
+      min-height: 44px;
       padding: 0 .9rem;
       border: 0;
       border-radius: 4px;
@@ -3241,7 +3244,7 @@
       padding: 1.1rem 1.1rem 1.2rem;
     }
 
-    .booking-card h3 {
+    .booking-card h2 {
       font-size: clamp(1.25rem, 1rem + .9vw, 1.625rem);
       font-weight: 800;
       letter-spacing: -.02em;
@@ -3318,7 +3321,7 @@
     .app .press-materials { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
     .press-materials .cutting--lead { grid-column: 1; grid-row: 1; }
     .press-materials .cutting__body { align-items: flex-start; max-width: 56rem; }
-    .press-materials h3 { font-size: clamp(1.5rem, 3vw, 3rem); line-height: 1.1; }
+    .press-materials h2 { font-size: clamp(1.5rem, 3vw, 3rem); line-height: 1.1; }
 
     .cutting {
       --notch: 16px;
@@ -4000,7 +4003,7 @@
       flex: none;
       align-items: center;
       gap: .45rem;
-      min-height: 40px;
+      min-height: 44px;
       padding: 0 .7rem;
       border: 1px solid var(--border);
       border-radius: 5px;
@@ -4084,8 +4087,8 @@
 
     /* Inline text buttons: padding widens the tap area without moving the text. */
     .linkish {
-      margin: -.6rem 0;
-      padding: .6rem .15rem;
+      margin: -.8rem 0;
+      padding: .8rem .15rem;
       border: 0;
       background: none;
       color: var(--accent-text);
@@ -4535,12 +4538,22 @@
           });
         });
 
-        const syncFromHistory = () => {
-          const id = viewFromHash();
-          if (id && id !== root.dataset.view) {
+        // Back, Forward and a typed #hash also run the browser's own fragment focus,
+        // which lands after popstate on the view section or the page body.
+        // hashchange fires last, so it puts focus back on the view heading.
+        const syncFromHistory = (event) => {
+          const id = viewFromHash() || (window.location.hash ? null : 'home');
+          if (!id) {
+            return;
+          }
+          if (id !== root.dataset.view) {
             show(id, { focus: true });
-          } else if (!window.location.hash && root.dataset.view !== 'home') {
-            show('home', { focus: true });
+          }
+          if (event && event.type === 'hashchange') {
+            const heading = document.getElementById(id)?.querySelector('[data-view-heading]');
+            if (heading && document.activeElement !== heading) {
+              heading.focus({ preventScroll: true });
+            }
           }
         };
         window.addEventListener('popstate', syncFromHistory);
@@ -5680,7 +5693,7 @@
           <header class="view__head">
             <div>
               <p class="view__idx">02 / Tracks &amp; mixes</p>
-              <h2 class="view__title" id="music-title" tabindex="-1" data-view-heading>Music</h2>
+              <h1 class="view__title" id="music-title" tabindex="-1" data-view-heading>Music</h1>
             </div>
             <p class="view__desc">Scorcher is out now on <a href="https://open.spotify.com/track/6bCqCFf0fjrOiBsiZHSq1j" target="_blank" rel="noopener">Spotify</a>, <a href="https://music.apple.com/us/album/scorcher/6821793136?i=6821793137" target="_blank" rel="noopener">Apple Music</a> and SoundCloud. Explore the catalog below or try the <a href="drum-machine.html">rhythm machine</a>.</p>
           </header>
@@ -5689,7 +5702,7 @@
           <div class="music view__body">
             <div class="panel clips">
               <div class="panel__bar"><span><b>Tracks &amp; mixes</b></span><span>11 tracks</span></div>
-              <h3 class="visually-hidden">Releases</h3>
+              <h2 class="visually-hidden">Releases</h2>
               <ol class="tracks">
                 <li class="track">
                   <button class="track__select" type="button" aria-pressed="true" data-track
@@ -5971,7 +5984,7 @@
                 </div>
                 <div class="deck__info">
                   <p class="deck__index mono" id="deck-index">Track 01 / 11</p>
-                  <h3 class="deck__title" id="deck-title">Scorcher</h3>
+                  <h2 class="deck__title" id="deck-title">Scorcher</h2>
                   <p class="deck__desc" id="deck-desc">The new Erosyn single. Out now on Spotify, Apple Music and SoundCloud.</p>
                   <dl class="deck__meta">
                     <div><dt>Type</dt><dd id="deck-type">Single</dd></div>
@@ -6017,7 +6030,7 @@
           <header class="view__head">
             <div>
               <p class="view__idx">03 / Artwork</p>
-              <h2 class="view__title" id="visuals-title" tabindex="-1" data-view-heading>Visuals</h2>
+              <h1 class="view__title" id="visuals-title" tabindex="-1" data-view-heading>Visuals</h1>
             </div>
             <p class="view__desc">Artwork, press photos and stage-screen files. Open an image to see it full size.</p>
           </header>
@@ -6181,7 +6194,7 @@
           <header class="view__head">
             <div>
               <p class="view__idx">04 / Connor</p>
-              <h2 class="view__title" id="about-title" tabindex="-1" data-view-heading>About</h2>
+              <h1 class="view__title" id="about-title" tabindex="-1" data-view-heading>About</h1>
             </div>
             <p class="view__desc">A little about the person behind the music.</p>
           </header>
@@ -6245,7 +6258,7 @@
           <header class="view__head">
             <div>
               <p class="view__idx">05 / Dates</p>
-              <h2 class="view__title" id="shows-title" tabindex="-1" data-view-heading>Shows</h2>
+              <h1 class="view__title" id="shows-title" tabindex="-1" data-view-heading>Shows</h1>
             </div>
             <p class="view__desc">Want to catch a set? Confirmed dates will appear here.</p>
           </header>
@@ -6267,7 +6280,7 @@
                 <img src="erosyn/web/erosyn-dj-silhouette-900.jpg" alt="" width="900" height="940" loading="lazy" decoding="async">
               </span>
               <div class="booking-card__body">
-                <h3 id="booking-card-title">Got a night in mind?</h3>
+                <h2 id="booking-card-title">Got a night in mind?</h2>
                 <!-- SOURCE: Erosyn press one-sheet v01 (booking copy, live identity) -->
                 <p>Tell me about the room, the lineup and the set you have in mind.</p>
                 <ul>
@@ -6288,7 +6301,7 @@
           <header class="view__head">
             <div>
               <p class="view__idx">06 / Bio &amp; downloads</p>
-              <h2 class="view__title" id="press-title" tabindex="-1" data-view-heading>Press</h2>
+              <h1 class="view__title" id="press-title" tabindex="-1" data-view-heading>Press</h1>
             </div>
             <p class="view__desc">A short bio, current release links and artwork for your feature or show announcement.</p>
           </header>
@@ -6297,7 +6310,7 @@
             <article class="panel cutting cutting--lead">
               <p class="panel__bar"><b>Press kit</b><span>Artist materials</span></p>
               <div class="cutting__body">
-                <h3>About Erosyn</h3>
+                <h2>About Erosyn</h2>
                 <p>Erosyn is the electronic music project of Miami-based producer and DJ Connor, previously known as SAP. His music and sets draw on dubstep, grime, drum and bass, psytrance, electro, hardstyle and old-school rave. Scorcher, released November 5, 2026, is available on Spotify, Apple Music and SoundCloud.</p>
                 <a class="btn btn--primary" href="erosyn/02-press-kit/one-sheet/erosyn-one-sheet-press-v01.pdf">Download press sheet</a>
                 <a class="btn btn--ghost" href="erosyn/02-press-kit/press-bio.md" download>Download text bio</a>
@@ -6315,7 +6328,7 @@
           <header class="view__head">
             <div>
               <p class="view__idx">07 / Inquiries</p>
-              <h2 class="view__title" id="contact-title" tabindex="-1" data-view-heading>Contact</h2>
+              <h1 class="view__title" id="contact-title" tabindex="-1" data-view-heading>Contact</h1>
             </div>
             <p class="view__desc">Bookings, press, collaborations, or just saying hello. Tell me what you have in mind.</p>
           </header>
@@ -6344,7 +6357,7 @@
               <div class="panel__bar" aria-hidden="true"><span><i class="led"></i><b>Your message</b></span><span>Email draft</span></div>
               <!-- Booking destination confirmed by Dave: erosynmusic@gmail.com. -->
               <form class="form" id="inquiry-form" action="mailto:erosynmusic@gmail.com" method="post" enctype="text/plain" aria-labelledby="form-title">
-                <h3 class="visually-hidden" id="form-title">Prepare an email inquiry</h3>
+                <h2 class="visually-hidden" id="form-title">Prepare an email inquiry</h2>
                 <p class="form__req">Fill in all four fields. Then open the draft in your email app to send it.</p>
 
                 <div class="form__row">

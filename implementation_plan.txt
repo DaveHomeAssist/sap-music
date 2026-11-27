@@ -14,6 +14,8 @@ Do not treat its open checkboxes as current work.
     Phase 3 is decided (see below).
   - The site's booking contact is erosynmusic@gmail.com. It does not use the
     @standardacidprocedure.com addresses listed in Phase 4.
+  - The Notion intake (api/notion-intake.js) was retired on 2026-11-27. Its
+    Phase 3 setup steps below are history.
   - Current records: docs/LAUNCH.md (Scorcher launch and source checks) and
     docs/EDITORIAL.md (copy and press sheet).
 

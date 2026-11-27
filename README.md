@@ -11,7 +11,7 @@ Artist site for **Erosyn** (formerly **SAP, Standard Acid Procedure**), a South 
 - Static HTML (no build step). Each live page is a single file with its own styles and script.
 - Vanilla JS
 - Self-hosted fonts under `fonts/`
-- Two Vercel functions under `api/`
+- One Vercel function under `api/` (the rhythm machine's owner-only classifier)
 - The files under `css/` belonged to the retired SAP page. No live page loads them.
 
 ## Local dev
