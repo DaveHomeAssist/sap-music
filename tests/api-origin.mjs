@@ -1,12 +1,19 @@
-// Checks which sites may call the API functions. No network and no browser:
-// each handler is called with a stand-in request and stops at its origin check.
+// Checks which sites may call the API function, and that the retired Notion
+// intake stays gone. No network and no browser: the handler is called with a
+// stand-in request and stops at its origin check.
 import assert from 'node:assert/strict';
+import { readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 
-delete process.env.SAP_ALLOWED_HOSTS; // test the built-in lists, not a local override
+delete process.env.SAP_ALLOWED_HOSTS; // test the built-in list, not a local override
 const require = createRequire(import.meta.url);
 const generateBeat = require('../api/generate-beat.js');
-const notionIntake = require('../api/notion-intake.js');
+
+// The legacy Notion intake (api/notion-intake.js) was retired on 2026-11-27:
+// nothing called it and a forged Origin header was its only gate. Any new
+// function under api/ needs its own abuse controls and a test here.
+const functions = readdirSync(new URL('../api/', import.meta.url)).sort();
+assert.deepEqual(functions, ['generate-beat.js'], `unexpected API functions: ${functions.join(', ')}`);
 
 function respond() {
   const res = {
@@ -32,17 +39,17 @@ const allowed = [
   'https://standardacidprocedure.com',
   'https://www.standardacidprocedure.com',
 ];
-const refused = ['https://example.org', 'https://erosynmusic.com.example.org', ''];
+const refused = [
+  'https://example.org',
+  'https://erosynmusic.com.example.org',
+  'https://anything.vercel.app',
+  '',
+];
 
 for (const origin of allowed) {
   const preflight = await call(generateBeat, 'OPTIONS', origin);
   assert.equal(preflight.statusCode, 204, `generate-beat should accept ${origin}`);
   assert.equal(preflight.headers['access-control-allow-origin'], origin);
-
-  // A GET from an accepted site gets past the origin check and is refused for its method.
-  const intake = await call(notionIntake, 'GET', origin);
-  assert.equal(intake.statusCode, 405, `notion-intake should accept ${origin}`);
-  assert.equal(intake.headers['access-control-allow-origin'], origin);
 }
 
 for (const origin of refused) {
@@ -52,9 +59,6 @@ for (const origin of refused) {
 
   const post = await call(generateBeat, 'POST', origin);
   assert.equal(post.statusCode, 403, `generate-beat should refuse a POST from "${origin}"`);
-
-  const intake = await call(notionIntake, 'GET', origin);
-  assert.equal(intake.statusCode, 403, `notion-intake should refuse "${origin}"`);
 }
 
-console.log(`PASS api origins: ${allowed.length} accepted, ${refused.length} refused, on both functions`);
+console.log(`PASS api origins: ${allowed.length} accepted, ${refused.length} refused; only generate-beat.js is deployed`);

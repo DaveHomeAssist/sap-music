@@ -345,14 +345,17 @@
       color: var(--text-dim);
     }
 
+    /* A taller hit area around the visible 3px track: 24px here, 44px on phones. */
     .tempo-slider {
       -webkit-appearance: none;
       appearance: none;
       width: 120px;
-      height: 3px;
-      background: var(--border-lite);
+      height: 24px;
+      margin: 0;
+      background: linear-gradient(var(--border-lite), var(--border-lite)) center / 100% 3px no-repeat;
       border-radius: 2px;
       outline: none;
+      cursor: pointer;
     }
 
     .tempo-slider::-webkit-slider-thumb {
@@ -603,16 +606,113 @@
       .transport { flex-direction: column; align-items: flex-start; }
     }
 
-    /* Phones: sixteen steps in one row would be too small to tap, so each track wraps into two rows of eight. */
+    /* Phones: sixteen steps in one row would be too small to tap, so each track wraps into two rows of eight.
+       The layout is compacted to fit a 390x844 screen without page scroll; nothing is clipped, so a shorter
+       screen still scrolls. Steps are 44px tall; their width is what a phone row of eight allows (about 40px). */
     @media (max-width: 560px) {
-      body { padding: 12px; }
-      .drum-machine { padding: 18px 12px; }
-      .sequencer { padding: 14px 10px; }
-      .track { grid-template-columns: 34px repeat(8, 1fr); gap: 4px; margin-bottom: 12px; }
+      body { padding: 4px; align-items: flex-start; }
+      .drum-machine { padding: 10px 8px; border-radius: 8px; }
+      .drum-machine::before { left: 8px; right: 8px; }
+      .header { margin-bottom: 6px; padding-bottom: 6px; }
+      .logo { display: inline-flex; align-items: center; min-height: 44px; }
+      .logo img { height: 28px; }
+      .model-tag { display: none; }
+      .ai-section { margin-bottom: 0; }
+      .ai-input { margin-bottom: 8px; }
+      .input-field { min-width: 0; }
+      .field-hint { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      .btn { min-height: 44px; }
+      .idea-buttons,
+      .presets-row {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        margin-right: -8px;
+        margin-left: -8px;
+        padding: 0 8px;
+        scrollbar-width: none;
+      }
+      .idea-buttons::-webkit-scrollbar,
+      .presets-row::-webkit-scrollbar { display: none; }
+      .idea-buttons { margin-bottom: 8px; }
+      .idea-btn,
+      .preset-btn { flex: none; }
+      .idea-label,
+      .presets-label { flex: none; }
+      .divider { display: none; }
+      .transport { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+      .transport-controls .btn { padding: 0 12px; }
+      .tempo-control { flex: 1 1 100%; min-height: 44px; gap: 10px; }
+      .tempo-slider { flex: 1; width: auto; min-width: 0; height: 44px; }
+      .sequencer { padding: 8px 4px; margin-bottom: 8px; }
+      .track { grid-template-columns: 22px repeat(8, minmax(0, 1fr)); gap: 3px; margin-bottom: 4px; }
       .track-label { grid-row: span 2; align-self: center; padding-right: 0; font-weight: 600; }
       .track-name { display: none; }
       .track-code { display: inline; }
-      .step[data-step="8"] { margin-left: 0; }
+      .step { aspect-ratio: auto; height: 44px; }
+      .step[data-step="4"],
+      .step[data-step="8"],
+      .step[data-step="12"] { margin-left: 0; }
+      .back-link { display: none; }
+    }
+
+    /* Phone landscape: one row of sixteen 44px steps under two compact control rows.
+       The header keeps only the home logo; the page title stays available to screen readers. */
+    @media (max-height: 500px) and (min-width: 561px) {
+      body { padding: 4px; align-items: flex-start; }
+      .drum-machine {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+          "head input ideas"
+          "transport transport presets"
+          "seq seq seq";
+        gap: 6px 8px;
+        max-width: none;
+        padding: 8px;
+        border-radius: 8px;
+      }
+      .drum-machine::before { left: 8px; right: 8px; }
+      .header { grid-area: head; margin: 0; padding: 0; border: 0; }
+      .logo { display: inline-flex; align-items: center; min-height: 44px; }
+      .logo img { height: 28px; }
+      .subtitle,
+      .field-hint,
+      .tempo-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      .header-right,
+      .divider,
+      .back-link { display: none; }
+      .ai-section { display: contents; }
+      .ai-input { grid-area: input; margin: 0; }
+      .input-field { min-width: 0; }
+      .btn { min-height: 44px; }
+      .idea-buttons { grid-area: ideas; }
+      .presets-row { grid-area: presets; }
+      .idea-buttons,
+      .presets-row {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        margin: 0;
+        scrollbar-width: none;
+      }
+      .idea-buttons::-webkit-scrollbar,
+      .presets-row::-webkit-scrollbar { display: none; }
+      .idea-btn,
+      .preset-btn,
+      .idea-label,
+      .presets-label { flex: none; }
+      .transport { grid-area: transport; flex-wrap: nowrap; gap: 8px; margin: 0; }
+      .transport-controls .btn { padding: 0 12px; }
+      .tempo-control { flex: 1; min-width: 0; margin-left: 0; gap: 8px; }
+      .tempo-slider { flex: 1; width: auto; min-width: 0; height: 44px; }
+      .sequencer { grid-area: seq; margin: 0; padding: 6px 8px; }
+      .track { grid-template-columns: 30px repeat(16, minmax(0, 1fr)); column-gap: 3px; margin-bottom: 3px; }
+      .track-label { padding-right: 0; font-weight: 600; }
+      .track-name { display: none; }
+      .track-code { display: inline; }
+      .step { aspect-ratio: auto; height: 44px; }
+      .step[data-step="4"],
+      .step[data-step="8"],
+      .step[data-step="12"] { margin-left: 0; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -665,13 +765,14 @@
           type="text"
           class="input-field"
           id="beatInput"
+          aria-describedby="beatHint"
           placeholder="Describe a style: 'warehouse halftime', 'eski grime', '174 rollers'..."
           autocomplete="off"
         />
         <button type="button" class="btn primary" id="generateBtn">Load pattern</button>
       </div>
 
-      <p class="field-hint">Choose a style to load a starting pattern, then tap the steps to make it yours.</p>
+      <p class="field-hint" id="beatHint">Choose a style to load a starting pattern, then tap the steps to make it yours.</p>
     <div class="idea-buttons">
         <span class="idea-label">Quick load:</span>
         <button type="button" class="btn idea-btn" data-idea="warehouse halftime pressure">Warehouse halftime</button>
