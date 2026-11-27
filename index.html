@@ -4014,6 +4014,20 @@
 
     .app .status__next {
       display: inline-flex;
+      flex: 0 1 auto;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    /* In a crowded status bar the hint text truncates; the social icons never wrap below the bar. */
+    .status__next span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .statusbar .social {
+      flex-wrap: nowrap;
     }
 
     .status__next .icon {

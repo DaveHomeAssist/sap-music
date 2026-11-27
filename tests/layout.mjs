@@ -62,7 +62,7 @@ function audit(insets) {
     return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden'
       && !el.closest('[hidden]') && visibleRect(el) !== null;
   };
-  const describe = (el) => `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).join('.') : ''}`;
+  const describe = (el) => `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).join('.') : ''}${el.getAttribute('aria-label') ? ` "${el.getAttribute('aria-label').slice(0, 24)}"` : ''}`;
   const controls = [...document.querySelectorAll('a[href], button, select, input:not([type=hidden]), textarea, summary, [role=button]')]
     .filter(shown)
     // A link in running text is exempt from target size (WCAG 2.5.5/2.5.8 inline exception).
@@ -83,11 +83,16 @@ function audit(insets) {
   }
   const de = document.documentElement;
   const h1s = [...document.querySelectorAll('h1')].filter(shown);
+  const shell = document.querySelector('.shell')?.getBoundingClientRect();
+  const bar = document.querySelector('.statusbar')?.getBoundingClientRect();
   return {
     overflow: [de.scrollWidth - de.clientWidth, de.scrollHeight - de.clientHeight],
     h1: h1s.map((h) => h.id),
     small,
     unsafe,
+    geometry: `viewport ${vw}x${vh}, visual ${Math.round(visualViewport.width)}x${Math.round(visualViewport.height)} scale ${visualViewport.scale.toFixed(3)}, `
+      + `shell ${shell ? Math.round(shell.height) : '-'}px, statusbar ${bar ? `${Math.round(bar.top)}-${Math.round(bar.bottom)}` : '-'}, `
+      + `--safe-bottom ${getComputedStyle(de).getPropertyValue('--safe-bottom').trim() || '-'}`,
   };
 }
 
@@ -105,13 +110,15 @@ try {
 
     for (const view of VIEWS) {
       await page.goto(`${origin}/#${view}`);
+      await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(200);
       const result = await page.evaluate(audit, size.insets);
       const where = `${view} at ${size.width}x${size.height}`;
+      if (view === 'home') console.log(`  ${size.name}: ${result.geometry}`);
       assert.deepEqual(result.overflow, [0, 0], `${where} scrolls the page`);
       assert.deepEqual(result.h1, [`${view}-title`], `${where} needs exactly one visible h1, the view heading`);
-      assert.deepEqual(result.small, [], `${where} has controls under 44x44`);
-      assert.deepEqual(result.unsafe, [], `${where} has controls inside the safe-area insets`);
+      assert.deepEqual(result.small, [], `${where} has controls under 44x44 (${result.geometry})`);
+      assert.deepEqual(result.unsafe, [], `${where} has controls inside the safe-area insets (${result.geometry})`);
     }
 
     // Back, Forward and a typed #hash leave focus on the view heading.
@@ -140,6 +147,7 @@ try {
 
     // Rhythm machine.
     await page.goto(`${origin}/drum-machine.html`);
+    await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(200);
     const drum = await page.evaluate(() => {
       const de = document.documentElement;
